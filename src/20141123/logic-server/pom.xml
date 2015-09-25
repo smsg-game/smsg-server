@@ -1,0 +1,121 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.lodogame.ldsg</groupId>
+	<artifactId>logic-server</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>logic-server</name>
+	<url>http://maven.apache.org</url>
+	<build>
+		<finalName>logic-server</finalName>
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<testSourceDirectory>src/${build.mode}/java</testSourceDirectory>
+
+		<testResources>
+			<testResource>
+				<directory>src/${build.mode}/resources</directory>
+			</testResource>
+		</testResources>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.0.2</version>
+					<configuration>
+						<encoding>UTF-8</encoding>
+						<source>1.6</source>
+						<target>1.6</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<configuration>
+						<encoding>UTF-8</encoding>
+					</configuration>
+				</plugin>
+				<plugin>
+				    <groupId>org.apache.maven.plugins</groupId>
+				    <artifactId>maven-shade-plugin</artifactId>
+				    <executions>
+				        <execution>
+				            <phase>package</phase>
+				            <goals>
+				                <goal>shade</goal>
+				            </goals>
+				            <configuration>
+				            	<filters>
+				                    <filter>
+					                    <excludes>
+						                    <exclude>logic/*</exclude>
+						                    <exclude>server/*</exclude>
+						                    <exclude>log4j.properties</exclude>
+						                    <exclude>config.properties</exclude>
+						                    <exclude>jdbc.properties</exclude>
+						                    <exclude>applicationContext.xml</exclude>
+						                </excludes>
+					                </filter>
+				                </filters>
+				            	<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer"> 
+                     					 <mainClass>com.lodogame.ldsg.server.LogicServer</mainClass> 
+				                   </transformer>
+				                <transformers>
+				                    <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+				                        <resource>META-INF/spring.handlers</resource>
+				                    </transformer>
+				                    <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+				                        <resource>META-INF/spring.schemas</resource>
+				                    </transformer>
+				                </transformers>
+				            </configuration>
+				        </execution>
+				    </executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.lodogame.game</groupId>
+			<artifactId>game-server</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.lodogame.ldsg</groupId>
+			<artifactId>game-service</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>6.8</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<repositories>
+		<repository>
+			<id>local</id>
+			<name>local Repository</name>
+			<url>http://203.195.190.162:8081/nexus/content/repositories/thirdparty/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>snapshot</id>
+			<name>snapshots Repository</name>
+			<url>http://203.195.190.162:8081/nexus/content/repositories/snapshots/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+	</repositories>
+</project>

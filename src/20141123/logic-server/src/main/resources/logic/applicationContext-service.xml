@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	 	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	 	http://www.springframework.org/schema/aop 
+	 	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+     	http://www.springframework.org/schema/tx 
+     	http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<bean id="userService" class="com.lodogame.ldsg.service.impl.UserServiceImpl" scope="singleton">
+		<property name="bossService" ref="bossService"></property>
+	</bean>
+	<bean id="heroService" class="com.lodogame.ldsg.service.impl.HeroServiceImpl" scope="singleton"></bean>
+	<bean id="equipService" class="com.lodogame.ldsg.service.impl.EquipServiceImpl" scope="singleton"></bean>
+	<bean id="sceneService" class="com.lodogame.ldsg.service.impl.SceneServiceImpl" scope="singleton"></bean>
+	<bean id="forcesService" class="com.lodogame.ldsg.service.impl.ForcesServiceImpl" scope="singleton"></bean>
+	<bean id="battleService" class="com.lodogame.ldsg.service.impl.BattleServiceImpl" scope="singleton" init-method="init">
+		<property name="executer" ref="taskExecutor"></property>
+	</bean>
+	<bean id="taskService" class="com.lodogame.ldsg.service.impl.TaskServiceImpl" scope="singleton"></bean>
+	<bean id="tavernService" class="com.lodogame.ldsg.service.impl.TavernServiceImpl" scope="singleton"></bean>
+	<bean id="toolService" class="com.lodogame.ldsg.service.impl.ToolServiceImpl" scope="singleton"></bean>
+	<bean id="goldSetService" class="com.lodogame.ldsg.service.impl.GoldSetServiceImpl" scope="singleton"></bean>
+	<bean id="activityService" class="com.lodogame.ldsg.service.impl.ActivityServiceImpl" scope="singleton"></bean>
+	<bean id="messageService" class="com.lodogame.ldsg.service.impl.MessageServiceImpl" scope="singleton"></bean>
+
+	<bean id="pkService" class="com.lodogame.ldsg.service.impl.PkServiceImpl" scope="singleton" init-method="init">
+		<property name="userPkInfoDao" ref="userPkInfoDao"></property>
+		<property name="userPkInfoDaoRedisImpl" ref="userPkInfoDaoRedisImpl"></property>
+		<property name="rankScoreCfgDao" ref="rankScoreCfgDaoCacheImpl"></property>
+		<property name="pkAwardDao" ref="pkAwardDaoCacheImpl"></property>
+	</bean>
+
+	<bean id="rankService" class="com.lodogame.ldsg.service.impl.RankServiceImpl" scope="singleton"></bean>
+
+	<bean id="mallService" class="com.lodogame.ldsg.service.impl.MallServiceImpl" scope="singleton"></bean>
+
+	<bean id="vipService" class="com.lodogame.ldsg.service.impl.VipServiceImpl" scope="singleton"></bean>
+
+	<bean id="activityTaskService" class="com.lodogame.ldsg.service.impl.ActivityTaskServiceImpl" scope="singleton"></bean>
+
+	<bean id="unSynLogService" class="com.lodogame.ldsg.service.impl.UnSynLogServiceImpl"></bean>
+
+	<bean id="bossService" class="com.lodogame.ldsg.service.impl.BossServiceImpl" init-method="init"></bean>
+
+	<bean id="towerService" class="com.lodogame.ldsg.service.impl.TowerServiceImpl" init-method="init"></bean>
+
+	<bean id="arenaService" class="com.lodogame.ldsg.service.impl.ArenaServiceImpl" init-method="init"></bean>
+
+	<bean id="mailService" class="com.lodogame.ldsg.service.impl.MailServiceImpl"></bean>
+
+	<bean id="activityDrawService" class="com.lodogame.ldsg.service.impl.ActivityDrawServiceImpl" scope="singleton"></bean>
+
+	<bean id="eventService" class="com.lodogame.ldsg.service.impl.EventServiceImpl" scope="singleton" init-method="init"></bean>
+
+	<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="8" />
+		<property name="maxPoolSize" value="128" />
+		<property name="queueCapacity" value="102400" />
+	</bean>
+	
+	<bean id="contestService" class="com.lodogame.ldsg.service.impl.ContestServiceImpl" scope="singleton" init-method="init"></bean>
+	
+	<bean id="warService" class="com.lodogame.ldsg.service.impl.WarServiceImpl" init-method="init"></bean>
+	
+	<bean id="deifyService" class="com.lodogame.ldsg.service.impl.DeifyServiceImpl" init-method="init"></bean>
+	<bean id="chatService" class="com.lodogame.ldsg.service.impl.ChatServiceImpl"></bean>
+	<bean id="factionService" class="com.lodogame.ldsg.service.impl.FactionServiceImpl"></bean>
+</beans>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="userDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.UserDaoRedisImpl">
+	</bean>
+
+	<bean id="userEquipDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.UserEquipDaoRedisImpl">
+	</bean>
+
+	<bean id="userForcesDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.UserForcesDaoRedisImpl">
+	</bean>
+
+	<bean id="userHeroDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.UserHeroDaoRedisImpl">
+	</bean>
+
+	<bean id="systemHeroDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.SystemHeroDaoRedisImpl">
+	</bean>
+
+	<bean id="systemEquipDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.SystemEquipDaoRedisImpl">
+	</bean>
+
+	<bean id="systemTaskDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.SystemTaskDaoRedisImpl">
+	</bean>
+
+	<bean id="systemUserLevelDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.SystemUserLevelDaoRedisImpl">
+	</bean>
+
+	<bean id="systemForcesDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.SystemForcesDaoRedisImpl">
+	</bean>
+
+	<bean id="systemHeroSkillDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.SystemHeroSkillDaoRedisImpl">
+	</bean>
+
+	<bean id="systemForcesMonsterDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.SystemForcesMonsterDaoRedisImpl">
+	</bean>
+
+	<bean id="systemMailDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.SystemMailDaoRedisImpl">
+	</bean>
+
+	<bean id="commandDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.CommandDaoRedisImpl">
+	</bean>
+
+	<bean id="userPkInfoDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.UserPkInfoDaoRedisImpl">
+	</bean>
+
+	<bean id="rankScoreCfgDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.RankScoreCfgDaoRedisImpl">
+	</bean>
+
+	<bean id="pkAwardDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.PkAwardDaoRedisImpl">
+	</bean>
+
+	<bean id="rankLogDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.RankLogDaoRedisImpl">
+	</bean>
+
+	<bean id="userSweepInfoDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.UserSweepInfoDaoRedisImpl">
+	</bean>
+	<!-- 用户扩展信息缓存 -->
+	<bean id="userExtinfoDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.UserExtinfoDaoRedisImpl"></bean>
+	<!-- 用户活跃度信息缓存 -->
+	<bean id="userActivityTaskDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.UserActivityTaskDaoRedisImpl"></bean>
+	<!-- 用户大关卡缓存 -->
+	<bean id="userSceneDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.UserSceneDaoRedisImpl"></bean>
+	<!-- 用户任务缓存 -->
+	<bean id="userTaskDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.UserTaskDaoRedisImpl"></bean>
+	<!-- 用户礼包表 -->
+	<bean id="userGiftbagDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.UserGiftbagDaoRedisImpl"></bean>
+	<!-- 异步运营日志队列 -->
+	<bean id="logOperatorDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.LogOperatorDaoRedisImpl"></bean>
+	<!-- 用户商城日志缓存 -->
+	<bean id="userMallLogDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.UserMallLogDaoRedisImpl"></bean>
+	<!-- 用户抽将信息缓存 -->
+	<bean id="userTavernDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.UserTavernDaoRedisImpl"></bean>
+	<!-- 用户道具缓存 -->
+	<bean id="userToolDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.UserToolDaoRedisImpl"></bean>
+	<!-- 用户每日获得道具数量缓存 -->
+	<bean id="userDailyGainLogDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.UserDailyGainLogDaoRedisImpl"></bean>
+	<!-- 契约英雄兑换缓存 -->
+	<bean id="userHeroExchangeDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.UserHeroExchangeDaoRedisImpl"></bean>
+
+	<bean id="partnerConfigDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.PartnerConfigDaoRedisImpl"></bean>
+
+	<bean id="userMallInfoDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.UserMallInfoDaoRedisImpl"></bean>
+	<bean id="userMonthlyCardTaskDaoRedisImpl" class="com.lodogame.game.dao.impl.redis.UserMonthlyCardTaskDaoRedisImpl"></bean>
+</beans>

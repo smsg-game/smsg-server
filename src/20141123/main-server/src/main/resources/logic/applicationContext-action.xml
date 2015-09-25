@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	 	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	<bean id="serverConnect" class="com.lodogame.game.server.action.ServerConnectAction" scope="prototype"></bean>
+	<bean id="User" class="com.lodogame.ldsg.action.UserAction" scope="prototype"></bean>
+	<bean id="Hero" class="com.lodogame.ldsg.action.HeroAction" scope="prototype"></bean>
+	<bean id="Equipment" class="com.lodogame.ldsg.action.EquipmentAction" scope="prototype"></bean>
+	<bean id="Scene" class="com.lodogame.ldsg.action.SceneAction" scope="prototype"></bean>
+	<bean id="Battle" class="com.lodogame.ldsg.action.BattleAction" scope="prototype"></bean>
+	<bean id="Embattle" class="com.lodogame.ldsg.action.EmbattleAction" scope="prototype"></bean>
+	<bean id="Task" class="com.lodogame.ldsg.action.TaskAction" scope="prototype"></bean>
+	<bean id="Tavern" class="com.lodogame.ldsg.action.TavernAction" scope="prototype"></bean>
+	<bean id="Pk" class="com.lodogame.ldsg.action.PkAction" scope="prototype"></bean>
+	<bean id="System" class="com.lodogame.ldsg.action.SystemAction" scope="prototype"></bean>
+	<bean id="Stat" class="com.lodogame.ldsg.action.StatAction" scope="prototype"></bean>
+	<bean id="Rank" class="com.lodogame.ldsg.action.RankAction" scope="prototype"></bean>
+	<bean id="Activity" class="com.lodogame.ldsg.action.ActivityAction" scope="prototype"></bean>
+	<bean id="ActivityDraw" class="com.lodogame.ldsg.action.ActivityDrawAction" scope="prototype"></bean>
+	<bean id="Tool" class="com.lodogame.ldsg.action.ToolAction" scope="prototype"></bean>
+	<bean id="Mall" class="com.lodogame.ldsg.action.MallAction" scope="prototype"></bean>
+	<bean id="Tower" class="com.lodogame.ldsg.action.TowerAction" scope="prototype"></bean>
+	<bean id="Boss" class="com.lodogame.ldsg.action.BossAction" scope="prototype"></bean>
+	<bean id="Arena" class="com.lodogame.ldsg.action.ArenaAction" scope="prototype"></bean>
+	<bean id="Email" class="com.lodogame.ldsg.action.MailAction" scope="prototype"></bean>
+	<bean id="Contest" class="com.lodogame.ldsg.action.ContestAction" scope="prototype"></bean>
+	<bean id="War" class="com.lodogame.ldsg.action.WarAction" scope="prototype"></bean>
+	<bean id="Deify" class="com.lodogame.ldsg.action.DeifyAction" scope="prototype"></bean>
+	<bean id="Chat" class="com.lodogame.ldsg.action.ChatAction" scope="prototype"></bean>
+	<bean id="Faction" class="com.lodogame.ldsg.action.FactionAction" scope="prototype"></bean>
+</beans>

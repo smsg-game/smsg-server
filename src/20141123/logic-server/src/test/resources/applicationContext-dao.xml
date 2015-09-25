@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<bean id="userDao" class="com.lodogame.game.dao.impl.cache.UserDaoCacheImpl">
+	</bean>
+
+	<bean id="systemHeroDao" class="com.lodogame.game.dao.impl.cache.SystemHeroDaoCacheImpl">
+	</bean>
+
+	<bean id="systemUserLevelDao" class="com.lodogame.game.dao.impl.cache.SystemUserLevelDaoCacheImpl">
+	</bean>
+
+
+</beans>

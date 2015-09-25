@@ -1,0 +1,1 @@
+sudo -u content java -Dfile.encoding=utf-8 -Duser.language=en -Duser.country=US -cp .:/data/config/command:/data/deploy/logic-server.jar:/data/config/logic-server/ $1 

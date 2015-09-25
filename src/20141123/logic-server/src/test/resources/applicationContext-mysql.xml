@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<!-- user dao start -->
+
+	<bean id="userDaoMysqlImpl" class="com.lodogame.game.dao.impl.mysql.UserDaoMysqlImpl">
+	</bean>
+
+	<bean id="userHeroDaoMysqlImpl" class="com.lodogame.game.dao.impl.mysql.UserHeroDaoMysqlImpl">
+	</bean>
+
+	<bean id="userEquipDaoMysqlImpl" class="com.lodogame.game.dao.impl.mysql.UserEquipDaoMysqlImpl">
+	</bean>
+
+	<bean id="userSceneDaoMysqlImpl" class="com.lodogame.game.dao.impl.mysql.UserSceneDaoMysqlImpl">
+	</bean>
+
+	<bean id="userForcesDaoMysqlImpl" class="com.lodogame.game.dao.impl.mysql.UserForcesDaoMysqlImpl">
+	</bean>
+
+	<bean id="userToolDaoMysqlImpl" class="com.lodogame.game.dao.impl.mysql.UserToolDaoMysqlImpl">
+	</bean>
+
+	<bean id="logDaoMysqlImpl" class="com.lodogame.game.dao.impl.mysql.LogDaoMysqlImpl">
+	</bean>
+
+	<bean id="userTaskDaoMysqlImpl" class="com.lodogame.game.dao.impl.mysql.UserTaskDaoMysqlImpl">
+	</bean>
+
+	<bean id="userTavernDaoMysqlImpl" class="com.lodogame.game.dao.impl.mysql.UserTavernDaoMysqlImpl">
+	</bean>
+
+
+
+	<!-- user dao end -->
+
+	<bean id="systemEquipDaoMysqlImpl" class="com.lodogame.game.dao.impl.mysql.SystemEquipDaoMysqlImpl">
+	</bean>
+
+	<bean id="systemHeroDaoMysqlImpl" class="com.lodogame.game.dao.impl.mysql.SystemHeroDaoMysqlImpl">
+	</bean>
+
+	<bean id="systemHeroUpgradeDaoMysqlImpl" class="com.lodogame.game.dao.impl.mysql.SystemHeroUpgradeDaoMysqlImpl">
+	</bean>
+
+	<bean id="systemLevelExpDaoMysqlImpl" class="com.lodogame.game.dao.impl.mysql.SystemLevelExpDaoMysqlImpl">
+	</bean>
+
+	<bean id="systemHeroUpgradeToolDaoMysqlImpl" class="com.lodogame.game.dao.impl.mysql.SystemHeroUpgradeToolDaoMysqlImpl">
+	</bean>
+
+	<bean id="systemForcesMonsterDaoMysqlImpl" class="com.lodogame.game.dao.impl.mysql.SystemForcesMonsterDaoMysqlImpl">
+	</bean>
+
+	<bean id="systemMonsterDaoMysqlImpl" class="com.lodogame.game.dao.impl.mysql.SystemMonsterDaoMysqlImpl">
+	</bean>
+
+	<bean id="systemTaskDaoMysqlImpl" class="com.lodogame.game.dao.impl.mysql.SystemTaskDaoMysqlImpl">
+	</bean>
+
+	<bean id="tavernDropToolDaoMysqlImpl" class="com.lodogame.game.dao.impl.mysql.TavernDropToolDaoMysqlImpl">
+	</bean>
+
+	<bean id="systemSceneDaoMysqlImpl" class="com.lodogame.game.dao.impl.mysql.SystemSceneDaoMysqlImpl"></bean>
+
+	<bean id="systemForcesDaoMysqlImpl" class="com.lodogame.game.dao.impl.mysql.SystemForcesDaoMysqlImpl"></bean>
+
+	<bean id="systemUserLevelDaoMysqlImpl" class="com.lodogame.game.dao.impl.mysql.SystemUserLevelDaoMysqlImpl"></bean>
+
+</beans>

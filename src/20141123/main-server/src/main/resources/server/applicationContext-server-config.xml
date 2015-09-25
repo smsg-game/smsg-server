@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	 	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<bean id="config" class="com.lodogame.game.server.context.ConfigContext">
+		<property name="ip" value="0.0.0.0"></property>
+		<property name="port" value="10000"></property>
+		<property name="supportDistributedSession" value="false"></property>
+		<property name="corePoolSize" value="256"></property>
+		<property name="encoding" value="utf-8"></property>
+		<property name="supportFlash" value="true"></property>
+		<property name="handlers" ref="handlers"></property>
+		<property name="filters" ref="filters"></property>
+		<property name="tcpNoDelay" value="true"></property>
+		<property name="keepalive" value="true"></property>
+	<property name="timeout" value="10"></property>
+	</bean>
+	
+	<bean id="heartbeatHandler" class="com.lodogame.game.server.handler.HeartbeatHandler"
+		>
+	</bean>
+	
+	<bean id="exceptionHandler" class="com.lodogame.game.server.exception.handler.DefaultExceptionHandler"
+		scope="prototype"></bean>
+	
+	<bean id="requestHandler" class="com.lodogame.game.server.RequestHandler"
+		scope="prototype"></bean> 
+
+	<bean id="policyRequestFilterHandler" class="com.lodogame.game.server.handler.PolicyRequestFilterHandler"></bean>
+	
+	<bean id="lengthFieldDecoder" class="org.jboss.netty.handler.codec.frame.LengthFieldBasedFrameDecoder" scope="prototype">
+		<constructor-arg index="0">
+			<value>1048576</value>
+		</constructor-arg>
+		<constructor-arg index="1">
+			<value>0</value>
+		</constructor-arg>
+		<constructor-arg index="2">
+			<value>4</value>
+		</constructor-arg>
+		<constructor-arg index="3">
+			<value>0</value>
+		</constructor-arg>
+		<constructor-arg index="4">
+			<value>4</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="lengthFieldPrepender" class="org.jboss.netty.handler.codec.frame.LengthFieldPrepender" scope="prototype">
+		<constructor-arg index="0">
+			<value>4</value>
+		</constructor-arg>
+	</bean>
+	<bean id="fixedLengthFrameDecoder" class="org.jboss.netty.handler.codec.frame.FixedLengthFrameDecoder" scope="prototype">
+		<constructor-arg index="0">
+			<value>4</value>
+		</constructor-arg>
+	</bean>
+	<bean id="jsonDecoder" class="com.lodogame.game.server.handler.json.JsonDecoder" scope="prototype"></bean>
+	<bean id="closeServerHandler" class="com.lodogame.game.server.handler.CloseServerHandler"></bean>
+	<bean id="handlers" class="com.lodogame.game.server.context.HandlerContext">
+		<property name="handlers">
+			<list>
+				<!-- <value>policyRequestFilterHandler</value>  -->
+				<!-- <value>amf3Decoder</value>  -->
+				<value>closeServerHandler</value>
+				<value>lengthFieldDecoder</value>
+				<value>heartbeatHandler</value>
+				<value>jsonDecoder</value>
+				<value>requestHandler</value> 
+				<!-- <value>lengthFieldPrepender</value>-->
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="filters" class="com.lodogame.game.server.context.FilterContext">
+		<property name="filters">
+			<list>
+				<bean id="loginFilter" class="com.lodogame.ldsg.filter.LoginFilter"
+					init-method="init" destroy-method="destroy">
+					<property name="exceptAction">
+						<list>
+							<value>login</value>
+							<value>reLogin</value>
+							<value>connect</value>
+							<value>checkOnline</value>
+							<value>log</value>
+							<value>ack</value>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<!-- 
+	<bean id="connector1" class="com.lodogame.game.server.context.ClientConfigContext">
+		<property name="ip" value="127.0.0.1"></property>
+		<property name="port" value="8888"></property>
+		<property name="supportDistributedSession" value="false"></property>
+		<property name="encoding" value="utf-8"></property>
+		<property name="supportFlash" value="true"></property>
+		<property name="handlers" ref="handlers"></property>
+		<property name="filters" ref="filters"></property>
+		<property name="tcpNoDelay" value="true"></property>
+		<property name="keepalive" value="true"></property>
+		<property name="serverType" value="logic"></property>
+	</bean>
+	
+	<bean id="connector2" class="com.lodogame.game.server.context.ClientConfigContext">
+		<property name="ip" value="127.0.0.1"></property>
+		<property name="port" value="8888"></property>
+		<property name="supportDistributedSession" value="false"></property>
+		<property name="encoding" value="utf-8"></property>
+		<property name="supportFlash" value="true"></property>
+		<property name="handlers" ref="handlers"></property>
+		<property name="filters" ref="filters"></property>
+		<property name="tcpNoDelay" value="true"></property>
+		<property name="keepalive" value="true"></property>
+		<property name="serverType" value="logic"></property>
+	</bean>
+	 -->
+</beans>

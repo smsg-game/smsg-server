@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="pushHandler" class="com.lodogame.ldsg.handler.PushHandlerImpl">
+	</bean>
+
+	<bean id="arenaPushHandler" class="com.lodogame.ldsg.handler.impl.ArenaPushHandlerImpl">
+	</bean>
+
+	<bean id="bossPushHandler" class="com.lodogame.ldsg.handler.impl.BossPushHandlerImpl">
+	</bean>
+
+	<bean id="warPushHandler" class="com.lodogame.ldsg.handler.impl.WarPushHandlerImpl">
+	</bean>
+
+	<bean id="userCommandHandler" class="com.lodogame.ldsg.handler.impl.UserCommandHandlerImpl" init-method="init">
+	</bean>
+
+	<bean id="bossCommandHandler" class="com.lodogame.ldsg.handler.impl.BossCommandHandlerImpl" init-method="init">
+	</bean>
+
+	<bean id="arenaCommandHandler" class="com.lodogame.ldsg.handler.impl.ArenaCommandHandlerImpl" init-method="init">
+	</bean>
+
+	<bean id="sysCommandHandler" class="com.lodogame.ldsg.handler.impl.SysCommandHandlerImpl" init-method="init">
+	</bean>
+
+	<bean id="warCommandHandler" class="com.lodogame.ldsg.handler.impl.WarCommandHandlerImpl" init-method="init">
+	</bean>
+
+	<bean id="loginEventHandle" class="com.lodogame.ldsg.handler.event.LoginEventHandle" init-method="init">
+	</bean>
+	
+	<bean id="deifyEventHandle" class="com.lodogame.ldsg.handler.event.DeifyEventHandle" init-method="init">
+	</bean>
+
+	<bean id="dropHeroEventHandle" class="com.lodogame.ldsg.handler.event.DropHeroEventHandle" init-method="init">
+	</bean>
+
+	<bean id="vipLevelEventHandle" class="com.lodogame.ldsg.handler.event.VipLevelEventHandle" init-method="init">
+	</bean>
+
+	<bean id="arenaEventHandle" class="com.lodogame.ldsg.handler.event.ArenaEventHandle" init-method="init">
+	</bean>
+
+	<bean id="heroTowerEventHandle" class="com.lodogame.ldsg.handler.event.HeroTowerEventHandle" init-method="init">
+	</bean>
+
+	<bean id="sceneEventHandle" class="com.lodogame.ldsg.handler.event.SceneEventHandle" init-method="init">
+	</bean>
+
+	<bean id="toolDropEventHandle" class="com.lodogame.ldsg.handler.event.ToolDropEventHandle" init-method="init">
+	</bean>
+	<bean id="UserLevelUpEventhandle" class="com.lodogame.ldsg.handler.event.UserLevelUpEventHandle" init-method="init"></bean>
+
+	<bean id="pkFightEventHandle" class="com.lodogame.ldsg.handler.event.PkFightEventHandle" init-method="init"></bean>
+
+	<bean id="logoutEventHandle" class="com.lodogame.ldsg.handler.event.LogoutEventHandle" init-method="init"></bean>
+
+	<bean id="warEventHandle" class="com.lodogame.ldsg.handler.event.WarEventHandle" init-method="init"></bean>
+
+	<bean id="heroLogHandle" class="com.lodogame.ldsg.handler.log.HeroLogHandlerImpl" init-method="init"></bean>
+
+	<bean id="userLevelUpLogHandle" class="com.lodogame.ldsg.handler.log.UserLevelUpLogHandlerImpl" init-method="init"></bean>
+
+	<bean id="worker" class="com.lodogame.ldsg.handler.Worker" init-method="init" lazy-init="false" scope="singleton">
+	</bean>
+	<bean id="contestCommandHandler" class="com.lodogame.ldsg.handler.impl.ContestCommandHandlerImpl" init-method="init"></bean>
+	<bean id="contestPushHandler" class="com.lodogame.ldsg.handler.impl.ContestPushHandlerImpl"></bean>
+	<bean id="deifyCommandHandler" class="com.lodogame.ldsg.handler.impl.DeifyCommandHandlerImpl" init-method="init"></bean>
+	<bean id="deifyPushHandler" class="com.lodogame.ldsg.handler.impl.DeifyPushHandlerImpl"></bean>
+	<!-- 异步插入运营日志线程池 -->
+	<bean id="logOperatorExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="10" />
+		<property name="maxPoolSize" value="50" />
+		<property name="queueCapacity" value="102400" />
+	</bean>
+	<bean id="logOperatorHandlerImpl" class="com.lodogame.ldsg.handler.LogOperatorHandlerImpl" init-method="init" lazy-init="false" scope="singleton"></bean>
+	<bean id="chatCommandHandler" class="com.lodogame.ldsg.handler.impl.ChatCommandHandlerImpl" init-method="init"></bean>
+	<bean id="factionCommandHandler" class="com.lodogame.ldsg.handler.impl.FactionCommandHandlerImpl" init-method="init"></bean>
+	<bean id="factionPushHandler" class="com.lodogame.ldsg.handler.impl.FactionPushHandlerImpl">
+	</bean>
+</beans>
