@@ -71,20 +71,6 @@
       </plugins>
     </pluginManagement>
   </build>
-  <repositories>
-    <repository>
-      <releases />
-      <id>local</id>
-      <name>local Repository</name>
-      <url>http://203.195.190.162:8081/nexus/content/repositories/thirdparty/</url>
-    </repository>
-    <repository>
-      <releases />
-      <id>snapshot</id>
-      <name>snapshots Repository</name>
-      <url>http://203.195.190.162:8081/nexus/content/repositories/snapshots/</url>
-    </repository>
-  </repositories>
   <dependencies>
     <dependency>
       <groupId>org.testng</groupId>
