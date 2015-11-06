@@ -1,0 +1,15 @@
+{% load common_extras %}
+<td>服务器:</td>
+<td>
+    <select id="server_id" name="server_id">
+	 <option value="">请选择服务器</option>
+	 {% for zone, server_list in server_list_map.items%}   
+	    <option value="" style="background: #F0F9FF;font-weight:bold;">├{{ zone|server_zone_name }}</option>
+	    {% for server in server_list %}
+	      <option value="{{ server.server_id }}" {%ifequal server.server_id server_id %}selected=selected{%endifequal%}>
+	         │&nbsp;&nbsp;├{{ server.server_id }}-{{ server.server_name }}
+	      </option>
+	    {% endfor %}
+	 {% endfor %}
+	 </select>
+</td>

@@ -1,0 +1,9 @@
+55 23 * * * /data/apps/ldsg_admin/ldsg_admin/shell/stat_user_level.sh
+1 0 * * * /data/apps/ldsg_admin/ldsg_admin/shell/stat_user_level_rank.sh
+5 0 * * * /data/apps/ldsg_admin/ldsg_admin/shell/stat_max_online.sh
+50 23 * * * /data/apps/ldsg_admin/ldsg_admin/shell/stat_server_data.sh
+50 23 * * * /data/apps/ldsg_admin/ldsg_admin/shell/liucun_server_data.sh
+*/1 * * * * /data/apps/ldsg_admin/ldsg_admin/shell/notice_sender.sh
+1 0 * * * /data/apps/ldsg_admin/ldsg_admin/shell/backup.sh
+1 0 * * * /data/apps/ldsg_admin/ldsg_admin/shell/online_merge.sh
+30 3 * * * /data/apps/ldsg_admin/ldsg_admin/shell/tool_use_stat.sh

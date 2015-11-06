@@ -1,0 +1,129 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+     
+  service = new rpc.ServiceProxy("/services/admin/", {asynchronous:false, methods: ['add_page', ]});
+       
+  $(document).ready(function(){
+  
+	  genPageLinks({{total}}, {{pagesize}});
+	
+	  $('input.add').click(function(){
+     
+         $('#page_id').val(0);
+         $('#name').val("");
+		 
+         $("#add_dialog").show().dialog({
+		     height: 180, width: 380, modal: true,
+	         title: '添加页面',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             }
+	     });
+	  });
+	  
+	 $('a.delete').click(function(){
+     
+         var id = $(this).parent().parent().attr('id');
+         var partner_id = $(this).parent().parent().attr('partner_id');
+         var name = $(this).parent().parent().attr('name');
+
+	      if(confirm("确定删除页面“" + name + "-" + partner_id + "”?")){
+		    try{
+		       service.delete_partner(partner_id);
+	           window.location.reload() ;
+			}catch(e){
+			   alert(e.message);
+			}
+	      }
+	  });
+	  
+	  $('a.edit').click(function(){
+     
+         var page_id = $(this).parent().parent().attr('page_id');
+         var name = $(this).parent().parent().attr('name');
+         
+         $('#page_id').val(page_id);
+		 $('#name').val(name);
+
+	     $("#add_dialog").show().dialog({
+		     height: 180, width: 380, modal: true,
+	         title: '修改页面',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             }
+	     });
+	  });
+	  
+	  
+	  
+    $('#add_form input.button').click(function(){
+		var page_id = $('#page_id').val();
+		var name = $('#name').val();
+
+        if(!name){
+	        alert("请输入页面名称");
+	    }else{
+		    try{
+		       service.add_page(page_id, name);
+	           window.location.reload() ;
+			}catch(e){
+			   alert(e.message);
+			}
+	    }
+	});
+	  
+  });
+  
+</script>
+{% endblock %}
+{% block title %}页面列表{% endblock %}
+{% block content %}
+<input type="button" class="add" value="添加页面"/>
+<br/>
+<table cellspacing="1" class="tablesorter">
+  <thead>
+    <th>页面ID</th>
+    <th>页面名称</th>
+    <th>创建时间</th>
+    <th>操作</th>
+  </thead>
+  <tbody>
+    {% if infos %}
+      {% for info in infos %}
+       <tr page_id="{{ info.page_id }}" name="{{ info.name }}">
+         <td>{{ info.page_id }}</td>
+         <td>{{ info.name}}</td>
+         <td>{{ info.created_time}}</td>
+         <td>
+            <a href="#" class="edit">编辑</a>
+            |
+            <a href="#" class="delete">删除</a>
+         </td>
+       </tr>
+      {% endfor %}
+    {% endif %}
+     <tr style="display:none"><td id="pageLink" colspan="12"></td></tr>
+  </tbody>
+</table>
+<div id="add_dialog" class="flora" style="display: none;">
+    <form id="add_form" class="margin-top-10">
+        <input id="page_id" type="hidden"/>
+	    <p>
+    		<label>页面名称:</label>
+			<span><input id="name" type="text" size="40"/></span>
+	    </p> 
+	    <p>
+	    <br/>
+		<input class="button" type="button" value="提交" />
+    </form>
+</div>
+{% endblock %}

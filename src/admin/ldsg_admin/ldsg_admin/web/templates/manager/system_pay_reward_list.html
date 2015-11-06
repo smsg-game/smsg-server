@@ -1,0 +1,211 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+     
+  service = new rpc.ServiceProxy("/services/activity/", {asynchronous:false, methods: ['add_system_pay_reward', ]});
+       
+  $(document).ready(function(){
+  
+	  genPageLinks({{total}}, {{pagesize}});
+	
+	  $('input.add').click(function(){
+     
+         $('#id').val(0);
+         $('#name').val("");
+         
+         $("#add_form input:checkbox").each(function(){
+			$(this).attr("checked", false);
+		 })
+
+	     $("#add_dialog").show().dialog({
+		     height: 460, width: 920, modal: true,
+	         title: '添加{{name}}配置',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             }
+	     });
+	  });
+	  
+	 $('a.detail').click(function(){
+     
+         var rid = $(this).parent().parent().attr('id');
+         var url = "{% url system-pay-reward-detail-list %}?rid=" + rid;
+		 window.location = url;
+	 });
+	 
+	 $('a.deploy').click(function(){
+     
+         var rid = $(this).parent().parent().attr('id');
+         var url = "{% url system-pay-reward-sync %}?rid=" + rid
+		 window.location = url;
+	 });
+	 
+	  $('.check_all').change(function(){
+     
+          var zone = $(this).val();
+     
+		  if($(this).attr("checked")){
+		      
+		       $(".check_" + zone).each(function(){
+		          $(this).attr("checked", "checked");
+		       })
+		      
+		  }else{
+		    
+		       $(".check_" + zone).each(function(){
+		          $(this).attr("checked", "");
+		       })
+		  }
+         
+	  });
+	  
+	  $('a.edit').click(function(){
+     
+         var id = $(this).parent().parent().attr('id');
+         var name = $(this).parent().parent().attr('name');
+         var server_ids = $(this).parent().parent().attr('server_ids');
+
+         $('#id').val(id);
+         $('#name').val(name);
+         
+         
+         $("#add_form input:checkbox").each(function(){
+            var value = $(this).val();
+			if(server_ids.indexOf(value) != -1 ){
+				$(this).attr("checked", "checked");
+			}else{
+			    $(this).attr("checked", "");
+			}
+		})
+         
+         
+	     $("#add_dialog").show().dialog({
+		     height: 460, width: 920, modal: true,
+	         title: '修改{{name}}活动',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             }
+	     });
+	  });
+	  
+	  $('#show_all').change(function(){
+	 
+	     var all = 0;
+	     if($(this).attr("checked")){
+	        all = 1;
+	     }
+	     
+	     {% ifequal reward_type 1 %}
+	        var url = "{% url system-pay-reward-once-list %}?all=" + all;
+		 {% else %}
+	        var url = "{% url system-pay-reward-total-list %}?all=" + all;
+	     {% endifequal %}
+	     window.location = url;
+	 });
+	  
+    $('#add_form input.button').click(function(){
+		var id = $('#id').val();
+		var name = $('#name').val();
+		var reward_type = $('#reward_type').val();
+		var server_ids = "";
+		
+		$("#add_form input:checkbox").each(function(){
+		
+		    if(!$(this).hasClass("check_all")){
+
+		    	if($(this).attr("checked")){
+					var values = $(this).val();
+					if(!server_ids){
+					    server_ids = values;
+					}else{
+					    server_ids = server_ids + "," + values;
+					}
+				}
+				
+			}
+		})
+   
+        if(!name){
+		   alert("请输入配置名称");
+	    }else if(!server_ids){
+	       alert("至少选择一个服务器 ");
+	    }else{
+		    try{
+		       var ret_val = service.add_system_pay_reward(id, name, reward_type, server_ids);
+	           if(ret_val == -1){
+	              alert("没有正式服权限!");
+	           }else{
+	              window.location.reload() ;
+	           }
+			}catch(e){
+			   alert(e.message);
+			}
+	    }
+	});
+	  
+  });
+  
+</script>
+{% endblock %}
+{% block title %}{{name}}充值配置列表{% endblock %}
+{% block content %}
+<input type="button" class="add" value="创建新的{{name}}配置"/>
+<span>显示所有: <input type="checkbox" value="all" id="show_all" {% ifequal show_all 1 %}checked{% endifequal %}/></span><br/>
+<input type="hidden" id="reward_type" value="{{reward_type}}"/>
+<table cellspacing="1" class="tablesorter">
+  <thead>
+    <th>ID</th>
+    <th>配置名称</th>
+    <th>服务器列表</th>
+    <th>创建人</th>
+    <th>创建时间</th>
+    <th>更新时间</th>
+    <th>操作</th>
+  </thead>
+  <tbody>
+    {% if infos %}
+      {% for info in infos %}
+       <tr id="{{ info.id }}" name="{{ info.name }}" server_ids="{{info.server_ids}}" >
+         <td>{{ info.id }}</td>
+         <td>{{ info.name}}</td>
+         <td>{{ info.server_ids }}</td>
+         <td>{{ info.created_user_name }}</td>
+         <td>{{ info.created_time }}</td>
+         <td>{{ info.updated_time }}</td>
+         <td>
+            <a href="#" class="edit">编辑</a>
+            |
+            <a href="#" class="detail">充值配置项设置</a>
+            |
+            <a href="#" class="deploy">发布到游戏服</a>
+         </td>
+       </tr>
+      {% endfor %}
+    {% endif %}
+     <tr style="display:none"><td id="pageLink" colspan="12"></td></tr>
+  </tbody>
+</table>
+<div id="add_dialog" class="flora" style="display: none;">
+    <form id="add_form" class="margin-top-10">
+        <input id="id" type="hidden"/>
+	    <p>
+    		<label>{{name}}充值名称:</label>
+			<span><input id="name" type="text" size="50"/></span>
+	    </p>
+	    <p>
+            <label>服务器选择:</label>
+    		{% include "inc/server_checkbox_sample.html" %}
+	    </p> 
+	    <br/>
+		<input class="button" type="button" value="提交" />
+    </form>
+</div>
+{% endblock %}

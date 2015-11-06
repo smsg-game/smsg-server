@@ -1,0 +1,42 @@
+{% extends "master.html" %}
+{% block title %}服务器留存{% endblock %}
+{% block head_ext %}
+{% endblock %}
+{% block content %}
+	<table class="tablesorter">
+		<thead>
+			<th>服务器</th>
+			<th>首日登陆数</th>
+			<th>次日留存</th>
+			<th>3日登录留存</th>
+			<th>4日留存</th>
+			<th>5日留存</th>
+			<th>6日留存</th>
+			<th>7日留存</th>
+			<th>15日留存</th>
+			<th>30日留存</th>
+		</thead>
+		<tbody>
+			{% if stats %}
+				{% for stat in stats %}
+				<tr>
+					<td>{{ stat.server_name }}[{{stat.server_id}}]</td>
+					<td>{{ stat.one_user }}</td>
+					<td>{{ stat.two_user }}%</td>
+					<td>{{ stat.three_user }}%</td>
+					<td>{{ stat.four_user }}%</td>
+					<td>{{ stat.five_user }}%</td>
+					<td>{{ stat.six_user }}%</td>
+					<td>{{ stat.seven_user }}%</td>
+					<td>{{ stat.fivteen_user }}%</td>
+					<td>{{ stat.thirty_user }}%</td>
+				</tr>
+				{% endfor %}
+		    {% else %}
+		          <tr style="display:none"><td id="pageLink" colspan="10"></td></tr>	
+		    {% endif %}
+		</tbody>
+	</table>
+</body>
+</html>
+{% endblock %}

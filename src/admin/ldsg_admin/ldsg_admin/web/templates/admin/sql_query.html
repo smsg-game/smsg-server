@@ -1,0 +1,198 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+     
+  service = new rpc.ServiceProxy("/services/admin/", {asynchronous:false, methods: ['add_server', 'delete_server']});
+       
+  $(document).ready(function(){
+  
+	  genPageLinks({{total}}, {{pagesize}});
+	
+	  $('input.add').click(function(){
+     
+         $('#id').val(0);
+         $('#server_id').val("");
+		 $('#server_name').val("");
+         $('#db_connect').val("");
+         $('#redis_connect').val("");
+         $('#server_host').val("");
+     
+	     $("#add_dialog").show().dialog({
+		     height: 360, width: 430, modal: true,
+	         title: '添加服务器',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             }
+	     });
+	  });
+	  
+	 $('a.delete').click(function(){
+     
+         var id = $(this).parent().parent().attr('id');
+         var server_id = $(this).parent().parent().attr('server_id');
+         var server_name = $(this).parent().parent().attr('server_name');
+
+	      if(confirm("确定删除服务器“" + server_id + "-" + server_name + "”?")){
+		    try{
+		       service.delete_server(id);
+	           window.location.reload() ;
+			}catch(e){
+			   alert(e.message);
+			}
+	      }
+	  });
+	  
+	  $('a.edit').click(function(){
+     
+         var id = $(this).parent().parent().attr('id');
+         var server_id = $(this).parent().parent().attr('server_id');
+         var server_name = $(this).parent().parent().attr('server_name');
+         var db_connect = $(this).parent().parent().attr('db_connect');
+         var redis_connect = $(this).parent().parent().attr('redis_connect');
+         var server_status = $(this).parent().parent().attr('server_status');
+         var server_host = $(this).parent().parent().attr('server_host');
+         
+         $('#id').val(id);
+         $('#server_id').val(server_id);
+		 $('#server_name').val(server_name);
+         $('#db_connect').val(db_connect);
+         $('#redis_connect').val(redis_connect);
+         $('#server_status').val(server_status);
+         $('#server_host').val(server_host);
+     
+	     $("#add_dialog").show().dialog({
+		     height: 360, width: 430, modal: true,
+	         title: '修改服务器',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             }
+	     });
+	  });
+	  
+	  
+	  
+    $('#add_form input.button').click(function(){
+		var id = $('#id').val();
+		var server_id = $('#server_id').val();
+		var server_name = $('#server_name').val();
+        var db_connect = $('#db_connect').val();
+        var redis_connect = $('#redis_connect').val();
+        var server_status = $('#server_status').val();
+        var server_host = $('#server_host').val();
+        
+        if(!server_id){
+		   alert("请输入服务器ID");
+	    }else if(!server_name){
+	       alert("请输入服务器名称 ");
+	    }else if(!db_connect){
+	       alert("请输入数据库连接");
+	    }else if(!redis_connect){
+	       alert("请输入redis连接");   
+		}else if(!server_host){
+	       alert("请输入服务器域名");
+	    }else{
+		    try{
+		       var server_info = {};
+		       server_info['id'] = id;
+		       server_info['server_id'] = server_id;
+		       server_info['server_name'] = server_name;
+		       server_info['db_connect'] = db_connect
+		       server_info['redis_connect'] = redis_connect
+		       server_info['server_status'] = server_status
+		       server_info['server_host'] = server_host
+		       service.add_server(server_info);
+	           window.location.reload() ;
+			}catch(e){
+			   alert(e.message);
+			}
+	    }
+	});
+	  
+  });
+  
+</script>
+{% endblock %}
+{% block title %}服务器列表{% endblock %}
+{% block content %}
+<input type="button" class="add" value="添加服务器"/><br/>
+<table cellspacing="1" class="tablesorter">
+  <thead>
+    <th>ID</th>
+    <th>服务器ID</th>
+    <th>服务器名称</th>
+    <th>服务器域名</th>
+    <th>服务器状态</th>
+    <th>数据库连接</th>
+    <th>redis连接</th>
+    <th>创建时间</th>
+    <th>操作</th>
+  </thead>
+  <tbody>
+    {% if infos %}
+      {% for info in infos %}
+       <tr id="{{ info.id }}" server_id="{{ info.server_id }}" server_name="{{info.server_name}}" server_host="{{ info.server_host }}" server_status="{{info.server_status}}" db_connect="{{ info.db_connect}}" redis_connect="{{info.redis_connect}}">
+         <td>{{ info.id }}</td>
+         <td>{{ info.server_id}}</td>
+         <td>{{ info.server_name }}</td>
+         <td>{{ info.server_host }}</td>
+         <td>{{ info.server_status }}</td>
+         <td>{{ info.db_connect }}</td>
+         <td>{{ info.redis_connect }}</td>
+         <td>{{ info.created_time }}</td>
+         <td>
+            <a href="#" class="edit">编辑</a>
+            |
+            <a href="#" class="delete">删除</a>
+         </td>
+       </tr>
+      {% endfor %}
+    {% endif %}
+     <tr style="display:none"><td id="pageLink" colspan="12"></td></tr>
+  </tbody>
+</table>
+<div id="add_dialog" class="flora" style="display: none;">
+    <form id="add_form" class="margin-top-10">
+        <input id="id" type="hidden"/>
+        <p>
+    		<label>服务器ID:</label>
+			<span style="margin-left:11px;"><input id="server_id" type="text"/></span>
+	    </p>
+	    <p>
+    		<label>服务器名称:</label>
+			<span><input id="server_name" type="text" size="50"/></span>
+	    </p> 
+	    <p>
+            <label>服务器域名:</label>
+			<span><input id="server_host" type="text" size="50"/></span>
+	    </p> 
+	    <p>
+            <label>数据库连接:</label>
+			<span><input id="db_connect" type="text" size="50"/></span>
+	    </p> 
+	    <p>
+    		<label>redis连接:</label>
+			<span style="margin-left:8px;"><input id="redis_connect" type="text" size="50"/></span>
+	    </p> 
+	    <p>
+	    <label>服务器状态:</label>
+	    <span>
+	    <select id="server_status">
+			   <option value="2">火爆</option>
+			   <option value="3">最新</option>
+			   <option value="100">未开放</option>
+	    </select>
+	    </span>
+	    </p>
+	    <br/>
+		<input class="button" type="button" value="提交" />
+    </form>
+</div>
+{% endblock %}

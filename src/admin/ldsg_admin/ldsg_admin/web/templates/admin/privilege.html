@@ -1,0 +1,110 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+function disablePerms() {
+	if($("input[name=super]:checked").val()=="1") {
+		$(".perm-container input[type=checkbox]").attr("disabled","disabeld");
+	} else {
+		$(".perm-container input[type=checkbox]").removeAttr("disabled");
+	}
+}
+$(function() {
+	$("input[name=super]").bind("click",function(){
+		disablePerms();
+	});
+});
+</script>
+<script type="text/javascript">
+
+  $(document).ready(function(){
+  });
+  
+</script>
+<style type="text/css">
+	.perm-container{}
+	.perm-layout-1{padding:3px 0;}
+	.perm-layout-2{padding-left:30px;}
+</style>
+{% endblock %}
+{% block title %}权限设置{% endblock %}
+{% block content %}
+<table cellspacing="1" class="tablesorter">
+	<input type="hidden" id="user_id" name="user_id" value="{{ user_id }}"/>
+	<!--<tr>
+		<td>拥有所有权限:</td>
+		<td>
+			<label><input type="radio" value="1" name="super"/>是</label>
+			<label><input type="radio" value="0" checked="checked" name="super"/>否</label>
+		</td>
+	</tr>
+	-->
+	<tr>
+		<td>功能权限:</td>
+		<td>
+			<div class="perm-container">
+				{% if infos%}
+					{% for page in infos %}
+						<div class="perm-layout-1">
+							<input type="hidden"  value="{{ page.user_page_id }}"/>
+							<label><input name="perms" value="{{page.page_id}}" type="checkbox" {% ifnotequal page.value  0%}checked='checked'{% endifnotequal %}  class='page_id'/>{{ page.name }}</label>
+							<div class="perm-layout-2">
+								<label><input value="2" type="checkbox" {% ifnotequal page.value  0%}{% if page.value|divisibleby:2 %}checked='checked'{% endif %}{% endifnotequal %} name="perms"/>添加</label>
+								<label><input value="3" type="checkbox" {% ifnotequal page.value  0%}{% if page.value|divisibleby:3 %}checked='checked'{% endif %}{% endifnotequal %} name="perms"/>删除</label>
+								<label><input value="5" type="checkbox" {% ifnotequal page.value  0%}{% if page.value|divisibleby:5 %}checked='checked'{% endif %}{% endifnotequal %} name="perms"/>修改</label>
+								<label><input value="7" type="checkbox" {% ifnotequal page.value  0%}{% if page.value|divisibleby:7 %}checked='checked'{% endif %}{% endifnotequal %} name="perms"/>查询</label>
+								<label><input value="11" type="checkbox" {% ifnotequal page.value  0%}{% if page.value|divisibleby:11 %}checked='checked'{% endif %}{% endifnotequal %} name="perms"/>正式服</label>
+							</div>
+						</div>
+					{% endfor %}
+				{% endif %}
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align: center"><input type="button" value="提交" id="sumbit"/></td>
+	</tr>
+</table>
+<script type="text/javascript">
+$(function() {
+	$(".perm-container input[type=checkbox]").bind("click",function() {
+		parentCheck(this);
+		childCheck(this);
+	});
+});
+function parentCheck(chk) {
+	var obj = $(chk).parent().parent().parent();
+	while(obj && obj.attr("class").indexOf("perm-container")==-1) {
+		if(chk.checked) {
+			$(obj.children()[0]).children().attr("checked",true);
+		}
+		obj = obj.parent();
+	}
+}
+function childCheck(chk) {
+	$(chk).parent().next().children().find("input[type=checkbox]").each(function(){this.checked=chk.checked});
+}
+$(function(){
+	$("#sumbit").click(function() {
+		var str = "";
+		var user_id = $("#user_id").val()
+		$('.perm-container').find('.perm-layout-1').each(function() {
+			var page_id = $(this).find('.page_id').val();
+			var res = 1;
+			$(this).find('.perm-layout-2 input:checkbox').each(function(i,checkbox) {
+				if(checkbox.checked){
+					res = res*checkbox.value
+				}
+			});
+			if ($(this).find("input[type='hidden']").val() != 0){
+				str += $(this).find("input[type='hidden']").val()+',';
+			}
+			str += page_id + "," + res + "-";
+		});
+		var url = "/admin/add_privilege?params="+str+"&user_id="+user_id
+		window.location = url;
+	});
+})
+</script>
+{% endblock %}

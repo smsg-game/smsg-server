@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="This site's design and contents Copyright &copy; Kingsoft." />
+    <meta name="keywords" content="Kingsoft, Webauth" />
+    <meta name="description" content="Kingsoft Cloud Security is a excellent information security tool for all of you." />    
+    
+    <link href="/site_media/css/base.css" rel="stylesheet"/>
+    <script src="/site_media/js/jquery/jquery.min.js"></script>
+    <script src="/site_media/js/jquery/jquery.utils.min.js"></script>
+    <script src="/site_media/js/base.js"></script>
+    <script src="/site_media/js/menu.js"></script>
+    <script src="/site_media/js/page.js"></script>
+    <script src="/site_media/js/My97DatePicker/newDate_WdatePicker.js"></script>
+    {% block head_ext %}{% endblock %}
+    <title>{% block title %}{{title}}{% endblock %} - 三国合伙人</title>
+	
+</head>
+<body>
+<div id="container">
+    
+    <div id="logo"><img src="/site_media/images/logo.png"/></div>
+    <div id="headUserInfo">
+     {% if user %}
+        {{ user.nickname }}|<a href="/logout/?next={{request.path|urlencode}}">注销</a>
+    {% endif %}
+    </div>
+    <br style="clear:both;" />
+    {% block message %}
+    <div align="center">
+        <span class="literal-block"><font color="red">{{message}}</font></span>
+    </div>
+    {% endblock %}
+
+    {% block navigation %}
+    <div id="nav">
+    	{% include "links.html" %}
+    </div>
+    {% endblock %}
+    
+    <div id="rightmain">
+	    <div id="content">
+	    {% block content%}{% endblock %}
+		</div>
+    </div>
+    
+    <div id="footer">
+	    <p>
+	    Copyright &copy; 2009 - {% now "Y" %}
+	    <a target="_blank" href="http://www.lodogame.com/">lodogame</a> Corp All Rights Reserved <a target="_blank" href="http://www.lodogame.com/">三国合伙人</a>
+	    </p>
+    </div>
+</div>
+<div id="debug"></div>
+</body>
+</html>

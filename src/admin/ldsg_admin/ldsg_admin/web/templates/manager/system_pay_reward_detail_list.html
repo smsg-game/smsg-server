@@ -1,0 +1,177 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+     
+  service = new rpc.ServiceProxy("/services/activity/", {asynchronous:false, methods: ['get_tool_list', ]});
+       
+  $(document).ready(function(){
+  
+	 $('a.clean_item').click(function(){
+         
+        var index = $(this).parent().parent().attr('index');
+        var message = "确定清除获得的道具吗?";
+
+	    if(confirm(message)){
+		    var html_id = '#' + 'tool_ids_name_' + index;
+            var val_id = '#'  + 'tool_ids_' + index;
+            var html_hiden_id = '#' + 'tool_ids_html_' + index;
+            $(html_id).val("");
+            $(val_id).val("");
+            $(html_hiden_id).html("");
+	    }
+	 });
+	  
+	  $('a.add_item').click(function(){
+	    var index = $(this).parent().parent().attr('index');
+        $('#name').val("");
+        $('#index').val(index);
+	    $("#add_dialog").show().dialog({
+		     height: 250, width: 430, modal: true,
+	         title: '添加获得道具',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             }
+	     });
+	  });
+	  
+	  $('#name').change(function(){
+	     
+	       var name = $(this).val();
+	       if(name){
+		       var tool_list = service.get_tool_list(name);	  
+		       $("#tool_id option").remove();
+		       for(var i=0; i<tool_list.length; i++){
+		          var tool = tool_list[i];
+		          $("#tool_id").append("<option value='" + tool.tool_type + "," + tool.tool_id + "'>" + tool.tool_name + "</option>");
+		       }
+	       }
+	  });
+	  
+	  
+       $('#add_form input.button').click(function(){
+         
+           var index =  $('#index').val();
+           var tool_num = $('#num').val()
+           if(!tool_num){
+               alert("请输入道具数量");
+               return;
+           }
+           var tool_id = $("#tool_id").val();
+           if(!tool_id){
+               alert("请选择道具");
+               return;
+           }
+           var tool_name = $("#tool_id option:selected").get(0).text;
+           
+           var html_id = '#' + 'tool_ids_name_' + index;
+           var val_id = '#'  + 'tool_ids_' + index;
+           var html_hiden_id = '#' + 'tool_ids_html_' + index;
+           
+           var tool_list_html = $(html_id).val();
+           var tool_list_val = $(val_id).val()
+           if(tool_list_html){
+              tool_list_html = tool_list_html + "|" + tool_name + "*" + tool_num;
+           }else{
+              tool_list_html =  tool_name + "*" + tool_num;
+           }
+           
+           if(tool_list_val){
+              tool_list_val = tool_list_val + "|" + tool_id + "," + tool_num;
+           }else{
+              tool_list_val = tool_id + "," + tool_num;
+           }
+           
+           $(html_id).val(tool_list_html);
+           $(val_id).val(tool_list_val);
+           $(html_hiden_id).html(tool_list_html);
+           
+           $("#add_dialog").dialog('close');
+	   });
+  });
+  
+</script>
+{% endblock %}
+{% block title %}{{name}}配置项列表{% endblock %}
+{% block content %}
+<form id="detail_form" action="{% url system-pay-reward-detail-list %}?rid={{rid}}" method="post">
+<table cellspacing="1" class="tablesorter">
+  <thead>
+    <th>序号</th>
+    <th>充值金额</th>
+    <th>获得物品列表(ids)</th>
+    <th>获得物品列表</th>
+    <th>次数限制</th>
+    <th width="22%">操作</th>
+  </thead>
+  <tbody>
+    {% if infos %}
+      {% for info in infos %}
+       <tr index="{{info.index}}">
+         <td>{{info.index}}<input type="checkbox" value="{{info.index}}" name="check" checked="checked"/></td>
+             <td><input type="text" size="10" name="pay_{{info.index}}" value="{{info.pay_money}}" id="pay_{{info.index}}"/></td>
+             <td>
+               <input id="tool_ids_{{info.index}}" name="tool_ids_{{info.index}}"  readonly="readonly" size="10" style="width:98%;" value="{{info.tool_ids}}" />
+               <input id="tool_ids_name_{{info.index}}" name="tool_ids_name_{{info.index}}" type="hidden" value="{{info.tool_ids_name}}" /> 
+             </td>
+             <td><span id="tool_ids_html_{{info.index}}">{{info.tool_ids_name}}</span></td>
+             <td><input type="text" size="5" style="width:98%;" value="{{info.times_limit}}" name="times_limit_{{info.index}}"/></td>
+         <td>
+                <a href="#" class="add_item">添加获得道具</a>
+                |
+                <a href="#" class="clean_item">清空获得道具</a>
+         </td>
+       </tr>
+      {% endfor %}
+    {% endif %}
+    {% if empty_infos %}
+      {% for info in empty_infos %}
+         <tr index="{{info.index}}">
+             <td>{{ info.index }}<input type="checkbox" value="{{info.index}}" name="check" checked="checked"/></td>
+             <td><input type="text" size="15" name="pay_{{info.index}}" id="pay_{{info.index}}" value="{{info.amount}}"/></td>
+             <td>
+               <input id="tool_ids_{{info.index}}" name="tool_ids_{{info.index}}"  readonly="readonly" size="10" style="width:98%;" value="" />
+               <input id="tool_ids_name_{{info.index}}" name="tool_ids_name_{{info.index}}" type="hidden" value="" /> 
+             </td>
+             <td><span id="tool_ids_html_{{info.index}}"></span></td>
+             <td><input type="text" size="5" style="width:98%;" value="" name="times_limit_{{info.index}}"/></td>
+         <td>
+                <a href="#" class="add_item" type="gain">添加获得道具</a>
+                |
+                <a href="#" class="clean_item" type="pre">清空获得道具</a>
+         </td>
+         </tr>
+      {% endfor %}
+    {% endif %}
+  </tbody>
+</table>
+<input type="submit" value="保存"/>
+</form>
+<div id="add_dialog" class="flora" style="display: none;">
+    <form id="add_form" class="margin-top-10">
+        <input id="index" type="hidden"/>
+	    <p>
+    		<label>道具名称:</label>
+			<span><input id="name" type="text" size="50"/></span>
+	    </p>
+	    <p>
+            <label>道具选择:</label>
+    		<select id="tool_id">
+    		  <option value="">请选择道具</option>
+    		</select>
+	    </p> 
+	    <p>
+    		<label>道具数量:</label>
+			<span><input id="num" type="text" size="20"/></span>
+	    </p>
+	    <br/>
+		<input class="button" type="button" value="确定" />
+    </form>
+</div>
+{% endblock %}

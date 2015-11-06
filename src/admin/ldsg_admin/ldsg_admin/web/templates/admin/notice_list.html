@@ -1,0 +1,208 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+     
+  service = new rpc.ServiceProxy("/services/admin/", {asynchronous:false, methods: ['add_system_notice', ]});
+       
+  $(document).ready(function(){
+  
+	  genPageLinks({{total}}, {{pagesize}});
+	
+	  $('#ucenter,#server_id,#partner_id').change(function(){
+     
+		 var ucenter = $('#ucenter').val();
+		 var server_id = $('#server_id').val();
+		 var partner_id = $('#partner_id').val();
+		 var url = "{% url system-notice-list %}?ucenter=" + ucenter + "&server_id=" + server_id + "&partner_id=" + partner_id ;
+		 window.location = url;
+         
+	  });
+	
+	  $('input.add').click(function(){
+     
+         $('#add_server_id').val("");
+		 $('#add_partner_id').val("");
+         $('#title').val("");
+         $('#is_enable').val("");
+         $('#notice_content').val("");
+
+     
+	     $("#add_dialog").show().dialog({
+		     height: 620, width: 830, modal: true,
+	         title: '添加公告',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             }
+	     });
+	  });
+
+	  
+	  $('a.edit').click(function(){
+     
+         var server_id = $(this).parent().parent().attr('server_id');
+         var partner_id = $(this).parent().parent().attr('partner_id');
+         var title = $(this).parent().parent().attr('title');
+         var is_enable = $(this).parent().parent().attr('is_enable');
+         var content = $(this).parent().parent().attr('content');
+
+         $('#add_server_id').val(server_id);
+		 $('#add_partner_id').val(partner_id);
+         $('#title').val(title);
+         $('#is_enable').val(is_enable);
+         $('#notice_content').val(content);
+         
+	     $("#add_dialog").show().dialog({
+		     height: 620, width: 830, modal: true,
+	         title: '修改公告',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             }
+	     });
+	  });
+	  
+	  
+	  
+    $('#add_form input.button').click(function(){
+    
+         var ucenter = $('#ucenter').val();
+         var partner_id = $('#add_partner_id').val();
+         var server_id = $('#add_server_id').val();
+         var title = $('#title').val();
+         var content = $('#notice_content').val();
+         var is_enable = $('#is_enable').val();
+
+        if(!partner_id){
+		   alert("请输入合作商ID");
+	    }else if(!server_id){
+	       alert("请选择服务器 ");
+	    }else if(!title){
+	       alert("请输入公告标题");
+	    }else if(!content){
+	       alert("请输入公告内容");   
+		}else{
+		    try{
+		       var info = {};
+		       info['partner_id'] = partner_id;
+		       info['server_id'] = server_id;
+		       info['title'] = title;
+		       info['content'] = content;
+		       info['is_enable'] = is_enable
+		       service.add_system_notice(ucenter, info);
+	           window.location.reload() ;
+			}catch(e){
+			   alert(e.message);
+			}
+	    }
+	});
+	  
+  });
+  
+</script>
+{% endblock %}
+{% block title %}公告管理{% endblock %}
+{% block content %}
+webapi:
+<select id="ucenter">
+  <option value="android" {% ifequal ucenter "android" %}selected=selected{% endifequal %}>android登录服</option>
+  <option value="ios" {% ifequal ucenter "ios" %}selected=selected{% endifequal %}>ios登录服</option>
+</select>
+{% include "inc/server_select.html" %}
+{% include "inc/partner_select.html" %}
+<input type="button" class="add" value="添加公告"/><br/>
+<table cellspacing="1" class="tablesorter">
+  <thead>
+    <th>服务器ID</th>
+    <th>合作商ID</th>
+    <th>标题</th>
+    <th>内容</th>
+    <th>创建时间</th>
+    <th>是否有效</th>
+    <th>操作</th>
+ </thead>
+  <tbody>
+    {% if infos %}
+      {% for info in infos %}
+       <tr server_id="{{ info.server_id }}" partner_id="{{ info.partner_id}}" title="{{ info.title }}" content="{{ info.content }}" is_enable="{{ info.is_enable }}" >
+         <td>{{ info.server_id|server_name }}</td>
+         <td>{{ info.partner_id|partner_name }}</td>
+         <td>{{ info.title }}</td>
+         <td>{{ info.content|truncate_str  }}</td>
+         <td>{{ info.created_time }}</td>
+         <td>
+            {% ifequal info.is_enable 1 %}
+              <font color="green">有效</font>
+            {% else %}
+              <font color="red">无效</font>
+            {% endifequal %}
+         </td>
+         <td>
+            <a href="#" class="edit">编辑</a>
+         </td>
+       </tr>
+      {% endfor %}
+    {% endif %}
+     <tr style="display:none"><td id="pageLink" colspan="12"></td></tr>
+  </tbody>
+</table>
+<div id="add_dialog" class="flora" style="display: none;">
+    <form id="add_form" class="margin-top-10">
+        <input id="id" type="hidden"/>
+        <p>
+    		<label>服务器ID:</label>
+			<span style="margin-left:10px;">
+			<select id="add_server_id">
+			 <option value="">请选择服务器</option>
+			 {% for zone, server_list in server_list_map.items%}   
+			    <option value="" style="background: #F0F9FF;font-weight:bold;">├{{ zone|server_zone_name }}</option>
+			    {% for server in server_list %}
+			      <option value="{{ server.server_id }}" {%ifequal server.server_id server_id %}selected=selected{%endifequal%}>
+			         │&nbsp;&nbsp;├{{ server.server_id }}-{{ server.server_name }}
+			      </option>
+			    {% endfor %}
+			 {% endfor %}
+			 </select>
+			</span>
+	    </p>
+        <p>
+    		<label>合作商ID:</label>
+			<span style="margin-left:10px;">
+			<select id="add_partner_id">
+				<option value="all">所有渠道</option>
+				{% for partner in partner_list %}
+					<option value="{{ partner.partner_id }}" {% ifequal partner.partner_id partner_id %}selected=selected{%endifequal%}>{{ partner.name }}</option>
+				{% endfor %}	
+			</select>
+			</span>
+	    </p>
+	    <p>
+    		<label>是否有效:</label>
+			<span style="margin-left:10px;">
+			<select id="is_enable">
+				<option value="0">无效</option>
+				<option value="1">有效</option>
+			</select>
+			</span>
+	    </p>
+	    <p>
+    		<label>标题:</label>
+			<span style="margin-left:34px;"><input id="title" type="text"  size="80"/></span>
+	    </p> 
+	    <p>
+	    <label style="margin-right:25px;">内容:</label>
+			<span style="margin-left:10px;">
+			  <textarea rows="22" cols="85" id="notice_content"></textarea>
+			</span>
+	    </p>
+	    <br/>
+		<input class="button" type="button" value="提交" />
+    </form>
+</div>
+{% endblock %}

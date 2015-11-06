@@ -297,7 +297,7 @@ public class LoginController {
 			serverList = new ArrayList<GameServer>();
 			GameServer gs = new GameServer();
 			gs.setServerId("d1");
-			gs.setServerName("测试服务器");
+			gs.setServerName("测试服务器-潮哥");
 			gs.setStatus(1);
 			serverList.add(gs);
 		}

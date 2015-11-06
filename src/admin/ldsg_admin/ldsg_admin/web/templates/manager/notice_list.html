@@ -1,0 +1,204 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+        
+  $(document).ready(function(){
+  
+      service = new rpc.ServiceProxy("/services/activity/", {asynchronous:false, methods: ['add_notice', ]});
+   
+	  genPageLinks({{total}}, {{pagesize}});
+	
+	  $('input.add').click(function(){
+     
+         $('#id').val(0);
+         $('#notice_content').val("");
+         $('#start_time').val("");
+         $('#end_time').val("");
+         $('#interval_time').val(5);
+            
+         $("#add_form input:checkbox").each(function(){
+			$(this).attr("checked", false);
+		 })
+
+	     $("#add_dialog").show().dialog({
+		     height: 600, width: 920, modal: true,
+	         title: '添加走马灯',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             }
+	     });
+	  });
+	  
+	  $('a.edit').click(function(){
+     
+         var id = $(this).parent().parent().attr('id');
+         var content = $(this).parent().parent().attr('content');
+         var start_time = $(this).parent().parent().attr('start_time');
+         var end_time = $(this).parent().parent().attr('end_time');
+         var interval_time = $(this).parent().parent().attr('interval_time');
+         var status = $(this).parent().parent().attr('status');
+         var server_ids = $(this).parent().parent().attr('server_ids');
+
+         $('#notice_content').val(content);
+         $('#start_time').val(start_time);
+         $('#end_time').val(end_time);
+         $('#interval_time').val(interval_time);
+         $('#status').val(status);
+         $('#id').val(id);
+         
+         $("#add_form input:checkbox").each(function(){
+            var value = $(this).val();
+			if(server_ids.indexOf(value) != -1 ){
+				$(this).attr("checked", "checked");
+			}else{
+			    $(this).attr("checked", "");
+			}
+		})
+         
+         
+	     $("#add_dialog").show().dialog({
+		     height: 600, width: 920, modal: true,
+	         title: '修改走马灯',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             }
+	     });
+	  });
+	  
+	  
+	  $('#add_form input.button').click(function(){
+		var id = $('#id').val();
+		var content = $('#notice_content').val();
+		var start_time = $('#start_time').val();
+        var end_time = $('#end_time').val();
+        var interval_time = $('#interval_time').val();
+        var status = $('#status').val();
+         
+        var server_ids = "";
+		
+		$("#add_form input:checkbox").each(function(){
+			if($(this).attr("checked")){
+				var values = $(this).val();
+				if(!server_ids){
+				    server_ids = values;
+				}else{
+				    server_ids = server_ids + "," + values;
+				}
+			}
+		})
+        
+        if(!content){
+		   alert("请输入内容");
+	    }else if(!start_time){
+	       alert("请输入开始时间 ");
+	    }else if(!end_time){
+	       alert("请输入结束时间");
+	    }else if(!interval_time){
+	       alert("请输入播放间隔");   
+		}else if(!server_ids){
+	       alert("至少选择一组服务器");   
+		}else{
+		    try{
+		       var info = {};
+		       info['id'] = id;
+		       info['start_time'] = start_time;
+		       info['end_time'] = end_time;
+		       info['interval_time'] = interval_time;
+		       info['content'] = content;
+		       info['status'] = status;
+		       info['server_ids'] = server_ids;
+		       service.add_notice(info);
+	           window.location.reload() ;
+			}catch(e){
+			   alert(e.message);
+			}
+	    }
+	});
+
+  });
+  
+</script>
+{% endblock %}
+{% block title %}走马灯管理{% endblock %}
+{% block content %}
+<input type="button" class="add" value="发送走马灯"/><br/>
+<table cellspacing="1" class="tablesorter">
+  <thead>
+    <th>ID</th>
+    <th>走马灯内容</th>
+    <th>服务器列表</th>
+    <th>开始时间</th>
+    <th>结束时间</th>
+    <th>播放间隔</th>
+    <th>是否生效</th>
+    <th>创建时间</th>
+    <th>创建人</th>
+    <th>操作</th>
+  </thead>
+  <tbody>
+    {% if infos %}
+      {% for info in infos %}
+       <tr id="{{info.id}}" content="{{info.content}}" server_ids="{{info.server_ids}}" start_time="{{info.start_time}}" end_time="{{info.end_time}}" interval_time="{{info.interval_time}}" status="{{info.status}}">
+         <td>{{ info.id }}</td>
+         <td>{{ info.content|truncate_str }}</td>
+         <td>{{ info.server_ids|server_names }}</td>
+         <td>{{ info.start_time }}</td>
+         <td>{{ info.end_time }}</td>
+         <td>{{ info.interval_time }}</td>
+         <td>{{ info.status }}</td>
+         <td>{{ info.created_time }}</td>
+         <td>{{ info.created_user }}</td>
+         <td><a href="#" class="edit">修改</a></td>
+       </tr>
+      {% endfor %}
+    {% endif %}
+     <tr style="display:none"><td id="pageLink" colspan="15"></td></tr>
+  </tbody>
+</table>
+<div id="add_dialog" class="flora" style="display: none;">
+    <form id="add_form" class="margin-top-10">
+        <input id="id" type="hidden"/>
+        <p>
+    		<label>内容:</label>
+			<span style="margin-left:45px;">
+			  <textarea rows="4" cols="90" id="notice_content"></textarea>
+			</span>
+	    </p>
+	    <p>
+    		<label>开始时间:</label>
+			<span style="margin-left:24px;">
+			  <input type="text" id="start_time" name="start_time" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="Wdate" style="width: 140px"/>
+			</span>
+			<label style="margin-left:50px;">结束时间:</label>
+			<span style="margin-left:24px;">
+			  <input type="text" id="end_time" name="start_time" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="Wdate" style="width: 140px"/>
+			</span>
+	    </p>
+	    <p> 
+	    <label>播放间隔(分):</label>
+		<span><input id="interval_time" type="text" size="22"/></span>
+	    <label style="margin-left:48px;">是否有效:</label>
+	    <span style="margin-left:24px;">
+	    <select id="status">
+	        <option value="1">生效</option>
+			<option value="0">无效</option>
+	    </select>
+	    </span>
+	    </p>
+	    <p style="margin-top:10px;">
+            <label>服务器选择:</label>
+    		{% include "inc/server_checkbox_sample.html" %}
+	    </p> 
+	    <br/>
+		<input class="button" type="button" value="提交" />
+    </form>
+</div>
+{% endblock %}

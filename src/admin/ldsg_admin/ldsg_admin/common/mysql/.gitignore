@@ -1,0 +1,6 @@
+/__init__.pyc
+/connection_wrapper.pyc
+/cursor_wrapper.pyc
+/data_row.pyc
+/reserve_convertor.pyc
+/schema.pyc

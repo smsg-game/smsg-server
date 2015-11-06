@@ -1,0 +1,334 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+     
+  service = new rpc.ServiceProxy("/services/activity/", {asynchronous:false, methods: ['get_tool_list', ]});
+       
+  mail_service = new rpc.ServiceProxy("/services/mail/", {asynchronous:false, methods: ['add_system_mail', ]});
+   
+       
+  $(document).ready(function(){
+
+	   $('#name').change(function(){
+	     
+	       var name = $(this).val();
+	       if(name){
+		       var tool_list = service.get_tool_list(name);	  
+		       $("#tool_id option").remove();
+		       for(var i=0; i<tool_list.length; i++){
+		          var tool = tool_list[i];
+		          $("#tool_id").append("<option value='" + tool.tool_type + "," + tool.tool_id + "'>" + tool.tool_name + "</option>");
+		       }
+	       }
+	   });
+	   
+	   $('input.ret_button').click(function(){
+           var url = "{% url system-mail-list %}";
+		   window.location = url;
+	   });
+	   
+	   $('.check_all').change(function(){
+     
+          var zone = $(this).val();
+     
+		  if($(this).attr("checked")){
+		      
+		       $(".check_" + zone).each(function(){
+		          $(this).attr("checked", "checked");
+		       })
+		      
+		  }else{
+		    
+		       $(".check_" + zone).each(function(){
+		          $(this).attr("checked", "");
+		       })
+		  }
+         
+	  });
+	   
+	   $("#add_mail_form input:checkbox").each(function(){
+	       
+	        var server_ids = "{{ system_mail.server_ids }},";
+	        var value = $(this).val();
+			if(server_ids.indexOf(value + ",") != -1 ){
+				$(this).attr("checked", "checked");
+			}else{
+			    $(this).attr("checked", "");
+			}
+		})
+	   
+	   $('#target').change(function(){
+	     
+	       var target = $("#target").val();
+           if(target == 5){
+               $("#partner_span").show();
+               $("#mail_time_span").hide();
+           }else{
+               $("#partner_span").hide();
+               $("#mail_time_span").show();
+           }
+	   });
+	  
+	  
+	   $('input.add_item').click(function(){
+           $('#name').val("");
+           $('#num').val("");
+	       $("#add_dialog").show().dialog({
+		      height: 250, width: 430, modal: true,
+	          title: '添加获得道具',
+		      overlay: {
+                opacity: 0.5, 
+                background: "black" 
+              }
+	      });
+	   });
+	   
+	   
+	   $('#add_form input.add_button').click(function(){
+         
+           var tool_num = $('#num').val()
+           if(!tool_num){
+               alert("请输入道具数量");
+               return;
+           }
+           var tool_id = $("#tool_id").val();
+           if(!tool_id){
+               alert("请选择道具");
+               return;
+           }
+           var tool_name = $("#tool_id option:selected").get(0).text;
+           
+           var tool_list_html = $("#tool_ids_name").val();
+           var tool_list_val = $("#tool_ids").val()
+           if(tool_list_html){
+              tool_list_html = tool_list_html + "\n" + tool_name + "*" + tool_num;
+           }else{
+              tool_list_html =  tool_name + "*" + tool_num;
+           }
+           
+           if(tool_list_val){
+              tool_list_val = tool_list_val + "|" + tool_id + "," + tool_num;
+           }else{
+              tool_list_val = tool_id + "," + tool_num;
+           }
+           
+           $("#tool_ids_name").val(tool_list_html);
+           $("#tool_ids").val(tool_list_val);
+           
+           $("#add_dialog").dialog('close');
+	   });
+	  
+	  
+    $('#send_mail_btn').click(function(){
+    
+        var system_mail_id = $('#system_mail_id').val();
+		var title = $('#title').val();
+		var content = $('#mail_content').val();
+        var target = $('#target').val();
+        var lodo_ids = $('#lodo_ids').val();
+        var partner_id = $('#partner_id').val();
+        var mail_time = $('#mail_time').val();
+        var tool_ids = $('#tool_ids').val();
+        var tool_ids_name = $('#tool_ids_name').val();
+
+        var server_ids;
+        var server_count = 0;
+        
+        $("#add_mail_form input:checkbox").each(function(){
+        
+            if(!$(this).hasClass("check_all")){
+            
+				if($(this).attr("checked")){
+				
+				    server_count = server_count + 1;
+				
+					var values = $(this).val();
+					if(!server_ids){
+					    server_ids = values;
+					}else{
+					    server_ids = server_ids + "," + values;
+					}
+				}
+		    }
+		})
+		
+		if(!server_ids){
+	       alert("至少选择一个服务器");
+	       return;
+	    }
+
+        if(!title){
+		   alert("请输入邮件标题");
+		   return;
+		}
+	    
+	    if(title.length > 36){
+		   alert("邮件标题过长");
+	       return;
+	    }
+	    
+	    if(!content){
+	       alert("请输入邮件内容");
+	       return;
+	    }
+	    
+	    if(target==2){
+	       if(!lodo_ids){
+	          alert("请输入用户ID");
+	          return;
+	       }
+	    }else if(target==5){
+	       if(!partner_id){
+	          alert("请选择渠道号");
+	          return;
+	       }
+	    }else{
+	       if(!mail_time){
+	          alert("请选择邮件时间");
+	          return;
+	       }
+	    }
+	    
+	    if(target==2 && server_count > 1){
+	       alert("发送指定用户时不能选择多个服务器");
+	       return;
+	    }
+	    
+        try{
+	       var info = {};
+	       info['system_mail_id'] = system_mail_id; 
+	       info['title'] = title;
+	       info['content'] = content;
+	       info['target'] = target;
+	       info['lodo_ids'] = lodo_ids;
+	       info['tool_ids'] = tool_ids;
+	       info['partner_id'] = partner_id;
+	       info['date'] = mail_time;
+	       info['tool_ids'] = tool_ids;
+	       info['server_ids'] = server_ids;
+	       info['tool_ids_name'] = tool_ids_name;
+	       var ret = mail_service.add_system_mail(info);
+           if(ret == -1){
+              alert("你没有发放正式服邮件的权限，请联系系统管理员!");
+              return;
+           }
+           if(system_mail_id=="0"){
+               alert("邮件发送成功");
+           }else{
+               alert("邮件编辑成功");
+           }
+           var url = "{% url system-mail-list %}";
+		   window.location = url;
+           
+        }catch(e){
+		   alert(e.message);
+		}
+	  
+	});
+	  
+  });
+  
+</script>
+{% endblock %}
+{% block title %}{{title}}{% endblock %}
+{% block content %}
+<div class="flora">
+   <form id="add_mail_form" >
+		<table cellspacing="1" class="tablesorter">
+		    <input type="hidden" id="system_mail_id" name="system_mail_id" value="{{ system_mail_id }}"/>			
+		    <tr>
+				<td>选择服务器</td>
+				<td>
+				  {% include "inc/server_checkbox_sample.html" %}
+				</td>
+			</tr>
+			<tr>
+				<td rowspan="3">收件人</td>
+				<td><textarea  onfocus="" id="lodo_ids" rows="5" cols="80">{{ system_mail.lodo_ids }}</textarea>  
+				每个 id 之间用英文逗号分隔
+				逗号和下一个 id 之间不要有空格</td>
+			</tr>
+			<tr>
+				<td>发放目标	
+				     <select name="target" id="target">
+				         <option value=2 {% ifequal system_mail.target 2 %}selected{% endifequal %}>指定用户</option>
+				         <option value=1 {% ifequal system_mail.target 1 %}selected{% endifequal %}>发送全服</option>
+				         <option value=3 {% ifequal system_mail.target 3 %}selected{% endifequal %}>登录用户</option>
+				         <option value=4 {% ifequal system_mail.target 4 %}selected{% endifequal %}>充值用户</option>
+   				         <option value=5 {% ifequal system_mail.target 5 %}selected{% endifequal %}>指定渠道</option>
+				     </select>
+				     <span id="partner_span" style="display:none;">{% include "inc/partner_select_sample.html" %}</span>
+				     <span id="mail_time_span">
+				        <input style="width:15%" type="txt" id="mail_time" name="date" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" value="{{ system_mail.date }}" class="Wdate" style="width: 100px" />
+				     </span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					选择不同发送对象时输入的时间有不同作用，如下（假设输入的时间是 <b>2013-1-1</b>）：
+					<br>1.如果选择<b>『登录用户』</b>，邮件只发送给 <b>2013-1-1</b> 这一天登录过的用户； 
+					<br>2.如果选择<b>『发送全服』</b>，邮件只发送给 <b>2013-1-1</b>这一天之前注册的用户；
+					<br>3.如果选择<b>『充值用户』</b>，邮件只发送给 <b>2013-1-1</b>这一天充值过的用户。
+					<br>4.如果选择指定用户，这个时间可以不用填写。
+				</td>
+			</tr>
+			<tr>
+				<td>主题</td>
+				<td><input type="text" id="title" size="80" value="{{ system_mail.title }}"/></td>
+			</tr>
+			<tr>
+				<td>邮件内容</td>
+				<td><textarea name="content" id="mail_content" rows="4" cols="80">{{ system_mail.content }}</textarea></td>
+			</tr>
+			<tr>
+				<td rowspan="3">道具</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="button" class="add_item" value="添加获得道具">
+				</td>
+			</tr>
+			<tr>
+					<td>
+					发放道具列表<br/>
+					<textarea id="tool_ids_name" rows="10" cols="40" readonly="readonly">{{ system_mail.tool_ids_name }}</textarea>
+					<input type="hidden" id="tool_ids" size="80" value="{{ system_mail.tool_ids }}" />
+					</td>
+				</tr>
+			<tr>
+				<td align="left" colspan="2">
+			    <input type="button" id="send_mail_btn" value="提交审核" >
+			    <input type="button" class="ret_button" value="返回" /> 
+			</td>
+			</tr>
+		</table>
+	</form>
+</div>
+<div id="add_dialog" class="flora" style="display: none;">
+    <form id="add_form" class="margin-top-10">
+        <input id="index" type="hidden"/>
+	    <p>
+    		<label>道具名称:</label>
+			<span><input id="name" type="text" size="50"/></span>
+	    </p>
+	    <p>
+            <label>道具选择:</label>
+    		<select id="tool_id">
+    		  <option value="">请选择道具</option>
+    		</select>
+	    </p> 
+	    <p>
+    		<label>道具数量:</label>
+			<span><input id="num" type="text" size="20"/></span>
+	    </p>
+	    <br/>
+		<input type="button" class="add_button" value="确定" />
+    </form>
+</div>
+{% endblock %}

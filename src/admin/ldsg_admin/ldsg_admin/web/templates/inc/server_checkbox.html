@@ -1,0 +1,6 @@
+<label>服务器:</label>
+	<span>
+	{% for server in server_list %}
+		<input type = "checkbox" value="{{server.server_id }}-{{ server.server_name }}"/>{{ server.server_name }}[{{server.server_id}}]&nbsp;&nbsp;
+	{% endfor %}
+	</span>

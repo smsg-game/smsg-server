@@ -1,0 +1,56 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+     
+  service = new rpc.ServiceProxy("/services/admin/", {asynchronous:false, methods: ['add_server', 'delete_server']});
+       
+  $(document).ready(function(){
+  
+	  $('#server_zone').change(function(){
+     
+		 var server_zone = $('#server_zone').val();
+        if(!server_zone){
+            alert("请选择服务器分区");
+         }else{
+            var url = "{% url user-online-stat %}?server_zone=" + server_zone;
+		    window.location = url;
+         }
+         
+	  });
+	  
+  });
+  
+</script>
+{% endblock %}
+{% block title %}在线人数统计{% endblock %}
+{% block content %}
+<span style="margin-right:20px;">服务器分区:</span>
+<select id="server_zone">
+	   <option value="2" {% ifequal server_zone 2 %}selected=selected{% endifequal %}>安卓务器组</option>
+	   <option value="3" {% ifequal server_zone 3 %}selected=selected{% endifequal %}>ios服务器组</option>
+</select>
+
+<table cellspacing="1" class="tablesorter">
+  <thead>
+  	<th>服务器</th>
+  	<th>在线人数</th>
+  </thead>
+  
+  <tbody>
+  	{% for info in infos %}
+  	<tr>
+  		<td>{{ info.server_id|server_name }}</td>
+	  	<td>{{ info.count }}</td>
+	 </tr>
+  	{% endfor %}
+  </tbody>
+ 
+  </tbody>
+</table>
+{% endblock %}

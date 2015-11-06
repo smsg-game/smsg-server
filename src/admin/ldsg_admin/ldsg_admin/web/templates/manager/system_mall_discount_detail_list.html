@@ -1,0 +1,79 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+     
+  service = new rpc.ServiceProxy("/services/activity/", {asynchronous:false, methods: ['get_tool_list', ]});
+       
+  $(document).ready(function(){
+  
+	 
+  });
+  
+</script>
+{% endblock %}
+{% block title %}商城打折列表{% endblock %}
+{% block content %}
+<form id="detail_form" action="{% url system-mall-discount-detail-list %}?did={{did}}" method="post">
+<table cellspacing="1" class="tablesorter">
+  <thead>
+    <th>序号</th>
+    <th>商品名称</th>
+    <th>商品价格(ids)</th>
+    <th>折扣</th>
+    <th>折扣后价格</th>
+  </thead>
+  <tbody>
+    {% if infos %}
+      {% for info in infos %}
+       <tr index="{{info.index}}">
+         <td>
+            {{ forloop.counter }} 
+            <input type="hidden" size="10" name="mall_id_{{forloop.counter }}" value="{{info.mall_id}}" id="item_{{forloop.counter}}"/>
+         </td>
+         <td>{{ info.name }}</td>
+         <td>{{ info.amount }}({% ifequal info.money_type 1 %} 元宝 {% else %} 银币 {% endifequal %})</td>
+         <td><input type="text" size="5" style="width:80%;" value="{{info.discount}}" name="discount_{{forloop.counter}}"/>%</td>
+         <td>
+           <span id="discount_price_{{forloop.counter}}">
+            {% ifnotequal info.discount 100%}
+               <font color="green">{{ info.discount_price }}</font>
+            {% else %}
+               {{ info.discount_price }}
+            {% endifnotequal %}
+           <span>
+         </td>
+       </tr>
+      {% endfor %}
+    {% endif %}
+  </tbody>
+</table>
+<input type="submit" value="保存"/>
+</form>
+<div id="add_dialog" class="flora" style="display: none;">
+    <form id="add_form" class="margin-top-10">
+        <input id="index" type="hidden"/>
+	    <p>
+    		<label>道具名称:</label>
+			<span><input id="name" type="text" size="50"/></span>
+	    </p>
+	    <p>
+            <label>道具选择:</label>
+    		<select id="tool_id">
+    		  <option value="">请选择道具</option>
+    		</select>
+	    </p> 
+	    <p>
+    		<label>道具数量:</label>
+			<span><input id="num" type="text" size="20"/></span>
+	    </p>
+	    <br/>
+		<input class="button" type="button" value="确定" />
+    </form>
+</div>
+{% endblock %}

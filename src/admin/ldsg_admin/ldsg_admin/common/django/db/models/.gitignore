@@ -1,0 +1,9 @@
+/__init__.pyc
+/base.pyc
+/loading.pyc
+/manager.pyc
+/options.pyc
+/query.pyc
+/query_utils.pyc
+/related.pyc
+/signals.pyc

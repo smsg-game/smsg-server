@@ -1,0 +1,119 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+     
+  service = new rpc.ServiceProxy("/services/client/", {asynchronous:false, methods: ['delete_battle_client', 'add_battle_client']});
+       
+  $(document).ready(function(){
+   
+      $('a.edit').click(function(){
+     
+         var id = $(this).parent().parent().attr('id');
+         var server_id = $(this).parent().parent().attr('server_id');
+
+         $('#id').val(id);
+         $('#server_id').val(server_id);
+		 
+	     $("#add_dialog").show().dialog({
+		     height: 220, width: 380, modal: true,
+	         title: '修改战斗服服务器ID',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             }
+	     });
+	  });
+	  
+	   $('a.delete').click(function(){
+     
+          var id = $(this).parent().parent().attr('id');
+
+	      if(confirm("确定删除?")){
+		    try{
+		       service.delete_battle_client(id);
+	           window.location.reload() ;
+			}catch(e){
+			   alert(e.message);
+			}
+	      }
+	  });
+	  
+	  $('#add_form input.button').click(function(){
+		var id = $('#id').val();
+		var server_id = $('#server_id').val();
+
+        if(!server_id){
+		    alert("请输入服务器ID");
+	    }else{
+		    try{
+		       service.add_battle_client(id, server_id);
+	           window.location.reload();
+			}catch(e){
+			   alert(e.message);
+			}
+	    }
+	});
+      
+  });
+  
+</script>
+{% endblock %}
+{% block title %}战斗服状态监控{% endblock %}
+{% block content %}
+{% for server_zone, client_list in client_maps.items %}
+<div style="text-align: center;font-size:16px;font-weight:bold;">[[{{ server_zone|server_zone_name }}]]</div>
+<table cellspacing="1" class="tablesorter">
+  <thead>
+    <th>ID</th>
+    <th>服务器</th>
+    <th>状态</th>
+    <th>IP</th>
+    <th>端口</th>
+    <th>最后上报时间</th>
+    <th>操作</th>
+  </thead>
+  <tbody>
+    {% if client_list %}
+      {% for info in client_list %}
+       <tr id="{{ info.id }}" server_id="{{ info.server_id }}"  >
+         <td>{{ info.id }}</td>
+         <td>{{ info.server_id|server_name }}</td>
+         <td>
+            {% ifequal info.status 1 %}
+               <font color="green">正常</font>
+            {% else %}
+               <font color="red">停止</font>
+            {% endifequal %}
+         </td>
+         <td>{{ info.ip }}</td>
+         <td>{{ info.port }}</td>
+         <td>{{ info.last_report_time }}</td>
+         <td>
+            <a href="#" class="edit">编辑</a>
+            |
+            <a href="#" class="delete">删除</a>
+         </td>
+       </tr>
+      {% endfor %}
+    {% endif %}
+  </tbody>
+</table>
+{% endfor %}
+<div id="add_dialog" class="flora" style="display: none;">
+    <form id="add_form" class="margin-top-10">
+        <input id="id" type="hidden"/>
+	    <p>
+    		<label>服务器ID:</label>
+			<span style="margin-left:12px;"><input id="server_id" type="text" size="30"/></span>
+	    </p> 
+	    <br/>
+		<input class="button" type="button" value="提交" />
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "master.html" %}
+{% block title %}服务器留存{% endblock %}
+{% block head_ext %}
+{% endblock %}
+{% block content %}
+<tr>
+	{% include "inc/server_select.html" %}
+	<td></td>
+	<td><input type="button" class="search" value="查找"/></td>
+</tr>
+	<table class="tablesorter">
+		<thead>
+			<th>日期</th>
+			<th>首日登陆数</th>
+			<th>次日留存</th>
+			<th>3日登录留存</th>
+			<th>4日留存</th>
+			<th>5日留存</th>
+			<th>6日留存</th>
+			<th>7日留存</th>
+			<th>15日留存</th>
+			<th>30日留存</th>
+		</thead>
+		<tbody>
+			{% if stats %}
+				{% for stat in stats %}
+				<tr>
+					<td>{{ stat.data_date }}</td>
+					<td>{{ stat.one_user }}</td>
+					<td>{{ stat.two_user }}%</td>
+					<td>{{ stat.three_user }}%</td>
+					<td>{{ stat.four_user }}%</td>
+					<td>{{ stat.five_user }}%</td>
+					<td>{{ stat.six_user }}%</td>
+					<td>{{ stat.seven_user }}%</td>
+					<td>{{ stat.fivteen_user }}%</td>
+					<td>{{ stat.thirty_user }}%</td>
+				</tr>
+				{% endfor %}
+		    {% else %}
+		          <tr style="display:none"><td id="pageLink" colspan="10"></td></tr>	
+		    {% endif %}
+		</tbody>
+	</table>
+</body>
+<script type="text/javascript">
+  $(document).ready(function(){
+	  $('input.search').click(function(){
+		 var server_id = $('#server_id').val();
+         if(!server_id){
+            alert("请选择服务器");
+         }else{
+            var url = "{% url server-liucun %}?server_id=" + server_id;
+		    window.location = url;
+         }
+	  });
+  });
+  
+</script>
+</html>
+{% endblock %}

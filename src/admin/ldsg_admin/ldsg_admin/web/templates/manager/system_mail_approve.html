@@ -1,0 +1,92 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+        
+  service = new rpc.ServiceProxy("/services/mail/", {asynchronous:true, methods: ['system_mail_approve', ]});
+   
+       
+  $(document).ready(function(){
+	 
+	 $('input.return_btn').click(function(){
+         var url = "{% url system-mail-approve-list %}";
+		 window.location = url;
+	 });
+	   
+	 $('input.approve_btn').click(function(){
+          var system_mail_id = $("#system_mail_id").val();
+          var approve = $(this).attr("pass");
+          var msg;
+          if(approve==1){
+              msg = "是否审核通过该邮件?";
+          }else{
+              msg = "是否审核未通过该邮件?";
+          }
+          
+          if(confirm(msg)){
+        
+            $('input.approve_btn').attr("disabled", "disbaled");
+      
+            service.system_mail_approve({
+	       		params:[system_mail_id, approve],
+	       		onSuccess:function(datas){
+	       			if(datas[0] == -1){
+	       			    alert("你没有正式服邮件审核的权限!")
+	       			}else if(datas[0] == 1){
+	       			    alert("邮件审核成功")
+	       			}
+	       		},
+		   		onException:function(e){
+		   			$('input.approve_btn').attr("disabled", "");			
+		   			alert("Web server error: because " + e.message);
+		   		}
+			});
+	      }
+	 });
+     
+  });
+  
+</script>
+{% endblock %}
+{% block title %}邮件审核{% endblock %}
+{% block content %}
+<div class="flora">
+   <form id="add_mail_form" >
+        <input type="hidden" id="system_mail_id" value="{{ system_mail.system_mail_id }}"/>
+		<table cellspacing="1" class="tablesorter">
+			<tr>
+				<td width="80">发放服务器</td>
+				<td>{{ system_mail.server_ids|server_names }}</td>
+			</tr>
+			<tr>
+				<td>发放目标</td>
+				<td>{{ system_mail|mail_target_detail }}</td>
+			</tr>
+			<tr>
+				<td>主题</td>
+				<td>{{ system_mail.title }}</td>
+			</tr>
+			<tr>
+				<td>邮件内容</td>
+				<td>{{ system_mail.content }}</td>
+			</tr>
+			<tr>
+				<td>道具</td>
+				<td>{{ system_mail.tool_ids_name }}</td>
+			</tr>
+			<tr>
+				<td align="left" colspan="2">
+			      <input type="button" class="approve_btn" pass=1 value="审核通过" >
+			      <input type="button" class="approve_btn" pass=0 value="审核不通过" >
+			      <input type="button" class="return_btn" value="返回" >
+			    </td>
+			</tr>
+		</table>
+	</form>
+</div>
+{% endblock %}

@@ -1,0 +1,197 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+     
+  service = new rpc.ServiceProxy("/services/client/", {asynchronous:false, methods: ['add_command', ]});
+       
+  $(document).ready(function(){
+   
+      $(".client_id_check").each(function(){
+		  $(this).attr("checked", "");
+	  })
+
+	  $('input.add').click(function(){
+		  var server_ids ;
+	      $(".client_id_check").each(function(){
+				if($(this).attr("checked")){
+					var values = $(this).val();
+					values = $("#serverId"+values).val();
+					if(!server_ids){
+						server_ids = values;
+					}else{
+						server_ids = server_ids + "," + values;
+					}
+				}
+			})
+		 $("#server_ids").html(server_ids);
+	     $("#add_dialog").show().dialog({
+		     height: 420, width: 430, modal: true,
+	         title: '发送维护命令',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             }
+	     });
+	  });
+	  
+	  
+    $('#add_form input.button').click(function(){
+   
+		 var version = $('#version').val();
+         var file_name = $('#file_name').val();
+         var command_type = $('#command_type').val();
+         var msg;
+         if(command_type == 4){
+         
+             if(!version){
+                alert("请输入升级包版本");
+                return
+             }
+             msg = "是否发布游戏服务器?";
+         }else if(command_type == 1){
+             msg = "是否重启逻辑服(不重启resin)?";
+         }else if(command_type == 7){
+             msg = "重启逻辑服(重启resin)?";
+         }else if(command_type == 2){
+             msg = "是否关闭逻辑服?";
+         }else if(command_type == 3){
+             if(!file_name){
+                alert("请输入数据包名字");
+                return
+             }                         
+             msg = "是否发布数据?";
+         }else if(command_type == 5){
+             if(!version){
+                alert("请输入升级包版本");
+                return
+             }
+             msg = "是否发布战斗服?";
+         }else if(command_type == 6){
+             msg = "是否运行战斗服?";
+         }
+
+         var client_ids ;
+         $(".client_id_check").each(function(){
+			if($(this).attr("checked")){
+				var values = $(this).val();
+				if(!client_ids){
+				    client_ids = values;
+				}else{
+				    client_ids = client_ids + "," + values;
+				}
+			}
+		})
+		
+		if(!client_ids){
+		   alert("至少选择一个客户端");
+		   return;
+		}
+
+         if(confirm(msg)){
+	         try{
+		         var info = {};
+		         info['version'] = version;
+		         info['file_name'] = file_name
+		         info['command_type'] = command_type;
+		         service.add_command(client_ids, info);
+	             window.location.reload() ;
+			 }catch(e){
+			     alert(e.message);
+			 }
+		 }
+	});
+	  
+  });
+  
+</script>
+{% endblock %}
+{% block title %}服务器维护{% endblock %}
+{% block content %}
+<input type="button" class="add" value="发送命令"/><br/>
+{% for server_zone, client_list in client_maps.items %}
+<div style="text-align: center;font-size:16px;font-weight:bold;">[[{{ server_zone|server_zone_name }}]]</div>
+<table cellspacing="1" class="tablesorter">
+  <thead>
+    <th>ID</th>
+    <th>客户端名称</th>
+    <th>服务器ID列表</th>
+    <th>状态</th>
+    <th>IP</th>
+    <th>最后上报时间</th>
+    <th>当前命令</th>
+    <th>最后执命令</th>
+    <th>最后执命令状态</th>
+    <th>操作</th>
+  </thead>
+  <tbody>
+    {% if client_list %}
+      {% for info in client_list %}
+       <tr id="{{ info.id }}" >
+         <td>{{ info.id }} <input type="checkbox" class="client_id_check" value="{{info.id}}" name="check" /></td>
+         <td>{{ info.client_name}}</td>
+         <td>{{ info.server_ids|server_names }}<input id="serverId{{info.id}}" type="hidden" value="{{info.server_ids}}"/></td>
+         <td>
+            {% ifequal info.status 1 %}
+               <font color="green">正常</font>
+            {% else %}
+               <font color="red">停止</font>
+            {% endifequal %}
+         </td>
+         <td>{{ info.ip }}</td>
+         <td>{{ info.last_report_time }}</td>
+         <td>{{ info.command }}</td>
+         <td>{{ info.last_command }}</td>
+         <td>{{ info.last_command_report|command_report_detail|safe }}</td>
+         <td>
+            <a href="{% url client-run-log-list %}?client_id={{info.id}}" class="log_detail">查看执行日志</a>
+         </td>
+       </tr>
+      {% endfor %}
+    {% endif %}
+     <tr style="display:none"><td id="pageLink" colspan="12"></td></tr>
+  </tbody>
+</table>
+{% endfor %}
+<div id="add_dialog" class="flora" style="display: none;">
+    <form id="add_form" class="margin-top-10">
+        <input id="id" type="hidden"/>
+        <input id ="ucenter" value="{{ucenter}}" type = "hidden"/>     
+	    <p>
+	        <label>命令:</label>
+			<span style="margin-left:34px;">
+			  <select id="command_type">
+			    <option value="4" selected="selected">发布逻辑服</option>
+			    <option value="1">重启逻辑服(不重启resin)</option>
+			    <option value="7">重启逻辑服(重启resin)</option>
+			    <option value="2">关闭逻辑服</option>
+			    <option value="3">发布数据</option>
+			    <option value="5">发布战斗服</option>
+			    <option value="6">运行战斗服</option>
+			  </select>
+			</span>
+	    </p> 
+	    <p>
+            <label>版本:</label>
+			<span style="margin-left:34px;"><input id="version" type="text"  size="50"/></span>
+	    </p> 
+	    <p>
+            <label>数据包名称:</label>
+			<span><input id="file_name" type="text"  size="50"/></span>
+	    </p>
+		<p>
+    		<label>服务器列表:</label>
+			<span style="margin-left:10px;" id="server_ids">
+			
+			</span>
+	    </p>
+	    <br/>
+		<input class="button" type="button" value="提交" />
+    </form>
+</div>
+{% endblock %}

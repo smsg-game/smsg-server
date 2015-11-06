@@ -1,0 +1,79 @@
+<div id='menu'>
+	<p class="menu_head">运营数据</p>
+	<div class="menu_body">
+		<!--<a href="/manager/mail">实际数据</a>-->
+	    <a href="{% url user-level-stat %}">用户等级统计</a>
+	    <a href="{% url currdate-register %}">当日注册</a>
+	    <a href="{% url user-reg-stat %}">用户注册统计</a>
+	    <a href="{% url user-payment-stat %}">用户充值分析</a>
+	    <a href="{% url user-online-stat %}">在线人数统计</a>
+	    <a href="{% url user-level-rank-stat %}">单服等级排行</a>
+	    <a href="{% url user-draw-time-rank %}">抽奖积分排行</a>
+	    <a href="{% url user-draw-power-rank %}">战力排行</a>
+	    <a href="{% url user-draw-pk-rank %}">争霸排行</a>
+	    <a href="{% url user-use-gold-rank %}">金币消耗排行</a>
+	    <a href="{% url user-payment-rank %}">玩家充值排行</a>
+	</div>
+	<p class="menu_head">运营工具</p>
+	<div class="menu_body">
+		<a href="{% url system-mail-list %}">邮件发放</a>
+		<a href="{% url system-mail-approve-list %}">邮件审核</a>
+		<a href="{% url giftcode-list %}">礼包码管理</a>
+		<a href="{% url notice-list %}">走马灯管理</a>
+		<a href="{% url system-notice-list %}">公告管理</a>
+		<a href="{% url payment-order-list %}">手工补单</a>
+	</div>
+	<p class="menu_head">运营活动配置</p>
+	<div class="menu_body">
+		<a href="{% url system-pay-reward-once-list %}">单笔充值配置</a>
+		<a href="{% url system-pay-reward-total-list %}">累计充值配置</a>
+		<a href="{% url system-exchange-list %}">兑换活动配置</a>
+		<a href="{% url forces-list %}">副本活动管理</a>
+		<a href="{% url activity-list %}">游戏活动管理</a>
+		<a href="{% url system-mall-discount-list %}">商场打折管理</a>
+	</div>
+	<p class="menu_head">用户相关操作</p>
+	<div class="menu_body">
+	    <a href="{% url user-info %}">用户信息查询</a>
+		<a href="{% url user-hero-info %}">用户卡牌查询</a>
+		<a href="{% url user-package-info %}">用户背包查询</a>
+		<a href="{% url user-purchase-info %}">用户消费查询</a>
+		<a href="{% url user-mail-list %}">用户邮件查询</a>
+	</div>
+	<p class="menu_head">用户日志查询</p>
+	<div class="menu_body">
+		<a href="{% url user-gold-use-log %}">金币日志查询</a>
+		<a href="{% url user-tool-use-log %}">道具日志查询</a>
+		<a href="{% url user-payment-log %}">充值记录查询</a>
+		<a href="{% url user-hero-log %}">武将日志查询</a>
+		<a href="{% url user-level-up-log %}">升级日志查询</a>
+	</div>
+	<p class="menu_head">服务器总览</p>
+	<div class="menu_body">
+	    <a href="{% url stat-server %}">服务器总览</a>
+	    <a href="{% url country-server %}">服务器总览-国家</a>
+	    <a href="{% url stat-liucun %}">服务器留存</a>
+	    <a href="{% url server-liucun %}">单个服务器留存</a>
+	</div>
+	<p class="menu_head">系统管理</p>
+	<div class="menu_body">
+		<a href="{% url server-list %}">服务器列表</a>
+		<a href="{% url package-list %}">升级包管理</a>
+		<a href="{% url black-imei-list %}">白名单管理</a>
+	    <a href="{% url partner-list %}">合作商列表</a>
+	</div>
+	<p class="menu_head">权限管理</p>
+	<div class="menu_body">
+		<a href="{% url user-list %}">用户列表</a>
+		<a href="{% url page-list %}">页面列表</a>
+	</div>
+	<p class="menu_head">系统工具</p>
+	<div class="menu_body">
+		<a href="{% url client-list %}">服务器维护</a>
+		<a href="{% url game-web-status-list %}">开关服务器</a>
+		<a href="{% url white-ip-list %}">白名单IP</a>
+		<a href="{% url sync-system-table %}">道具表同步</a>
+		<a href="{% url battle-client-list %}">战斗服监控</a>
+	</div>
+</div>
+<p id="menu_bar">&nbsp;</p>

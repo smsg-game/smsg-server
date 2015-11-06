@@ -1,0 +1,610 @@
+#toolbar{display:none;}
+#msgbar span{padding:5px;}
+/*===========topkeyspiderinfo============*/
+#topkeyspiderinfo{width:60%;margin:10px 20% 0 20%;padding:5%;border:1px solid #c0c0c0;background-color:#fff;}
+#topkeyspiderinfo .spiderinfo{padding:10px;}
+
+/* CSS Document */
+
+body{
+	font-size:12px;
+	font-family:"宋体", Verdana, Arial, Helvetica, sans-serif;
+	color:#000;
+	margin:0;
+	padding:0 10px !important;
+	background-color:#fff;
+}
+a{
+	color:#0000CC;
+}
+a:hover{
+	text-decoration:none;
+}
+img{
+	vertical-align: baseline;
+}
+ul, form, p, dt, dl{
+	margin:0;
+	padding:0;
+}
+table{
+	border:0;
+	padding:0;
+	font-size:12px;
+}
+li{
+	list-style: none;
+}
+#content ul{
+	margin:0;
+	padding:0px 0px 0px 20px;
+}
+#content ul li{
+	list-style: square;
+}
+input[type="button"],input[type="submit"],input[type="file"]{
+	*height:22px;
+	*line-height:18px;
+}
+input,select{font-size:12px;}
+input[type="text"]:hover,
+input[type="password"]:hover,
+textarea:hover{
+	border:2px solid #FF9900;
+}
+
+h2{
+	font-size:18px;
+	margin:10px 0 0;
+}
+h3{
+	font-size:14px;
+	margin:10px 0 0;
+}
+/*突出文本*/
+.focus{
+	font-style:normal;
+	color:red;
+	font-weight:bold;
+}
+.focus2{
+	font-style:normal;
+	color:green;
+	font-weight:bold;
+}
+.focus3{
+	font-style:normal;
+	color:blue;
+	font-weight:bold;
+}
+.focus4{
+	font-style:normal;
+	color:#FFB400;
+	font-weight:bold;
+}
+.obvious{
+	font-style:normal;
+	color: #0066FF;
+}
+/*tip*/
+.tip{
+	color:#000;
+	background-color:#FAD163;
+	font-weight:bold;
+	line-height:22px;
+	margin:5px;
+	padding:0 4px;
+	float:left;
+}
+/*登录*/
+#login{
+	width:371px;
+	height:223px;
+	text-align:left;
+	margin:50px auto 10px auto;
+	background: url(../images/login_bg.png) no-repeat;
+	overflow:hidden;
+}
+#login input[type="text"], #login input[type="password"]{
+	width:200px;
+}
+#login input[type="text"]:hover,
+#login input[type="password"]:hover{
+	border:solid #FF9900;
+}
+#login ul{
+	margin:80px 0 0 50px;
+}
+#login ul li{
+	height:36px;
+	line-height:36px;
+}
+#login ul li+li+li{
+	padding-left:52px;
+	*padding-left:0;
+}
+#login ul li+li+li input{
+	*padding:0 0.2em;
+	*height:24px;
+}
+#container{
+	width:100%;
+	margin:0 auto;
+	text-align:left;
+}
+#logo{
+	float:left;
+	margin:5px 0 5px 10px;
+}
+/*head area*/
+#headUserInfo{
+	float:right;
+	text-align:right;
+	margin:5px 0;
+}
+.headTitle{
+	font-size:36px;
+	float:left;
+	margin:10px 0 10px 290px;
+}
+/*导航菜单*/
+#nav{
+	width:140px;
+	position:absolute;
+	*left:10px;
+	/* margin-top:30px; */
+}
+#nav a{
+	text-decoration:none;
+}
+#nav a:hover{
+	color: #000000;
+}
+#nav ul{
+	margin:15px 0;
+}
+#nav ul li{
+	line-height:22px;
+	margin:2px 0;
+	*margin:1px 0;
+	overflow:hidden;
+	zoom:1;
+}
+#nav ul li img{
+	vertical-align:middle;
+	margin-left:0px
+}
+/*当前选中样式*/
+#nav ul .current{
+	color:#0000CC;
+	font-weight:bold;
+	background-color:#C3D9FF;
+	text-indent:15px;
+	padding-left:15px;
+	*padding-left:0;
+}
+/*默认菜单样式*/
+#nav ul .default{
+	color:#ccc;
+	background-color:#ddd;
+	text-indent:15px;
+	padding-left:15px;
+	*padding-left:0;
+}
+#nav ul .default a{
+	color:#666;
+}
+/*sub nav*/
+#nav ul li ul{
+	margin:0;
+	overflow:hidden;
+}
+#nav ul li ul li{
+	margin-left:15px;
+	padding-left:5px;
+}
+#nav ul li ul li.subCurrent{
+	font-weight:bold;
+	background-color:#E0ECFF;
+}
+
+.menu_head {
+	padding: 5px 10px;
+	padding-left:20px;
+	cursor: pointer;
+	position: relative;
+	margin:1px;
+    background: #DDDDDD url(../images/right.gif) 5px center no-repeat;
+}
+
+#menu_bar{
+	padding: 5px 10px;
+	padding-left:20px;
+	cursor: pointer;
+	position: absolute;
+	margin:1px;
+    background: url(../images/left.gif) 5px center no-repeat;
+    z-index: 1000;
+}
+
+#menu_bar.hided{
+	padding: 5px 10px;
+	cursor: pointer;
+    background: url(../images/right.gif) 5px center no-repeat;
+    z-index: 1000;
+}
+
+.menu_body {
+	display:none;
+}
+.menu_body a{
+  display:block;
+  color:#006699;
+  background-color:#ffffff;
+  padding: 3px 0 3px 20px;
+  text-decoration:none;
+}
+.menu_body a:hover{
+  color: #000000;
+  text-decoration:none;
+  background: #E0ECFF;
+}
+
+/*扩展和收起左侧导航*/
+.expandLR{
+	position:relative;
+	left:139px;
+	cursor:pointer;
+}
+
+
+#main{
+	margin:10px 0 0 0;
+	overflow:hidden;
+	clear:both;
+}
+#content{
+	background:#C3D9FF;
+	margin-left:140px;
+	padding:10px;
+}
+#toolbar{
+	clear:both;
+	background:#E8EEFA;
+	height:25px;
+	line-height:25px;
+	margin:0 auto 10px 140px;
+	padding:1px 0 1px 5px;
+}
+#toolbar input[type="checkbox"]{
+	vertical-align:middle !important;
+}
+.sidebar{
+	margin-bottom:5px;
+}
+.sidebar a{
+	text-decoration:none;
+}
+.sidebar input[type="text"]{
+	width:80px;
+	height:14px;
+}
+/*信息摘要*/
+.summary, .doing, .undoing, .unstart{
+	margin:5px auto 10px auto;
+	padding:8px;
+	background:#E0ECFF;
+	overflow:hidden;
+}
+.summary fieldset, .doing fieldset, .undoing fieldset, .unstart fieldset{
+	border:1px solid #bbb;
+	margin:5px 0;
+	padding:5px;
+	*padding-top:0;
+	line-height:20px;
+}
+.summary fieldset legend, .doing fieldset legend, .undoing fieldset legend, .unstart fieldset legend{
+	color:#000;
+	font-weight:bold;
+}
+.summary label, .doing label, .undoing label, .unstart label{
+	width:60px;
+	line-height:20px;
+	float:left;
+}
+/*数据表格样式*/
+.tableData{
+	background:#f1f5fd;
+}
+.tableData img{
+	vertical-align:middle;
+}
+.tableData div{
+	background:#66CCFF;
+}
+.tableData div b.niftycorners{
+	margin-bottom:0!important;
+	background-color:#C3D9FF!important;
+}
+.tableData table{
+	width:100%;
+	border:none;
+	padding:0;
+}
+.tableData th{
+	text-align:center;
+	line-height:20px;
+	background: #66CCFF;
+}
+.tableData tr{
+	background:#f1f5fd;
+}
+.tableData tr:hover{
+	background: #CCFFCC;
+}
+.tableData td{
+	height:24px;
+	text-align:center;
+	padding:2px;
+	border-bottom:1px solid #BBBBBB;
+}
+/*翻页效果*/
+.pages{
+	text-align:right;
+	line-height:22px;
+	margin-top:5px;
+}
+.pages .current{
+	color:#996600;
+	font-weight:bold;
+}
+.pages a:hover{
+	color:#996600;
+}
+/*硬件使用状况条状样式*/
+.diskBar{
+	height:14px;
+	width:160px;
+	text-align:center;
+	display:block;
+	border:1px solid #15a4d0;
+	background-color:#fff;
+}
+.diskBar span{
+	position: relative;
+	overflow:hidden;
+	zoom:1;
+}
+.used{
+	float:left;
+	height:14px;
+	margin:-15px 0 0 1px;
+	display:block;
+	background:url(../../used.gif) repeat-x;
+}
+.unused{
+	float:left;
+	height:14px;
+	*margin-left:0 !important;
+	margin-top:-15px;
+	background:url(../../unused.gif) repeat-x;
+}
+.diskBar img{ vertical-align:top;}
+
+/*tag页*/
+#tag{
+	margin-top:5px;
+	clear:both;
+	overflow:hidden;
+	zoom:1;
+}
+#tag a{
+	text-decoration:none;
+}
+#tag li a{
+	color:#333;
+}
+#tag li.tagCurrent a,#tag li:hover a{
+	color:#0000cc;
+}
+#tag li{
+	float:left;
+	height:20px;
+	line-height:20px;
+	padding:2px 5px 0;
+	margin:2px 3px 0 0;
+	background: url(../../middle.png) no-repeat;
+}
+#tag li:hover{
+	height:20px;
+	margin-top:2px;
+	background: url(../../hoover_middle.png) no-repeat;
+}
+#tag li.tagCurrent{
+	color:#0000cc;
+	height:22px;
+	padding:6px 5px 0;
+	margin:0 3px 0 0;
+	line-height:inherit;
+	background:url(../../sel_middle.png) no-repeat;
+}
+.tagContent{
+	margin:0 auto 10px auto;
+	padding:8px;
+	background:#E0ECFF;
+	overflow:hidden;
+}
+/*状态图标列表和块*/
+ul.stateList li{
+	background: #EfFFFF;
+	line-height:22px;
+	padding:0 4px;
+	margin:3px 0;
+}
+ul.stateList img{
+	vertical-align:middle;
+	cursor:pointer;
+}
+.doing ul.stateList li{
+	background: #f0f0f0;
+}
+.doing{
+	line-height:20px;
+	background: #EFFFFF;
+}
+.undoing{
+	line-height:20px;
+	background-color:#E0F2FF;
+}
+.unstart{
+	line-height:20px;
+	background-color:#E7F3FF;
+}
+
+/*footer area*/
+#footer{
+	text-align:center;
+	line-height:20px;
+	margin-top:10px;
+	padding:0;
+}
+
+.cachesynfilecount{
+	font-size:12px;
+	font-weight:normal;
+	color:gray;
+}
+
+.examine-user{
+	background-image: url(../../user.gif);
+	background-repeat: no-repeat;
+	background-position: left center;
+	padding-top: 2px;
+	padding-right: 0px;
+	padding-bottom: 2px;
+	padding-left: 20px;
+	float:left;
+	width:100%;
+}
+.warn-examine-user {
+	background-image: url(../../warn-user.gif);
+	background-repeat: no-repeat;
+	background-position: left center;
+	padding-top: 2px;
+	padding-right: 0px;
+	padding-bottom: 2px;
+	padding-left: 20px;
+	float:left;
+	width:100%;
+}
+.mispercent {
+	height:7px;
+	margin-top:0px;
+	margin-bottom:0px;
+	background-color:red;
+	background-repeat: no-repeat;
+	background-position: left center;
+	width:10px;
+}
+.mispercent-bg{
+	width:100px;
+	background-color:#ccc;
+	float:left;
+	margin:4px;
+	text-align:left;
+}
+.loading{
+	background-image: url(../../loading.gif);
+	background-repeat: no-repeat;
+	background-position: center center;
+	height: 16px;
+	width: 16px;	
+}
+.greenpercent{
+	height:7px;
+	margin-top:0px;
+	margin-bottom:0px;
+	background-color:green;
+	background-repeat: no-repeat;
+	background-position: left center;
+	width:10px;	
+}
+.searchOuter {
+	background-image: url(../../search.gif);
+	background-repeat: no-repeat;
+	background-position: left center;
+	padding-left:18px;
+	border:solid 1px #7f9db9;
+	height:22px;	
+}
+
+.personoption {
+	background-image: url(../../s-user.gif);
+	background-repeat: no-repeat;
+	background-position: left center;	
+	padding-left:17px;
+}
+
+.operatorResult{
+	width:570px;
+	height:350px;
+	background-color:#f2f2f2;
+	border:solid 1px #000;
+	position:absolute;
+	padding:4px;
+}
+
+
+.fcGreen{
+	color:green;
+}
+.fcRed{
+	color:red;
+}
+
+
+/* tablesorter tables */
+table.tablesorter {
+	background-color: #CDCDCD;
+	margin:10px 0pt 15px;
+	width: 100%;
+	text-align: left;
+}
+table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+	background-color: #e6EEEE;
+	border: 1px solid #FFF;
+	padding: 4px;
+}
+table.tablesorter thead tr .header {
+	background-image: url(../images/bg.gif);
+	background-repeat: no-repeat;
+	background-position: center right;
+	cursor: pointer;
+}
+table.tablesorter tbody td {
+	color: #3D3D3D;
+	padding: 4px;
+	background-color: #FFF;
+	vertical-align: top;
+}
+table.tablesorter tbody tr.odd td {
+	background-color:#F0F0F6;
+}
+table.tablesorter thead tr .headerSortUp {
+	background-image: url(../images/asc.gif);
+}
+table.tablesorter thead tr .headerSortDown {
+	background-image: url(../images/desc.gif);
+}
+table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
+	background-color: #8dbdd8;
+}
+
+/* client list style */
+tr.clientStatusRow {
+	cursor: pointer;
+}
+
+.margin-top-10 p{
+   margin-top: 10px;
+}

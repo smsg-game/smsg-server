@@ -1,0 +1,80 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+     
+  service = new rpc.ServiceProxy("/services/admin/", {asynchronous:false, methods: ['add_server', 'delete_server']});
+       
+  $(document).ready(function(){
+  
+	  $('input.search').click(function(){
+     
+		 var date = $('#date').val();
+		 var server_id = $('#server_id').val();
+         if(!date){
+            alert("请选择日期");
+         }else if(!server_id){
+            alert("请选择服务器");
+         }else{
+            var url = "{% url user-level-stat %}?date=" + date + "&server_id=" + server_id;
+		    window.location = url;
+         }
+         
+	  });
+	  
+  });
+  
+</script>
+{% endblock %}
+{% block title %}用户等级统计{% endblock %}
+{% block content %}
+<input type="text" id="date" name="date" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="Wdate" style="width: 100px" value="{{date}}"/>
+{% include "inc/server_select.html" %}
+<input type="button" class="search" value="查找"/><br/>
+
+<table cellspacing="1" class="tablesorter">
+  <thead>
+    <th>用户等级</th>
+    <th>用户人数</th>
+    <th>用户等级</th>
+    <th>用户人数</th>
+    <th>用户等级</th>
+    <th>用户人数</th>
+    <th>用户等级</th>
+    <th>用户人数</th>
+    <th>用户等级</th>
+    <th>用户人数</th>
+    <th>用户等级</th>
+    <th>用户人数</th>
+    <th>用户等级</th>
+    <th>用户人数</th>
+    <th>用户等级</th>
+    <th>用户人数</th>
+    <th>用户等级</th>
+    <th>用户人数</th>
+    <th>用户等级</th>
+    <th>用户人数</th>
+  </thead>
+  <tbody>
+    {% if level_infos %}
+        <tr>
+        {% for level_info in level_infos %}
+           <td>{{ level_info.level }}</td>
+           <td>{{ level_info.total }}</td>
+           
+           {% if level_info.new_line %}
+              </tr><tr>
+           {% endif %}
+           
+        {% endfor %}
+        <tr>
+    {% endif %}
+     <tr style="display:none"><td id="pageLink" colspan="12"></td></tr>
+  </tbody>
+</table>
+{% endblock %}

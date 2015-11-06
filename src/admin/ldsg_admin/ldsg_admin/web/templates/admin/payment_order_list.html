@@ -1,0 +1,138 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+     
+  service = new rpc.ServiceProxy("/services/admin/", {asynchronous:false, methods: ['fill_order', ]});
+       
+  $(document).ready(function(){
+  
+	  genPageLinks({{total}}, {{pagesize}});
+	
+	  $('input.search').click(function(){
+         
+         var ucenter = $('#ucenter').val();
+		 var name = $('#name').val();
+		 var server_id = $('#server_id').val();
+		 
+		 if(!name){
+            alert("请输入用户ID或者角色名");
+         }else if(!server_id){
+            alert("请选择服务器");
+         }else{
+            var url = "{% url payment-order-list %}?ucenter=" + ucenter + "&name=" + name + "&server_id=" + server_id ;
+		    window.location = url;
+         }
+         
+	  });
+	
+	  $('a.edit').click(function(){
+     
+         var order_id = $(this).parent().parent().attr('order_id');
+         $('#order_id').val(order_id);
+
+	     $("#add_dialog").show().dialog({
+		     height: 120, width: 630, modal: true,
+	         title: '手工补单',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             }
+	     });
+	  });
+	  
+	  $('#add_form input.button').click(function(){
+	  
+	    var ucenter = $('#ucenter').val();
+	    var order_id = $('#order_id').val();
+		var partner_order_id = $('#partner_order_id').val();
+        
+        if(!partner_order_id){
+          alert("请输入合作商订单ID");
+        }else{
+           try{
+		       service.fill_order(ucenter, order_id, partner_order_id);
+               window.location.reload() ;
+		   }catch(e){
+			   alert(e.message);
+		   }
+        }
+  
+	});
+
+	  
+  });
+  
+</script>
+{% endblock %}
+{% block title %}升级包列表{% endblock %}
+{% block content %}
+webapi:
+<select id="ucenter">
+  {% ifequal is_test 0 %}
+  <option value="android" {% ifequal ucenter "android" %}selected=selected{% endifequal %}>android登录服</option>
+  <option value="ios" {% ifequal ucenter "ios" %}selected=selected{% endifequal %}>ios登录服</option>
+  {% endifequal %}
+</select>
+请输入用户ID或者用户昵称:<input type="text" name="name" id="name" value="{{name}}"/>{% include "inc/server_select.html" %}
+<input type="button" class="search" to_excel=0 value="查找"/>
+<table cellspacing="1" class="tablesorter">
+  <thead>
+    <th>订单ID</th>
+    <th>合作商订单ID</th>
+    <th>服务器</th>
+    <th>玩家昵称</th>
+    <th>订单金额</th>
+    <th>订单状态</th>
+    <th>创建时间</th>
+    <th>操作</th>
+  </thead>
+  <tbody>
+    {% if infos %}
+      {% for info in infos %}
+       <tr order_id="{{ info.order_id }}">
+         <td>{{ info.order_id }}</td>
+         <td>{{ info.partner_order_id}}</td>
+         <td>{{ info.server_id|server_name }}</td>
+         <td>{{ info.username }}</td>
+         <td>{{ info.amount }}</td>
+         <td>
+            {% ifequal info.status 0 %}
+               未支付
+            {% else %}
+               {% ifequal info.status 1 %}
+                  已完成
+               {% else %}
+                  元宝发放失败
+               {% endifequal %} 
+            {% endifequal %} 
+         </td>
+         <td>{{ info.created_time }}</td>
+         <td>
+           {% ifequal info.status 0 %}
+            <a href="#" class="edit" copy="0">补单</a>
+           {% endifequal %} 
+         </td>
+       </tr>
+      {% endfor %}
+    {% endif %}
+     <tr style="display:none"><td id="pageLink" colspan="12"></td></tr>
+  </tbody>
+</table>
+<div id="add_dialog" class="flora" style="display: none;">
+    <form id="add_form" class="margin-top-10">
+        <input id="order_id" type="hidden"/>
+        <p>
+    		<label>合作商订单ID:</label>
+			<span style="margin-left:10px;"><input id="partner_order_id" type="text" size="50"/></span>
+	    </p>
+	    <br/>
+		<input class="button" type="button" value="确定" />
+    </form>
+</div>
+{% endblock %}

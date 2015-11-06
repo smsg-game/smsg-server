@@ -1,0 +1,6 @@
+<span style="margin-right:20px;">服务器分区:</span>
+<select id="server_zone">
+	   {% for zone, zone_name in server_zone_map.items %}
+	      <option value="{{zone}}" {% ifequal server_zone zone %}selected=selected{% endifequal %}>{{ zone_name }}</option>
+	   {% endfor %}
+</select>

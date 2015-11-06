@@ -1,0 +1,283 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+     
+  service = new rpc.ServiceProxy("/services/package/", {asynchronous:false, methods: ['add_package', 'sync_package']});
+       
+  $(document).ready(function(){
+  
+	  genPageLinks({{total}}, {{pagesize}});
+	
+	  $('input.search').click(function(){
+     
+		 var version = $('#s_version').val();
+		 var ucenter = $('#ucenter').val();
+		 var url = "{% url package-list %}?ucenter=" + ucenter + "&version=" + version ;
+		 window.location = url;
+         
+	  });
+	
+	  $('input.add').click(function(){
+     
+         $('#id').val(0);
+         $('#id').val();
+         $('#partner_id').val();
+         $('#version').val();
+         $('#versions').val();
+         $('#full_url').val();
+         $('#upgrade_url').val();
+         $('#pkg_type').val();
+         $('#description').val();
+         $('#frs').val();
+         $('#is_test').val();
+         $('#ucenter').val();
+        
+     
+	     $("#add_dialog").show().dialog({
+		     height: 420, width: 430, modal: true,
+	         title: '添加升级包',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             }
+	     });
+	  });
+	  
+	 $('a.delete').click(function(){
+     
+         var id = $(this).parent().parent().attr('id');
+         var server_id = $(this).parent().parent().attr('server_id');
+         var server_name = $(this).parent().parent().attr('server_name');
+
+	      if(confirm("确定删除增量包“" + server_id + "-" + server_name + "”?")){
+		    try{
+		       service.delete_server(id);
+	           window.location.reload() ;
+			}catch(e){
+			   alert(e.message);
+			}
+	      }
+	  });
+	  
+	  $('a.sync').click(function(){
+     
+         var ucenter = $('#ucenter').val();
+         var id = $(this).parent().parent().attr('id');
+
+	      if(confirm("确定同步增量包到其它合作商?")){
+		    try{
+		       service.sync_package(ucenter, id);
+	           window.location.reload() ;
+			}catch(e){
+			   alert(e.message);
+			}
+	      }
+	  });
+	  
+	  $('a.edit').click(function(){
+     
+         var id = $(this).parent().parent().attr('id');
+         var partner_id = $(this).parent().parent().attr('partner_id');
+         var version = $(this).parent().parent().attr('version');
+         var versions = $(this).parent().parent().attr('versions');
+         var full_url = $(this).parent().parent().attr('full_url');
+         var upgrade_url = $(this).parent().parent().attr('upgrade_url');
+         var pkg_type = $(this).parent().parent().attr('pkg_type');
+         var description = $(this).parent().parent().attr('description');
+         var frs = $(this).parent().parent().attr('frs');
+         var is_test = $(this).parent().parent().attr('is_test');
+         
+         
+         var copy = $(this).attr("copy");
+         if(copy==1){
+             $('#id').val(0);
+         }else{
+             $('#id').val(id);
+         }
+         $('#partner_id').val(partner_id);
+		 $('#version').val(version);
+         $('#versions').val(versions);
+         $('#full_url').val(full_url);
+         $('#upgrade_url').val(upgrade_url);
+         $('#pkg_type').val(pkg_type);
+         $('#description').val(description);
+         $('#frs').val(frs);
+         $('#is_test').val(is_test);
+
+	     $("#add_dialog").show().dialog({
+		     height: 420, width: 430, modal: true,
+	         title: '添加升级包',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             }
+	     });
+	  });
+	  
+	  
+	  
+    $('#add_form input.button').click(function(){
+		 var id = $('#id').val();
+         var partner_id = $('#partner_id').val();
+         var version = $('#version').val();
+         var versions = $('#versions').val();
+         var full_url = $('#full_url').val();
+         var upgrade_url = $('#upgrade_url').val();
+         var pkg_type = $('#pkg_type').val();
+         var description = $('#description').val();
+         var frs = $('#frs').val();
+         var is_test = $('#is_test').val();
+         var ucenter = $('#ucenter').val();
+         var reg = new RegExp("^[0-9]*$");
+        if(!partner_id){
+		   alert("请输入合作商ID");
+	    }else if(!version){
+	       alert("请输入版本 ");
+	    }else if(!full_url){
+	       alert("请输入完整升级包");
+	    }else if(!pkg_type){
+	       alert("升级包类型");   
+		}else if(!reg.test(pkg_type)){
+           alert("升级包类型只能是数字");   
+        }else if(!is_test){
+	       alert("是否测试包");
+	    }else if(!reg.test(is_test)){
+           alert("是否测试包只能是数字");
+        }else{
+		    try{
+		       var package_info = {};
+		       package_info['id'] = id;
+		       package_info['partner_id'] = partner_id;
+		       package_info['version'] = version;
+		       package_info['versions'] = versions
+		       package_info['full_url'] = full_url
+		       package_info['upgrade_url'] = upgrade_url
+		       package_info['pkg_type'] = pkg_type
+		       package_info['description'] = description
+		       package_info['frs'] = frs
+		       package_info['is_test'] = is_test
+		       service.add_package(ucenter,package_info);
+	           window.location.reload() ;
+			}catch(e){
+			   alert(e.message);
+			}
+	    }
+	});
+	  
+  });
+  
+</script>
+{% endblock %}
+{% block title %}升级包列表{% endblock %}
+{% block content %}
+webapi:
+<select id="ucenter">
+  {% ifequal is_test 0 %}
+  <option value="android" {% ifequal ucenter "android" %}selected=selected{% endifequal %}>android登录服</option>
+  <option value="ios" {% ifequal ucenter "ios" %}selected=selected{% endifequal %}>ios登录服</option>
+  {% endifequal %}
+</select>
+版本:<input type="text" id="s_version" value="{{version}}"/>
+<input type="button" class="search" to_excel=0 value="查找"/>
+<input type="button" class="add" value="添加升级包"/><br/>
+<table cellspacing="1" class="tablesorter">
+  <thead>
+    <th>ID</th>
+    <th width="55">合作商ID</th>
+    <th>版本</th>
+    <th width="55">兼容版本</th>
+    <th>完整升级包</th>
+    <th width="65">增量升级包</th>
+    <th width="65">升级包类型</th>
+    <th>描述</th>
+    <th>白名单</th>
+    <th>是否测试包</th>
+    <th width="70">操作</th>
+  </thead>
+  <tbody>
+    {% if infos %}
+      {% for info in infos %}
+       <tr id="{{ info.id }}" partner_id="{{ info.partner_id}}" version="{{ info.version }}" versions="{{ info.versions }}" full_url="{{ info.full_url }}" upgrade_url="{{ info.upgrade_url }}" pkg_type="{{ info.pkg_type }}" description="{{ info.description }}" frs="{{ info.frs }}" is_test="{{ info.is_test }}" >
+         <td>{{ info.id }}</td>
+         <td>{{ info.partner_id}}</td>
+         <td>{{ info.version }}</td>
+         <td>{{ info.versions }}</td>
+         <td>{{ info.full_url }}</td>
+         <td>{{ info.upgrade_url }}</td>
+         <td>
+             {% ifequal info.pkg_type 1 %}
+                增量包
+             {% else %}
+                apk包
+             {% endifequal %}
+         
+         </td>
+         <td>{{ info.description }}</td>
+         <td style="word-break:break-all">{{ info.frs }}</td>
+         <td>{{ info.is_test }}</td>
+         <td>
+            <a href="#" class="edit" copy="0">编辑</a>
+            |
+            <a href="#" class="edit" copy="1">复制</a>
+         </td>
+       </tr>
+      {% endfor %}
+    {% endif %}
+     <tr style="display:none"><td id="pageLink" colspan="12"></td></tr>
+  </tbody>
+</table>
+<div id="add_dialog" class="flora" style="display: none;">
+    <form id="add_form" class="margin-top-10">
+        <input id="id" type="hidden"/>
+        <p>
+    		<label>合作商ID:</label>
+			<span style="margin-left:10px;"><input id="partner_id" type="text" size="50"/></span>
+	    </p>
+	    <p>
+    		<label>版本:</label>
+			<span style="margin-left:34px;"><input id="version" type="text"  size="50"/></span>
+	    </p> 
+	    <p>
+            <label>兼容版本:</label>
+			<span style="margin-left:10px;"><input id="versions" type="text"  size="50"/></span>
+	    </p> 
+	    <p>
+            <label>完整升级包:</label>
+			<span><input id="full_url" type="text"  size="50"/></span>
+	    </p> 
+	    <p>
+    		<label>增量升级包:</label>
+			<span><input id="upgrade_url" type="text"  size="50"/></span>
+	    </p>
+	    <p>
+    		<label>升级包类型:</label>
+			<span>
+			    <select id="pkg_type">
+			       <option value="1">增量包</option>
+			       <option value="0">apk包</option>
+			    </select>
+			</span>
+	    </p>
+	    <p>
+    		<label>描述:</label>
+			<span style="margin-left:35px;"><input id="description" type="text"  size="50"/></span>
+	    </p>
+	    <p>
+    		<label>白名单:</label>
+			<span style="margin-left:24px;"><input id="frs" type="text"  size="50"/></span>
+	    </p>
+	    <p>
+    		<label>是否测试包:</label>
+			<span><input id="is_test" type="text"  size="50"/></span>
+	    </p> 
+	    <br/>
+		<input class="button" type="button" value="提交" />
+    </form>
+</div>
+{% endblock %}

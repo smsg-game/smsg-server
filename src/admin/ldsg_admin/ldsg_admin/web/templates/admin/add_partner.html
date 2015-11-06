@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>三国合伙人后台管理</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+	<script src="/site_media/plus/bootstrap/js/bootstrap.min.js"></script>
+	<link href="/site_media/plus/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen"></head>
+    <script language="javascript" type="text/javascript" src="/site_media/plus/My97DatePicker/WdatePicker.js"></script>
+<body>
+	<div style="color:red">
+		{{error_message}}
+	</div>
+	<div style="">
+		<form action="/partner/add/" method="post" class="form-horizontal" id="myForm">
+			<div class="control-group">
+			    <label class="control-label" for="p_num">渠道代号</label>
+			    <div class="controls">
+			      <input type="text" id="p_num" name="p_num" value="{{partner.p_num}}">
+			      <input type="hidden" value="{{partner.pid}}" name="pid" id="pid"/>
+			    </div>
+			 </div>
+			 <div class="control-group">
+			    <label class="control-label" for="p_name">渠道名称</label>
+			    <div class="controls">
+			      <input type="text" id="p_name" name="p_name" value="{{partner.s_name}}">
+			    </div>
+			 </div>
+			 <div class="control-group">
+			 	<div class="controls">
+			      <button class="btn btn-primary" id="sumbit" type="button">提交</button>
+			      <a href="/index/" class="btn btn-primary" type="button">返回</a>
+			    </div>
+			 </div>
+		</form>
+	</div>
+	<script>
+		$(document).ready(function(){
+			$("#sumbit").click(function(){
+				var a = true;
+				var input = $("#myForm").find("input:text").each(function() {
+					 if($(this).val()=="" || $(this).val().length==0){
+					 	alert("字段不能为空");
+					 	a = false;
+					 	return false;
+					 }
+				});
+				if(!a){
+					return;
+				}
+		        $("#myForm").submit();
+			})
+		})
+	</script>
+</body>
+</html>
+

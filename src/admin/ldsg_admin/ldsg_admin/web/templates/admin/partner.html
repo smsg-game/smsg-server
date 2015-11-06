@@ -1,0 +1,66 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+{% endblock %}
+{% block title %}{% endblock %}
+{% block content %}
+	<div style="text-align:center;">
+		<div>
+			<select name="partner" id="partner">
+				<option value="0" >请选择</option>	
+				{% for item in partners %}
+					<option value="{{item.pid}}">{{item.p_name}}</option>
+				{% endfor %}
+			</select>
+			<button class="btn btn-small" id="addService">添加服务器</button>
+			<a href="/partner/delete/{{pid}}/" class="btn btn-small">删除</a>
+			<!--<a href="/partner/update/{{pid}}/" class="btn btn-small">修改</a>-->
+			<a href="/partner/add/" class="btn btn-small">添加</a>
+		</div>
+		<div style="display:none;" id="serviceBox">
+			<form action="/add_partner_service/" method="post" id="myForm">
+				<input type="hidden" value="{{pid}}" name="pid" />
+				{% for item in filterservices %}
+					<input type="checkbox" name="selectedServer" value="{{ item.sid }}"/>{{ item.s_name }}
+				{% endfor %}
+				<button class="btn btn-small">提交</button>
+			</form>
+		</div>
+		<a htef="/service/" class="btn btn-mini">服务器列表</a>
+	</div>
+	<table cellspacing="1" class="tablesorter">
+	    <thead>
+			<th>服务器代号</th>
+			<th>服务器名称</th>
+			<th>开放状态</th>
+			<th>操作</th>
+		</thead>
+		<tbody>
+		{% for item in services %}
+    		<tr>
+    			<td>{{ item.s_num }}</td>
+    			<td>{{ item.s_name }}</td>
+    			<td>{{ item.isdel }}</td>
+    			<td><a href="/partner/service/delete/{{item.sid}}/{{pid}}/">删除</a></td>
+    		</tr>
+		{% endfor %}
+		 </tbody>
+	</table>
+	<script>
+		$(document).ready(function(){
+			$("#partner ").val({{pid}});
+			$("#addService").click(function() {
+				if($("#partner").val() == 0){
+					alert("请选择渠道");
+					return ;
+				}
+				$("#serviceBox").toggle();
+			});
+			$("#partner").change(function() {
+				var pid = $(this).val();
+				window.location.href='/partner/'+pid+'/';
+			});
+		})
+	</script>
+{% endblock %}
+

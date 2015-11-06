@@ -97,7 +97,7 @@
         <bean id="connector1" class="com.lodogame.game.server.context.ClientConfigContext">
                 <property name="connectorId" value="connector1"></property>
                 <property name="ip" value="127.0.0.1"></property>
-                <property name="port" value="10000"></property>
+                <property name="port" value="9999"></property>
                 <property name="supportDistributedSession" value="false"></property>
                 <property name="encoding" value="utf-8"></property>
                 <property name="supportFlash" value="true"></property>
@@ -113,7 +113,7 @@
         <bean id="connector2" class="com.lodogame.game.server.context.ClientConfigContext">
                 <property name="connectorId" value="connector2"></property>
                 <property name="ip" value="127.0.0.1"></property>
-                <property name="port" value="10000"></property>
+                <property name="port" value="9999"></property>
                 <property name="supportDistributedSession" value="false"></property>
                 <property name="encoding" value="utf-8"></property>
                 <property name="supportFlash" value="true"></property>
@@ -129,7 +129,7 @@
         <bean id="connector3" class="com.lodogame.game.server.context.ClientConfigContext">
                 <property name="connectorId" value="connector3"></property>
                 <property name="ip" value="127.0.0.1"></property>
-                <property name="port" value="10000"></property>
+                <property name="port" value="9999"></property>
                 <property name="supportDistributedSession" value="false"></property>
                 <property name="encoding" value="utf-8"></property>
                 <property name="supportFlash" value="true"></property>

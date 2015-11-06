@@ -1,0 +1,58 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+   
+   $(document).ready(function(){
+   
+       genPageLinks({{total}}, {{pagesize}});
+  });
+  
+</script>
+{% endblock %}
+{% block title %}客户端运行日志{% endblock %}
+{% block content %}
+<table cellspacing="1" class="tablesorter">
+  <thead>
+    <th>ID</th>
+    <th>运行时间</th>
+    <th>命令类型</th>
+    <th>服务器ID</th>
+    <th>运行状态</th>
+    <th>扩展信息</th>
+    <th>日志输出</th>
+  </thead>
+  <tbody>
+    {% if infos %}
+      {% for info in infos %}
+       <tr id="{{ info.id }}" >
+         <td>{{ info.id }}</td>
+         <td>{{ info.created_time}}</td>
+         <td>{{ info.command_type|command_type_name}}[{{ info.command_type}}]</td>
+         <td>{{ info.server_id|server_name }}[{{ info.server_id }}]</td>
+         <td>
+            {% ifequal info.status 1 %}
+               <font color="green">成功</font>
+            {% else %}
+               <font color="red">失败</font>
+            {% endifequal %}
+            
+         </td>
+         <td>{{ info.extinfo }}</td>
+         <td>
+           <textarea cols="120" rows="10" style="width:98%;">
+              {{ info.content }}
+           </textarea>
+         </td>
+       </tr>
+      {% endfor %}
+    {% endif %}
+     <tr style="display:none"><td id="pageLink" colspan="12"></td></tr>
+  </tbody>
+</table>
+{% endblock %}

@@ -1,16 +1,20 @@
 #!/bin/sh
-
-SRC_DIR=/data/src/$1
+T_SRC_DIR=/cygdrive/e/github/smsg-game/smsg-server/src/20141123/
+SRC_DIR=/cygdrive/e/github/smsg-game/smsg-server/src/build/
 DEPLOY_DIR=/data/deploy_dir
 CONFIG_DIR=/data/deploy_dir/config
 BATTLE_DIR=/data/deploy_dir_battle
 BATTLE_CONFIG_DIR=/data/deploy_battle/config
 
+rm -rf $SRC_DIR/*
+rm -rf $DEPLOY_DIR/*
+cp -rf $T_SRC_DIR/* $SRC_DIR
+
 cd $SRC_DIR/
 
-svn up
 
-mvn clean deploy -U -Dmaven.test.skip=true -pl game-server,game-utils,partner-sdk,game-model,game-dao,game-service
+
+mvn clean install -U -Dmaven.test.skip=true -pl game-server,game-utils,partner-sdk,game-model,game-dao,game-service
 
 rm $DEPLOY_DIR -rf
 mkdir $DEPLOY_DIR
@@ -112,18 +116,14 @@ mvn clean package shade:shade -U -Dmaven.test.skip=true
 cp $SRC_DIR/game-web/target/webapp.war $DEPLOY_DIR/game-web.war
 cp $SRC_DIR/game-api/target/webapp.war $DEPLOY_DIR/game-api.war
 
-cd $DEPLOY_DIR
 
-tar -zcvf $1\.tar\.gz ./
-/usr/bin/ftp -n 115.146.121.248 <<EOF
-user ftpchibi xjK4kPKUusCO
-binary
-prompt
-cd deploy
-delete $1.tar.gz
-EOF
+
+
+cd $DEPLOY_DIR
+tar -zcvf allgame\.tar\.gz ./
+
 
 
 
 # 替换 ftp 的登录名和密码，以及 ip
-wput $DEPLOY_DIR/$1.tar.gz ftp://ftpchibi:xjK4kPKUusCO@115.146.121.248/public_html/3qchibi/deploy/$1.tar.gz
+#wput $DEPLOY_DIR/$1.tar.gz ftp://wenbo:123456@54.251.118.150/deploy/$1.tar.gz

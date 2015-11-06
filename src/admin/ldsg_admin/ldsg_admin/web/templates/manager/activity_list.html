@@ -1,0 +1,290 @@
+{% extends "master.html" %}
+{% block title %}游戏活动管理{% endblock %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+       
+  $(document).ready(function(){
+  		$('input.search').click(function(){
+		 var server_id = $('#server_id').val();
+         if(!server_id){
+            alert("请选择服务器");
+         }else{
+            var url = "{% url activity-list %}?server_id=" + server_id;
+		    window.location = url;
+         }
+         
+	  });
+  });
+  
+</script>
+
+<script type="text/javascript">
+  activity = new rpc.ServiceProxy("/services/activity/", {asynchronous:true, methods: ['add_activity', 'delete_activity']});
+       
+  $(document).ready(function(){
+  
+	  //genPageLinks({{total}}, {{pagesize}});
+	
+	  $('input.add').click(function(){
+     
+         $('#id').val(0);
+         $('#server_id').val("");
+		 $('#server_name').val("");
+         $('#db_connect').val("");
+         $('#redis_connect').val("");
+         $('#server_host').val("");
+     
+	     $("#add_dialog").show().dialog({
+		     height: 360, width: 430, modal: true,
+	         title: '添加服务器',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             }
+	     });
+	  });
+	  
+	 $('a.delete').click(function(){
+     
+         var id = $(this).parent().parent().attr('id');
+         var server_id = $(this).parent().parent().attr('server_id');
+         var server_name = $(this).parent().parent().attr('server_name');
+
+	      if(confirm("确定删除服务器“" + server_id + "-" + server_name + "”?")){
+		    try{
+		       service.delete_server(id);
+	           window.location.reload() ;
+			}catch(e){
+			   alert(e.message);
+			}
+	      }
+	  });
+	  
+	  $('a.edit').click(function(){
+     
+         var activity_id = $(this).parent().parent().attr('activity_id');
+         var activity_type = $(this).parent().parent().attr('activity_type');
+         var activity_name = $(this).parent().parent().attr('activity_name');
+         var activity_desc = $(this).parent().parent().attr('activity_desc');
+         var start_time = $(this).parent().parent().attr('start_time');
+         var end_time = $(this).parent().parent().attr('end_time');
+         var open_weeks = $(this).parent().parent().attr('open_weeks');
+         var param = $(this).parent().parent().attr('param');
+         var display = $(this).parent().parent().attr('display');
+         var sort = $(this).parent().parent().attr('sort');
+         
+         $('#activity_id').val(activity_id);
+         $('#activity_type').val(activity_type);
+		 $('#activity_name').val(activity_name);
+         $('#activity_desc').val(activity_desc);
+         $('#start_time').val(start_time);
+         $('#end_time').val(end_time);
+         $('#open_weeks').val(open_weeks);
+         $('#param').val(param);
+         $('#display').val(display);
+         $('#sort').val(sort);
+     
+	     $("#add_dialog").show().dialog({
+		     height: 900, width: 430, modal: true,
+	         title: '修改活动',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             },
+             buttons:{ "Close": function() { $(this).dialog("close"); window.location.reload()}},
+             close: function(ev, ui) { $(this).remove(); }
+	     });
+	  });
+	  
+	  
+	  
+    $('#add_form input.button').click(function(){
+    	$('#add_form input.button').attr("disabled", "disabled");
+    	var server_id = $('#server_id').val();
+    	var serverIds = "";
+    	serverIds += server_id+",";
+    	$("#add_form input:checkbox").each(function(){
+			if($(this).attr("checked")){
+				var values = $(this).val();
+				var str = "<div style=\"border:1px solid #666;margin:5px 0;\" id=\""+values.split("-")[0]+"\">";
+				str += "<span>正在同步:"+values;
+				str += "</span></div>"
+				$("#add_form").append(str);
+				if(values.split("-")[0] != server_id){
+					serverIds += values.split("-")[0]+',';
+				}
+			}
+		})
+    	 var activity_id = $('#activity_id').val();
+	     var activity_type = $('#activity_type').val();
+		 var activity_name = $('#activity_name').val();
+	     var activity_desc = $('#activity_desc').val();
+	     var start_time = $('#start_time').val();
+	     var end_time = $('#end_time').val();
+	     var open_weeks = $('#open_weeks').val();
+	     var param = $('#param').val();
+	     var display = $('#display').val();
+	     var sort = $('#sort').val();
+        
+        if(!activity_id){
+		   alert("请输入活动D");
+	    }else if(!activity_type){
+	       alert("请输入活动类型 ");
+	    }else if(!activity_name){
+	       alert("请输入活动名称");
+	    }else if(!activity_desc){
+	       alert("请输入活动描述");   
+		}else if(!start_time){
+	       alert("请输入开始时间");
+	    }else if(!end_time){
+	       alert("请输入结束时间");
+	    }else if(!open_weeks){
+	       alert("请输入开放周");
+	    }else if(!param){
+	       alert("请输入参数,没有请写0");
+	    }else if(!display){
+	       alert("请输入是否显示");
+	    }else if(!sort){
+	       alert("请输入排序");
+	    }else{
+		    try{
+		       var activity_info = {};
+		       activity_info['activityId'] = activity_id;
+		       activity_info['activityType'] = activity_type;
+		       activity_info['activityName'] = activity_name;
+		       activity_info['activityDesc'] = activity_desc
+		       activity_info['startTime'] = start_time
+		       activity_info['endTime'] = end_time
+		       activity_info['openWeeks'] = open_weeks
+		       activity_info['param'] = param
+		       activity_info['display'] = display
+		       activity_info['sort'] = sort
+		       var serverIdlist = serverIds.split(",");
+		       for(var i = 0;i<serverIdlist.length;i++){
+		       		if(serverIdlist[i]!=null && serverIdlist[i].length>0){
+		       			server_id = serverIdlist[i];
+		       			activity.add_activity({
+				       		params:[server_id, activity_info],
+				       		onSuccess:function(datas){
+				       		    var sid = datas[0];
+				       			var json = eval("(" + datas[1] +")");//转换为json对象     
+				       			var rc = json['rc'];
+				       			if(rc == "1000"){
+				       				$("#"+sid).append("<span style=\"color:red;margin-left:20px;\">成功</span>")
+				       			}else{
+				       				$("#"+sid).append("<span style=\"color:red;margin-left:20px;\">失败</span>")
+				       			}	
+				       		},
+					   		onException:function(e){
+					   			$('input.start_check_button').attr("disabled", "");			
+					   			alert("Web server error: because " + e.message);
+					   		}
+		        		});
+	       			}
+	       		}
+	       		$('#add_form input.button').attr("disabled", "");			
+			}catch(e){
+			   alert(e.message);
+			}
+	    }
+	});
+	  
+  });
+  
+</script>
+{% endblock %}
+{% block content %}
+	{% include "inc/server_select.html" %}<input type="button" class="search" value="查找"/><br/>
+	<table class="tablesorter">
+		<thead>
+			<th>ID</th>
+			<th>活动类型</th>
+			<th>活动名称</th>
+			<th>活动描述</th>
+			<th>开始时间</th>
+			<th>结束时间</th>
+			<th>开放周</th>
+			<th>参数</th>
+			<th>是否显示</th>
+			<th>排序</th>
+			<th>操作</th>
+		</thead>
+		<tbody>
+			{% if datas %}
+				{% for data in datas%}
+					<tr activity_id="{{ data.activity_id }}" activity_type="{{ data.activity_type }}" activity_name="{{ data.activity_name }}" activity_desc="{{ data.activity_desc}}" start_time="{{ data.start_time }}" end_time="{{ data.end_time }}" open_weeks="{{ data.open_weeks }}" param="{{ data.param }}" display="{{ data.display }}" sort="{{ data.sort }}">
+						<td>{{ data.activity_id }}</td>
+						<td>{{ data.activity_type }}</td>
+						<td>{{ data.activity_name }}</td>
+						<td title="{{ data.activity_desc}}">{{ data.activity_desc|slice:"30"  }}</td>
+						<td>{{ data.start_time }}</td>
+						<td>{{ data.end_time }}</td>
+						<td>{{ data.open_weeks }}</td>
+						<td>{{ data.param }}</td>
+						<td>{{ data.display }}</td>
+						<td>{{ data.sort }}</td>
+						<td><a href="#" class="edit">修改</a></td>
+					</tr>
+				{% endfor %}
+		    {% endif %}
+		    <tr style="display:none"><td id="pageLink" colspan="11"></td></tr>
+		</tbody>
+	</table>
+<div id="add_dialog" class="flora" style="display: none;">
+    <form id="add_form" class="margin-top-10">
+        <input id="activity_id" type="hidden"/>
+	    <p>
+    		<label>活动类型:</label>
+			<span><input id="activity_type" type="text" size="40"/></span>
+	    </p> 
+	    <p>
+    		<label>活动名称:</label>
+			<span><input id="activity_name" type="text" size="40"/></span>
+	    </p> 
+	    <p>
+    		<label>活动描述:</label>
+			<span><input id="activity_desc" type="text" size="40"/></span>
+	    </p>
+	    <p>
+    		<label>开始时间:</label>
+			<span>
+			  <input type="text" id="start_time" name="start_time" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="Wdate" style="width: 140px"/>
+			</span>
+	    </p>
+	    <p>
+    		<label>结束时间:</label>
+			<span>
+			  <input type="text" id="end_time" name="start_time" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="Wdate" style="width: 140px"/>
+			</span>
+	    </p>
+	    <p>
+    		<label>开放周:</label>
+			<span style="margin-left:12px;"><input id="open_weeks" type="text" size="40"/></span>
+	    </p>
+	    <p>
+    		<label>参数:</label>
+			<span style="margin-left:24px;"><input id="param" type="text" size="40"/></span>
+	    </p>
+	    <p>
+    		<label>是否显示:</label>
+			<span><input id="display" type="text" size="40"/></span>
+	    </p>
+	    <p>
+    		<label>排序:</label>
+			<span style="margin-left:24px;"><input id="sort" type="text" size="40"/></span>
+	    </p>
+	    <p>
+    		{% include "inc/server_checkbox.html" %}
+	    </p>
+	    <br/>
+		<input class="button" type="button" value="提交" />
+    </form>
+</div>
+</body>
+</html>
+{% endblock %}

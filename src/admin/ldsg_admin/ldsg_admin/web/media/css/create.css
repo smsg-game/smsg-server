@@ -1,0 +1,149 @@
+@charset "utf-8";
+.Area_920 {
+	MARGIN: 0px auto; WIDTH: 920px
+}
+.create_bg {
+	background-image: url(../images/create_01.gif);
+	background-repeat: repeat-y;
+}
+.create_bot {
+	FONT-SIZE: 1px;
+	OVERFLOW: hidden;
+	WIDTH: 920px;
+	HEIGHT: 5px;
+	background-image: url(../images/create_02.gif);
+	background-repeat: no-repeat;
+	margin-top: 20px;
+}
+.create_lc {
+	FLOAT: left; WIDTH: 241px
+}
+.create_rc {
+	FLOAT: right; WIDTH: 664px
+}
+.create_lc_top {
+	FONT-SIZE: 1px; BACKGROUND: url(../images/create_03.gif) no-repeat; OVERFLOW: hidden; WIDTH: 241px; HEIGHT: 5px
+}
+.create_rc_top {
+	FONT-SIZE: 1px; BACKGROUND: url(../images/create_08.gif) no-repeat; OVERFLOW: hidden; WIDTH: 664px; HEIGHT: 5px
+}
+.create_box {
+	MARGIN-TOP: 67px; MARGIN-BOTTOM: 112px
+}
+.rCreate_box {
+	BACKGROUND: url(../images/create_07.gif) #fff repeat-x center 50%; HEIGHT: 35px
+}
+.rCreate_box LI {
+	BACKGROUND: url(../images/create_05.gif) no-repeat; FLOAT: left; WIDTH: 149px; LINE-HEIGHT: 35px; MARGIN-RIGHT: 11px; TEXT-ALIGN: center
+}
+.rCreate_box LI.bg1 {
+	BACKGROUND: url(../images/create_06.gif) no-repeat; WIDTH: 191px
+}
+.rCreate_box LI.active {
+	BACKGROUND: url(../images/create_05_01.gif) no-repeat; COLOR: #fff
+}
+.rCreate_box LI.active1 {
+	BACKGROUND: url(../images/create_06_01.gif) no-repeat; WIDTH: 191px; COLOR: #fff
+}
+.creatBox1 {
+	MARGIN: 0px auto; WIDTH: 594px
+}
+.creatBox1 P {
+	LINE-HEIGHT: 22px
+}
+.creatBox1_l {
+	FLOAT: left; WIDTH: 80px
+}
+.creatBox1_r {
+	FLOAT: right; WIDTH: 510px
+}
+.createTab {
+	MARGIN: 0px auto; WIDTH: 662px; BORDER-COLLAPSE: collapse
+}
+.createTab TH {
+	BORDER-RIGHT: #c9dfec 1px solid; FONT-WEIGHT: normal; HEIGHT: 24px
+}
+.createTab TD {
+	BORDER-RIGHT: #c9dfec 1px solid; FONT-WEIGHT: normal; HEIGHT: 24px
+}
+.createTab .end_td {
+	BORDER-RIGHT-STYLE: none
+}
+.createTab .td_l15 {
+	TEXT-INDENT: 15px
+}
+.createTab_tdbg {
+	BACKGROUND: #daebf4
+}
+.createNew {
+	MARGIN-TOP: 110px; MARGIN-BOTTOM: 56px
+}
+.create_div {
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; BACKGROUND: #6f9cb9; PADDING-BOTTOM: 10px; WIDTH: 325px; PADDING-TOP: 10px
+}
+.createDiv {
+	BACKGROUND: #fff; WIDTH: 325px
+}
+.createDiv UL {
+	PADDING-RIGHT: 6px; PADDING-LEFT: 3px; PADDING-BOTTOM: 7px; PADDING-TOP: 0px
+}
+.createDiv LI {
+	DISPLAY: inline; FLOAT: left; MARGIN: 8px 4px 0px
+}
+.createDiv LI IMG {
+	BORDER-RIGHT: #6f9cb9 1px solid; BORDER-TOP: #6f9cb9 1px solid; BORDER-LEFT: #6f9cb9 1px solid; BORDER-BOTTOM: #6f9cb9 1px solid
+}
+#div2 {
+	FLOAT: left; MARGIN-LEFT: 60px
+}
+ HTML #div2 {
+	FLOAT: left; MARGIN-LEFT: 30px
+}
+UNKNOWN {
+	FLOAT: left; MARGIN-LEFT: 60px
+}
+
+.list_creat {
+	BORDER-RIGHT: #d0d0d0 0px solid;
+	BORDER-TOP: #d0d0d0 1px solid;
+	MARGIN-TOP: 1px;
+	BORDER-LEFT: #d0d0d0 0px solid;
+	WIDTH: 98%;
+	BORDER-BOTTOM: #d0d0d0 0px solid;
+	BORDER-COLLAPSE: collapse;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.list_creat TH {
+	PADDING-RIGHT: 0px;
+	PADDING-LEFT: 0px;
+	PADDING-BOTTOM: 3px;
+	COLOR: #000;
+	LINE-HEIGHT: 20px;
+	PADDING-TOP: 3px;
+	BORDER-BOTTOM: #dadada 1px solid;
+	WHITE-SPACE: nowrap;
+	text-indent: 10px;
+}
+
+.list_creat TH.end_cell {
+	BORDER-RIGHT-WIDTH: 0px
+}
+
+.list_creat TD {
+	PADDING-RIGHT: 0px;
+	PADDING-LEFT: 0px;
+	PADDING-BOTTOM: 0px;
+	TEXT-INDENT: 10px;
+	LINE-HEIGHT: 25px;
+	PADDING-TOP: 0px;
+	HEIGHT: 25px;
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: #dadada;
+}
+
+.list_creat .top_5 {
+	MARGIN-TOP: 5px
+}

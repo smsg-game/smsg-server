@@ -1,0 +1,30 @@
+﻿{% extends "master.html" %}
+{% block title %}系统异常 {% endblock %}
+{% block head_ext %}
+{% endblock %}
+{% block content %}
+	服务器出开小差了,请联系管理员
+</body>
+</html>
+<script language=javascript>
+	function login_submit_onclicked(){
+		if($('#username').val().length < 1){
+			alert("请您输入用户名！");
+			login_form.username.focus();
+			return;
+		}
+		if($('#password').val().length < 1){
+			alert("请您输入密码！");
+			login_form.password.focus();
+			return;
+		}
+		$('#login_form').submit();
+	}
+	function catch_return_for_submit(e){
+		var key = window.event ? e.keyCode : e.which;
+		if(key == 13){//回车模拟点击提交按钮，提交表单
+			login_submit_onclicked();
+		}
+	}
+</script>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+        
+  $(document).ready(function(){
+  
+	  genPageLinks({{total}}, {{pagesize}});
+	
+	  $('a.approve').click(function(){
+     
+         var id = $(this).parent().parent().attr('id');
+         var url = "{% url system-mail-approve %}?mid=" + id;
+		 window.location = url;
+	 });
+	 
+
+  });
+  
+</script>
+{% endblock %}
+{% block title %}邮件待审核列表{% endblock %}
+{% block content %}
+<table cellspacing="1" class="tablesorter">
+  <thead>
+    <th>ID</th>
+    <th>邮件标题</th>
+    <th>邮件内容</th>
+    <th>服务器列表</th>
+    <th>成功发放服务器列表</th>
+    <th>邮件附件</th>
+    <th>邮件状态</th>
+    <th>发送时间</th>
+    <th>审核时间</th>
+    <th>邮件发送人</th>
+    <th>操作</th>
+  </thead>
+  <tbody>
+    {% if infos %}
+      {% for info in infos %}
+       <tr id="{{ info.system_mail_id }}">
+         <td>{{ info.system_mail_id }}</td>
+         <td>{{ info.title}}</td>
+         <td title="{{ info.content }}" >{{ info.content|truncate_str }}</td>
+         <td title="{{ info.server_ids|server_names }}">{{ info.server_ids|server_names|truncate_str }}</td>
+         <td title="{{ info.send_server_ids|empty|server_names }}">{{ info.send_server_ids|empty|server_names|truncate_str }}</td>
+         <td>{{ info.tool_ids_name|empty }}</td>
+         <td>{{ info.status|system_mail_status }}</td>
+         <td>{{ info.created_time|empty }}</td>
+         <td>{{ info.approve_time|empty }}</td>
+         <td>{{ info.created_user|empty }}</td>
+         <td>  <a href="#" class="approve">审核</a> </td>
+       </tr>
+      {% endfor %}
+    {% endif %}
+     <tr style="display:none"><td id="pageLink" colspan="15"></td></tr>
+  </tbody>
+</table>
+{% endblock %}

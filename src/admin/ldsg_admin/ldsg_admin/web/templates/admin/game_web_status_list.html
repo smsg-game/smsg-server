@@ -1,0 +1,85 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+     
+  service = new rpc.ServiceProxy("/services/admin/", {asynchronous:false, methods: ['set_game_web_status', ]});
+       
+  $(document).ready(function(){
+  
+     $('a.set_white_list').click(function(){
+     
+		 var ucenter = $(this).parent().parent().attr('ucenter');
+		 var url = "{% url white-ip-list %}?ucenter=" + ucenter ;
+		 window.location = url;
+         
+	 });
+  
+	 $('a.set_status').click(function(){
+     
+          var ucenter = $(this).parent().parent().attr('ucenter');
+          var status = $(this).attr('status');
+
+          var msg;
+          if(status==0){
+             msg = "确定开启服务器吗?";
+          }else{
+             msg = "确定关闭服务器吗?";
+          }
+
+	      if(confirm(msg)){
+		    try{
+		       service.set_game_web_status(ucenter, status);
+	           window.location.reload() ;
+			}catch(e){
+			   alert(e.message);
+			}
+	      }
+	  });
+	 
+  });
+  
+</script>
+{% endblock %}
+{% block title %}开关服务器{% endblock %}
+{% block content %}
+<table cellspacing="1" class="tablesorter">
+  <thead>
+    <th>game_web</th>
+    <th>说明</th>
+    <th>服务器状态</th>
+    <th>操作</th>
+  </thead>
+  <tbody>
+    {% if infos %}
+      {% for info in infos %}
+       <tr ucenter="{{ info.ucenter }}" >
+         <td>{{ info.ucenter }}</td>
+         <td>{{ info.ucenter|ucenter_name }}</td>
+         <td>
+              {% ifequal info.status 0 %}
+                <font color="green">开启</font>
+              {% else %}
+                <font color="red">关闭</font>
+              {% endifequal %}
+         </td>
+         <td>
+           {% ifequal info.status 0 %}
+            <a href="#" class="set_status" status="1">关闭服务器</a>
+           {% else %}
+            <a href="#" class="set_status" status="0">开启服务器</a>
+           {% endifequal %}
+           <a href="#" class="set_white_list">白名单IP设置</a>
+         </td>
+       </tr>
+      {% endfor %}
+    {% endif %}
+     <tr style="display:none"><td id="pageLink" colspan="12"></td></tr>
+  </tbody>
+</table>
+{% endblock %}

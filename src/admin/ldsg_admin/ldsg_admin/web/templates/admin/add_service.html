@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>三国合伙人后台管理</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+	<script src="/site_media/plus/bootstrap/js/bootstrap.min.js"></script>
+	<link href="/site_media/plus/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen"></head>
+    <script language="javascript" type="text/javascript" src="/site_media/plus/My97DatePicker/WdatePicker.js"></script>
+<body>
+	<div style="color:red">
+		{{error_message}}
+	</div>
+	<div style="">
+		<form action="/add_service/" method="post" class="form-horizontal" id="myForm">
+			<div class="control-group">
+			    <label class="control-label" for="inputEmail">服务器代号</label>
+			    <div class="controls">
+			      <input type="text" id="s_num" name="s_num" value="{{service.s_num}}">
+			      <input type="hidden" value="{{service.sid}}" name="sid" id="sid"/>
+			    </div>
+			 </div>
+			 <div class="control-group">
+			    <label class="control-label" for="s_name">服务器名称</label>
+			    <div class="controls">
+			      <input type="text" id="s_name" name="s_name" value="{{service.s_name}}">
+			    </div>
+			 </div>
+			 <div class="control-group">
+			    <label class="control-label" for="db_connect">连接字符串</label>
+			    <div class="controls">
+			      <div class="input-append">
+					  <input class="span2" id="db_connect" value="{{service.db_connect}}" size=50 name="db_connect" type="text">
+					  <button class="btn db_connect" _db="db_connect" type="button">测试</button>
+				   </div>
+			    </div>
+			 </div>
+			 <div class="control-group">
+			    <label class="control-label" for="open_time">开放时间</label>
+			    <div class="controls">
+			      <input type="text" id="open_time" value="{{service.open_time}}" onfocus="WdatePicker({minDate:'%y-%M-{%d+1}',dateFmt:'yyyy-MM-dd HH:mm:00'})" name="open_time">
+			    </div>
+			 </div><div class="control-group">
+			    <label class="control-label" for="isdel">开放状态</label>
+			    <div class="controls">
+			      <input type="text" id="isdel" name="isdel" value="{{service.isdel}}">
+			    </div>
+			 </div>
+			 <div class="control-group">
+			    <label class="control-label" for="s_port">端口</label>
+			    <div class="controls">
+			      <input type="text" id="s_port" name="s_port" value="{{service.s_port}}">
+			    </div>
+			 </div>
+			 <div class="control-group">
+			    <label class="control-label" for="db_connect_stat">统计连接字符串</label>
+			    <div class="controls">
+			    	<div class="input-append">
+					  <input class="span2" id="db_connect_stat" size=50 name="db_connect_stat" type="text" value="{{service.db_connect_stat}}">
+					  <button class="btn db_connect" type="button" _db="db_connect_stat" >测试</button>
+				   </div>
+			    </div>
+			 </div>
+			 <div class="control-group">
+			 	<div class="controls">
+			      <button class="btn btn-primary" id="sumbit" type="button">提交</button>
+			      <a href="/index/" class="btn btn-primary" type="button">返回</a>
+			    </div>
+			 </div>
+		</form>
+	</div>
+	<script>
+		$(document).ready(function(){
+			$("#sumbit").click(function(){
+				var a = true;
+				var input = $("#myForm").find("input:text").each(function() {
+					 if($(this).val()=="" || $(this).val().length==0){
+					 	alert("字段不能为空");
+					 	a = false;
+					 	return false;
+					 }
+				});
+				if(!a){
+					return;
+				}
+				var str=/^server=\S+,\d+;database=\S+;user=\S+;pwd=\S+;$/;
+		        if(!str.test($("#db_connect").val())&&!str.test($("#db_connect_stat").val()))
+		        {
+		           alert("数据库连接字符不正确");
+		           return;
+		        }
+		        $("#myForm").submit();
+			})
+			$(".db_connect").click(function(){
+				var db = $(this).attr("_db");
+				if($("#"+db).val() == "" || $("#"+db).val().length == 0){
+					return ;
+				}
+				alert($("#"+db).val())
+				$.ajax( {
+				        type : "POST",
+				        url : '/test_connect/',
+				        async : false,
+				        data : {
+				            dbConnect:$("#"+db).val()
+				        }, 
+				        success: function(data){
+				            alert(data)
+				        }
+				    });
+			})
+		})
+	</script>
+</body>
+</html>
+

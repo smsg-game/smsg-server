@@ -1,0 +1,56 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+     
+  service = new rpc.ServiceProxy("/services/admin/", {asynchronous:false, methods: ['add_server', 'delete_server']});
+       
+  $(document).ready(function(){
+  
+	  $('input.search').click(function(){
+     
+		 var name = $('#name').val();
+		 var server_id = $('#server_id').val();
+         if(!name){
+            alert("请输入用户ID或者角色名");
+         }else if(!server_id){
+            alert("请选择服务器");
+         }else{
+            var url = "{% url user-package-info %}?name=" + name + "&server_id=" + server_id;
+		    window.location = url;
+         }
+         
+	  });
+	  
+	  
+  });
+</script>
+{% endblock %}
+{% block title %}用户背包查询{% endblock %}
+{% block content %}
+请输入用户ID或者用户昵称:<input type="text" name="name" id="name" value="{{name}}"/><input type="button" class="search" value="查找"/> {% include "inc/server_select.html" %}<br/>
+
+<table cellspacing="1" class="tablesorter">
+  <thead>
+  	<th>道具名称</th>
+  	<th>道具数量</th>
+  </thead>
+  
+  <tbody>
+  	{% if user_package_info %}
+  	{% for info in user_package_info %}
+  	<tr>
+  		<td>{{ info.name }}</td>
+  		<td>{{ info.tool_num }}</td>
+  	</tr>
+  	{% endfor %}
+  	{% endif %}
+	<tr style="display:none"><td id="pageLink" colspan="12"></td></tr>
+  </tbody>
+</table>
+{% endblock %}

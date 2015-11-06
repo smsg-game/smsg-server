@@ -1,0 +1,140 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+     
+  service = new rpc.ServiceProxy("/services/admin/", {asynchronous:true, methods: ['add_giftcode', ]});
+       
+  $(document).ready(function(){
+  
+	  genPageLinks({{total}}, {{pagesize}});
+	
+	  $('input.search').click(function(){
+     
+		 var gift_bag_type = $('#gift_bag_type').val();
+		 var category = $('#category').val();
+		 var sub_type = $('#sub_type').val();
+         var gift_code = $('#gift_code').val();
+         var to_excel = $(this).attr("to_excel");
+         if(!gift_bag_type){
+            alert("请输入礼包大类型");
+         }else{
+            var url = "{% url giftcode-list %}?category=" + category + "&sub_type=" + sub_type + "&gift_bag_type=" + gift_bag_type + "&gift_code=" + gift_code + "&to_excel=" + to_excel;
+		    window.location = url;
+         }
+         
+	  });
+	  
+	
+	  $('input.add').click(function(){
+     
+         $('#partner_id').val();
+         $('#version').val();
+         $('#versions').val();
+
+	     $("#add_dialog").show().dialog({
+		     height: 180, width: 430, modal: true,
+	         title: '生成礼包码',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             }
+	     });
+	  });
+	  
+
+     $('#add_form input.button').click(function(){
+        var gift_bag_type = $('#add_gift_bag_type').val();
+		var category = $('#category').val();
+		var sub_type = $('#add_sub_type').val();
+        var amount = $('#amount').val();
+        
+        if(!gift_bag_type){
+		   alert("请输入礼包大类型");
+		   return;
+	    }else if(!sub_type){
+	       alert("请输入礼包小类型 ");
+	       return;
+	    }else if(!amount){
+	       alert("请输入生成数量");
+	       return;
+	    }
+	    
+	    $(this).attr("disabled", "disbaled");
+	      
+        service.add_giftcode({
+       		params:[category, gift_bag_type, sub_type, amount],
+       		onSuccess:function(datas){
+       			alert("礼包码生成成功!");
+       		},
+	   		onException:function(e){
+	   			$('#add_form input.button').attr("disabled", "");			
+	   			alert("Web server error: because " + e.message);
+	   		}
+		});
+	});
+	  
+  });
+  
+</script>
+{% endblock %}
+{% block title %}礼包码管理{% endblock %}
+{% block content %}
+选择服务器组:
+<select id="category">
+  <option value="android" {% ifequal category "ad" %}selected=selected{% endifequal %}>安卓</option>
+  <option value="ios" {% ifequal category "ios" %}selected=selected{% endifequal %}>IOS</option>
+</select>
+礼包大类型:<input type="text" id="gift_bag_type" value="{{gift_bag_type}}"/>
+礼包小类型:<input type="text" id="sub_type" value="{{sub_type}}"/>
+礼包码:<input type="text" id="gift_code" value="{{gift_code}}"/>
+<input type="button" class="search" to_excel=0 value="查找"/>
+<input type="button" class="add" value="添加礼包码"/>
+<input type="button" class="search" to_excel=1 value="导出礼包码"/><br/>
+<table cellspacing="1" class="tablesorter">
+  <thead>
+    <th>礼包码</th>
+    <th>使用状态</th>
+    <th>礼包大类型</th>
+    <th>礼包小类型</th>
+    <th>使用用户</th>
+  </thead>
+  <tbody>
+    {% if infos %}
+      {% for info in infos %}
+       <tr>
+         <td>{{ info.code }}</td>
+         <td>{{ info.flag}}</td>
+         <td>{{ info.gift_bag_type }}</td>
+         <td>{{ info.type }}</td>
+         <td>{{ info.user_id }}</td>
+       </tr>
+      {% endfor %}
+    {% endif %}
+     <tr style="display:none"><td id="pageLink" colspan="12"></td></tr>
+  </tbody>
+</table>
+<div id="add_dialog" class="flora" style="display: none;">
+    <form id="add_form" class="margin-top-10">
+        <p>
+    		<label>礼包大类型:</label>
+			<span style="margin-left:10px;"><input id="add_gift_bag_type" type="text" size="20"/></span>
+	    </p>
+	    <p>
+    		<label>礼包小类型:</label>
+			<span style="margin-left:10px;"><input id="add_sub_type" type="text"  size="20"/></span>
+	    </p> 
+	    <p>
+            <label>生成数量:</label>
+			<span style="margin-left:20px;"><input id="amount" type="text"  size="20"/></span>
+	    </p> 
+	    <br/>
+		<input class="button" type="button" value="提交" />
+    </form>
+</div>
+{% endblock %}

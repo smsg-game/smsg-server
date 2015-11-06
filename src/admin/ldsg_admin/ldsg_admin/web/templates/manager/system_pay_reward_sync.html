@@ -1,0 +1,81 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+     
+  service = new rpc.ServiceProxy("/services/activity/", {asynchronous:true, methods: ['sync_system_pay_reward', ]});
+       
+  $(document).ready(function(){
+   
+        $('#start_sync_button').attr("disabled", "");
+   
+       	$('#start_sync_button').click(function(){
+      
+            var rid = $('#rid').val();
+           
+            if(confirm("确定要同步到游戏服务器吗?")){
+            
+	            $('#start_sync_button').attr("disabled", "disbaled");
+	      
+	            service.sync_system_pay_reward({
+		       		params:[rid],
+		       		onSuccess:function(datas){
+		       			if(datas[0] == -1){
+		       		       alert("没有正式服发布权限");
+		       		    }else{
+		       			   $('#result').html(datas[1]);
+		       		    }
+		       		},
+			   		onException:function(e){
+			   			$('#start_sync_button').attr("disabled", "");			
+			   			alert("Web server error: because " + e.message);
+			   		}
+				});
+		    }
+
+	    });
+   
+  });
+  
+</script>
+{% endblock %}
+{% block title %}发布到游戏服务器{% endblock %}
+{% block content %}
+<input id="rid" type="hidden" value="{{rid}}"/>
+<input id="start_sync_button" type="button" value="发布到游戏服"/>
+服务器:{{pay_reward_info.server_ids}}
+<span id="result">
+
+</span>
+<table cellspacing="1" class="tablesorter">
+  <thead>
+    <th>序号</th>
+    <th>充值金额</th>
+    <th>获得物品列表(ids)</th>
+    <th>获得物品列表</th>
+    <th>次数限制</th>
+  </thead>
+  <tbody>
+    {% if infos %}
+      {% for info in infos %}
+       <tr>
+         <td>{{ info.index }}</td>
+             <td>{{info.pay_money}}</td>
+             <td>
+                {{info.tool_ids}}
+             </td>
+             <td>{{info.tool_ids_name}}</td>
+             <td>
+               {{info.times_limit}}
+             </td>
+       </tr>
+      {% endfor %}
+    {% endif %}
+  </tbody>
+</table>
+{% endblock %}

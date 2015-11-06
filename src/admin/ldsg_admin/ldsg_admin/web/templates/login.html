@@ -1,0 +1,40 @@
+﻿{% extends "master.html" %}
+{% block title %}登录 {% endblock %}
+{% block head_ext %}
+{% endblock %}
+{% block content %}
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+	<form id="login_form" name="login_form" action="/login/" method="post">
+		<div style="text-align:center;color:red;">
+			{{error_message}}
+		</div>
+		<table width="371px" align="center" border="0" height="180px" background="/site_media/bigPicture/login_bg.gif">
+		<tr align="center"><td colspan="2"><h3>用 户 登 录</h3></td></tr>
+
+		<tr align="center">
+			<td align="right" width="100px">用户名:</td>
+			<td align="left"><input id="username" name="username" type="text" style="width:180px" /></td>
+		</tr>
+		<tr align="center">
+			<td align="right" width="100px">密码:</td>
+			<td align="left"><input id="password" name="password" type="password" onKeyPress="catch_return_for_submit(event)" style="width:180px"/></td>
+		</tr>
+		<tr align="center"><td colspan="2"><input type="button" onclick="login_submit_onclicked()" id="login_submit" value="登 录" style="width:80px" /></td></tr>
+		</table>
+	</form>
+	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+</body>
+</html>
+<script language=javascript>
+	function login_submit_onclicked(){
+		
+		$('#login_form').submit();
+	}
+	function catch_return_for_submit(e){
+		var key = window.event ? e.keyCode : e.which;
+		if(key == 13){//回车模拟点击提交按钮，提交表单
+			login_submit_onclicked();
+		}
+	}
+</script>
+{% endblock %}

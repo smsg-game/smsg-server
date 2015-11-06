@@ -1,0 +1,60 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+     
+  service = new rpc.ServiceProxy("/services/admin/", {asynchronous:false, methods: ['add_server', 'delete_server']});
+       
+  $(document).ready(function(){
+  
+	  $('input.search').click(function(){
+     
+		 var server_id = $('#server_id').val();
+		 var to_excel = $(this).attr("to_excel");
+         if(!server_id){
+            alert("请选择服务器");
+         }else{
+            var url = "{% url user-draw-time-rank %}?server_id=" + server_id + "&to_excel=" + to_excel;
+		    window.location = url;
+         }
+         
+	  });
+	  
+  });
+  
+</script>
+{% endblock %}
+{% block title %}用户抽奖积分排行{% endblock %}
+{% block content %}
+{% include "inc/server_select.html" %}
+<input type="button" class="search" to_excel=0 value="查找"/>
+<input type="button" class="search" to_excel=1 value="导出excel"/>
+<br/>
+
+<table cellspacing="1" class="tablesorter">
+  <thead>
+    <th>玩家排名</th>
+    <th>玩家名称</th>
+    <th>玩家ID</th>
+    <th>积分</th>
+  </thead>
+  <tbody>
+    {% if infos %}
+        {% for info in infos %}
+          <tr>
+           <td>{{ forloop.counter }}</td>
+           <td>{{ info.username }}</td>
+           <td>{{ info.lodo_id }}</td>
+           <td>{{ info.score }}</td>
+          <tr>
+        {% endfor %}
+    {% endif %}
+     <tr style="display:none"><td id="pageLink" colspan="12"></td></tr>
+  </tbody>
+</table>
+{% endblock %}

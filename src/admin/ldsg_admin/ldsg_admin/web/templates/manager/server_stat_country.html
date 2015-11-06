@@ -1,0 +1,77 @@
+{% extends "master.html" %}
+{% block title %}服务器总览{% endblock %}
+{% block head_ext %}
+<script type="text/javascript">
+       
+  $(document).ready(function(){
+	  $('input.search').click(function(){
+     
+		 var begindate = $('#begindate').val();
+		 var enddate = $('#enddate').val();
+         if(!begindate){
+            alert("请选择开始日期");
+         }else{
+            var url = "{% url country-server %}?begindate=" + begindate + "&enddate=" + enddate;
+		    window.location = url;
+         }
+         
+	  });
+	  
+  });
+  
+</script>
+{% endblock %}
+{% block content %}
+	开始日期:<input type="text" name="begindate" onfocus="WdatePicker({maxDate:'%y-%M-{%d}',dateFmt:'yyyy-MM-dd'})" id="begindate" value="{{begindate}}"/>结束日期:<input type="text" name="enddate" id="enddate" onfocus="WdatePicker({maxDate:'%y-%M-{%d-1}',dateFmt:'yyyy-MM-dd'})" value="{{enddate}}"/><input type="button" class="search" value="查找"/><br/>
+	<table class="tablesorter">
+		<thead>
+			<th>服务器</th>
+			<th>国家</th>
+			<th>渠道商注册</th>
+			<th>创角</th>
+			<th>日活跃</th>
+			<th>充值人数</th>
+			<th>充值金额</th>
+			<th>ARPU</th>
+			<th>活跃付费率</th>
+			<th>最高在线</th>
+			<th>新用户充值</th>
+			<th>老用户充值</th>
+			<th>新用户充值人数</th>
+			<th>老用户充值人数</th>
+			<th>注册用户ARPU</th>
+		</thead>
+		<tbody>
+			{% if stat_server_datas_map %}
+				{% for zone, stats in stat_server_datas_map.items%}  
+					{% for stat in stats %}
+						<tr>		
+							<td>{{ stat.server_name }}[{{ stat.server_id }}]</td>
+							<td>{{ stat.country_code }}</td>
+							<td>{{ stat.new_register }}</td>
+							<td>{{ stat.create_user }}</td>
+							<td>{{ stat.date_active }}</td>
+							<td>{{ stat.pay_people }}</td>
+							<td>{{ stat.pay_money }}</td>
+							<td>{% widthratio stat.pay_money stat.pay_people 1 %}</td>
+							<td>{{stat.temp}}%</td>
+							<td>{{ stat.max_online }}</td>
+							<td>{{ stat.new_user_pay }}</td>
+							<td>{{ stat.old_user_pay }}</td>
+							<td>{{ stat.new_payer }}</td>
+							<td>{{ stat.old_payer }}</td>
+							<td>{% widthratio stat.pay_money stat.new_register 1 %}</td>
+						</tr>
+					{% endfor %}
+		  		{% endfor %}
+		  		<tr>
+		  			<td colspan="14">充值总计:{{ total }}</td>
+		  		</tr>
+		    {% else %}
+		    	<tr style="display:none"><td id="pageLink" colspan="14"></td></tr>	
+		    {% endif %}
+		</tbody>
+	</table>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+{% endblock %}
+{% block title %}{% endblock %}
+{% block content %}
+	<div style="text-align:center;">
+		<a href="/add_service/" class="btn btn-primary">添加服务器</a>
+		<a href="/partner/" class="btn btn-primary">渠道列表</a>
+	</div>
+	<table cellspacing="1" class="tablesorter">
+	   <thead>
+			<th>服务器代号</th>
+			<th>服务器名称</th>
+			<th>连接字符串</th>
+			<th>开放状态</th>
+			<th>端口</th>
+			<th>统计连接字符串</th>
+			<th>操作</th>
+	   </thead>
+	   <tbody>
+		{% for item in services %}
+    		<tr>
+    			<td>{{ item.s_num }}</td>
+    			<td>{{ item.s_name }}</td>
+    			<td title="{{ item.db_connect }}">{{ item.db_connect|slice:"30" }}</td>
+    			<td>{{ item.isdel }}</td>
+    			<td>{{ item.s_port }}</td>
+    			<td title="{{ item.db_connect_stat}}">{{ item.db_connect_stat|slice:"30" }}</td>
+    			<td><a href="/service/update/{{item.sid}}/" class="btn btn-mini">修改</a><a href="/service/delete/{{item.sid}}/" class="btn btn-mini" >删除</a></td>
+    		</tr>
+		{% endfor %}
+	    </tbody>
+	</table>
+{% endblock %}
+

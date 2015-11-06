@@ -1,0 +1,67 @@
+7{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+     
+  service = new rpc.ServiceProxy("/services/admin/", {asynchronous:false, methods: ['add_server', 'delete_server']});
+       
+  $(document).ready(function(){
+  
+	  $('input.search').click(function(){
+     
+		 var start_date = $('#start_date').val();
+		 var end_date = $('#end_date').val();
+		 var name = $('#name').val();
+		 var server_id = $('#server_id').val();
+         if(!start_date){
+            alert("请选择开始日期");
+         } else if (!end_date) {
+        	 alert("请选择结束日期")
+         } else if (!name) {
+        	 alert("请输入用户 ID 或者角色名")
+         }else if(!server_id){
+            alert("请选择服务器");
+         }else{
+            var url = "{% url user-purchase-info %}?start_date=" + start_date + "&end_date=" + end_date 
+            		+ "&name=" + name + "&server_id=" + server_id;
+		    window.location = url;
+         }
+	  });
+  });
+  
+</script>
+{% endblock %}
+{% block title %}用户消费统计{% endblock %}
+{% block content %}
+
+请输入用户ID或者用户昵称：<input type="text" name="name" id="name" value="{{name}}"/>{% include "inc/server_select.html" %}</td>
+请输入开始日期：<input type="text" id="start_date" name="start_date" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="Wdate" style="width: 100px" value="{{start_date}}"/>
+请输入结束日期：<input type="text" id="end_date" name="end_date" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="Wdate" style="width: 100px" value="{{end_date}}"/>
+<input type="button" class="search" value="查找"/><br/>
+
+<table cellspacing="1" class="tablesorter">
+  <thead>
+  	<th>道具名</th>
+  	<th>单次购买数量</th>
+  	<th>购买时间</th>
+  </thead>
+  
+  <tbody>
+  	{% if user_purchase_info %}
+  	{% for info in user_purchase_info %}
+  	<tr>
+  		<td>{{ info.name }}</td>
+  		<td>{{ info.num }}</td>
+  		<td>{{ info.created_time }}</td>
+  	</tr>
+  	{% endfor %}
+  	{% endif %}
+	<tr style="display:none"><td id="pageLink" colspan="12"></td></tr>
+  </tbody>
+</table>
+{% endblock %}

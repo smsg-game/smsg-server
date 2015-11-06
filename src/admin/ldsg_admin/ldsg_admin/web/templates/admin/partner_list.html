@@ -1,0 +1,153 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+     
+  service = new rpc.ServiceProxy("/services/admin/", {asynchronous:false, methods: ['add_partner', 'delete_partner']});
+       
+  $(document).ready(function(){
+  
+	  genPageLinks({{total}}, {{pagesize}});
+	
+	  $('input.add').click(function(){
+     
+         $('#id').val(0);
+         $('#partner_id').val("");
+		 $('#name').val("");
+         
+         $("#add_dialog").show().dialog({
+		     height: 220, width: 380, modal: true,
+	         title: '添加合作商',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             }
+	     });
+	  });
+	  
+	 $('a.delete').click(function(){
+     
+         var id = $(this).parent().parent().attr('id');
+         var partner_id = $(this).parent().parent().attr('partner_id');
+         var name = $(this).parent().parent().attr('name');
+
+	      if(confirm("确定删除合作商“" + name + "-" + partner_id + "”?")){
+		    try{
+		       service.delete_partner(partner_id);
+	           window.location.reload() ;
+			}catch(e){
+			   alert(e.message);
+			}
+	      }
+	  });
+	  
+	  $('a.edit').click(function(){
+     
+         var id = $(this).parent().parent().attr('id');
+         var partner_id = $(this).parent().parent().attr('partner_id');
+         var name = $(this).parent().parent().attr('name');
+         var server_zone = $(this).parent().parent().attr('server_zone');
+         
+         $('#id').val(id);
+         $('#partner_id').val(partner_id);
+		 $('#name').val(name);
+         $('#server_zone').val(server_zone);
+         
+	     $("#add_dialog").show().dialog({
+		     height: 220, width: 380, modal: true,
+	         title: '修改合作商',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             }
+	     });
+	  });
+	  
+	  
+	  
+    $('#add_form input.button').click(function(){
+		var id = $('#id').val();
+		var partner_id = $('#partner_id').val();
+		var name = $('#name').val();
+		var server_zone = $('#server_zone').val();
+
+        if(!partner_id){
+		    alert("请输入合作商ID");
+	    }else if(!name){
+	        alert("请输入合作商名称");
+	    }else{
+		    try{
+		       service.add_partner(partner_id, name, server_zone);
+	           window.location.reload() ;
+			}catch(e){
+			   alert(e.message);
+			}
+	    }
+	});
+	  
+  });
+  
+</script>
+{% endblock %}
+{% block title %}合作商列表{% endblock %}
+{% block content %}
+<input type="button" class="add" value="添加合作商"/>
+<br/>
+<table cellspacing="1" class="tablesorter">
+  <thead>
+    <th>ID</th>
+    <th>服务器分区</th>
+    <th>合作商ID</th>
+    <th>合作商名称</th>
+    <th>操作</th>
+  </thead>
+  <tbody>
+    {% if infos %}
+      {% for info in infos %}
+       <tr id="{{ info.id }}" partner_id="{{ info.partner_id }}" name="{{ info.name }}" server_zone="{{ info.server_zone }}">
+         <td>{{ info.id }}</td>
+         <td>{{ info.server_zone|server_zone_name }}</td>
+         <td>{{ info.partner_id }}</td>
+         <td>{{ info.name}}</td>
+         <td>
+            <a href="#" class="edit">编辑</a>
+            |
+            <a href="#" class="delete">删除</a>
+         </td>
+       </tr>
+      {% endfor %}
+    {% endif %}
+     <tr style="display:none"><td id="pageLink" colspan="12"></td></tr>
+  </tbody>
+</table>
+<div id="add_dialog" class="flora" style="display: none;">
+    <form id="add_form" class="margin-top-10">
+        <input id="id" type="hidden"/>
+        <p> 
+	    <label>服务器分区:</label>
+	    <span>
+	    <select id="server_zone">
+			{% include "inc/server_zone_select_sample.html" %}
+	    </select>
+	    </span>
+	    </p>
+	    <p>
+    		<label>合作商ID:</label>
+			<span style="margin-left:12px;"><input id="partner_id" type="text" size="30"/></span>
+	    </p> 
+	    <p>
+	    <p>
+    		<label>合作商名称:</label>
+			<span><input id="name" type="text" size="40"/></span>
+	    </p> 
+	    <p>
+	    <br/>
+		<input class="button" type="button" value="提交" />
+    </form>
+</div>
+{% endblock %}

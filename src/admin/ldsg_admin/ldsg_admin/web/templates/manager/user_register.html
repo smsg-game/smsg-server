@@ -1,0 +1,59 @@
+{% extends "master.html" %}
+{% block title %}登录 {% endblock %}
+{% block head_ext %}
+<script type="text/javascript">
+       
+  $(document).ready(function(){
+  	  var myDate = new Date();
+  		var year = myDate.getFullYear();  //获取年
+        var month = myDate.getMonth() + 1;    //获取月
+        var day = myDate.getDate(); //获取日
+  	  $("#begindate").val(year+'-'+month+'-'+day);
+	  $('input.search').click(function(){
+     
+		 var begindate = $('#begindate').val();
+		 var server_id = $('#server_id').val();
+         if(!begindate){
+            alert("请选择开始日期");
+         }else if(!server_id){
+            alert("请选择服务器");
+         }else{
+            var url = "{% url currdate-register %}?begindate=" + begindate + "&server_id=" + server_id;
+		    window.location = url;
+         }
+         
+	  });
+	  
+  });
+  
+</script>
+{% endblock %}
+{% block content %}
+	日期:<input type="text" name="begindate" onfocus="WdatePicker({maxDate:'%y-%M-%d',dateFmt:'yyyy-MM-dd'})" id="begindate" value="{{begindate}}"/>{% include "inc/server_select.html" %}<input type="button" class="search" value="查找"/><br/>
+	<table class="tablesorter">
+		<thead>
+			<th>已创角用户总量</th>
+			<th>新增创角用户</th>
+			<th>日活跃</th>
+			<th>活跃率</th>
+		</thead>
+		<tbody>
+			{% if stats %}
+				<tr>
+					<td>{{ stats.total_user }}</td>
+					<td>{{ stats.new_register }}</td>
+					<td>{{ stats.date_active }}</td>
+					<td>{{ stats.active }}%</td>
+				</tr>
+		    {% else %}
+		          <tr>
+		            <td colspan="4">
+		               查找失败，无服务器信息
+		            </td>
+		          </tr>
+		    {% endif %}
+		</tbody>
+	</table>
+</body>
+</html>
+{% endblock %}

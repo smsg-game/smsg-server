@@ -1,0 +1,294 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+     
+  service = new rpc.ServiceProxy("/services/admin/", {asynchronous:false, methods: ['add_server', 'delete_server', 'sync_server_status']});
+       
+  $(document).ready(function(){
+  
+	  genPageLinks({{total}}, {{pagesize}});
+	
+	  $('#server_zone').change(function(){
+     
+		 var server_zone = $('#server_zone').val();
+		 var url = "{% url server-list %}?server_zone=" + server_zone ;
+		 window.location = url;
+         
+	  });
+	
+	  $('input.add').click(function(){
+     
+         $('#id').val(0);
+         $('#server_id').val("");
+		 $('#server_name').val("");
+         $('#db_connect').val("");
+         $('#redis_connect').val("");
+         $('#server_host').val("");
+         $('#open_time').val("");
+         $('#server_port').val("");
+     
+	     $("#add_dialog").show().dialog({
+		     height: 460, width: 430, modal: true,
+	         title: '添加服务器',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             }
+	     });
+	  });
+	  
+	 $('a.delete').click(function(){
+     
+         var id = $(this).parent().parent().attr('id');
+         var server_id = $(this).parent().parent().attr('server_id');
+         var server_name = $(this).parent().parent().attr('server_name');
+
+	      if(confirm("确定删除服务器“" + server_id + "-" + server_name + "”?")){
+		    try{
+		       service.delete_server(id);
+	           window.location.reload() ;
+			}catch(e){
+			   alert(e.message);
+			}
+	      }
+	  });
+	  
+	  $('input.sync').click(function(){
+     
+          var server_zone = $('#server_zone').val();
+          
+	      if(confirm("确定要同步服务器状态?")){
+		    try{
+		       var ret = service.sync_server_status(server_zone);
+	           if(ret){
+	              alert("同步成功!");
+	           }else{
+	              alert("同步失败!");
+	           }
+	        }catch(e){
+			   alert(e.message);
+			}
+	      }
+	  });
+	  
+	  $('a.edit').click(function(){
+     
+         var id = $(this).parent().parent().attr('id');
+         var server_id = $(this).parent().parent().attr('server_id');
+         var server_name = $(this).parent().parent().attr('server_name');
+         var db_connect = $(this).parent().parent().attr('db_connect');
+         var redis_connect = $(this).parent().parent().attr('redis_connect');
+         var server_status = $(this).parent().parent().attr('server_status');
+         var is_test = $(this).parent().parent().attr('is_test');
+         var server_zone = $(this).parent().parent().attr('server_zone');
+         var server_port = $(this).parent().parent().attr('server_port');
+         var server_host = $(this).parent().parent().attr('server_host');
+         var open_time = $(this).parent().parent().attr('open_time');
+
+
+         $('#id').val(id);
+         $('#server_id').val(server_id);
+		 $('#server_name').val(server_name);
+         $('#db_connect').val(db_connect);
+         $('#redis_connect').val(redis_connect);
+         $('#server_status').val(server_status);
+         $('#server_host').val(server_host);
+     	 $('#open_time').val(open_time);
+     	 $('#is_test').val(is_test);
+     	 $('#server_port').val(server_port);
+     	 $('#add_server_zone').val(server_zone);
+	     $("#add_dialog").show().dialog({
+		     height: 460, width: 430, modal: true,
+	         title: '修改服务器',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             }
+	     });
+	  });
+	  
+	  $('a.partner_setting').click(function(){
+     
+         var server_id = $(this).parent().parent().attr('server_id');
+         var url = "{% url server-partner-list %}?server_id=" + server_id;
+		 window.location = url;
+	 });
+	  
+    $('#add_form input.button').click(function(){
+    
+		var id = $('#id').val();
+		var server_id = $('#server_id').val();
+		var server_name = $('#server_name').val();
+        var db_connect = $('#db_connect').val();
+        var redis_connect = $('#redis_connect').val();
+        var server_status = $('#server_status').val();
+        var server_host = $('#server_host').val();
+        var open_time = $('#open_time').val();
+        var is_test = $('#is_test').val();
+        var server_zone = $('#add_server_zone').val();
+        var server_port = $('#server_port').val();
+        
+        
+        if(!server_id){
+		   alert("请输入服务器ID");
+	    }else if(!server_name){
+	       alert("请输入服务器名称 ");
+	    }else if(!db_connect){
+	       alert("请输入数据库连接");
+	    }else if(!redis_connect){
+	       alert("请输入redis连接");   
+		}else if(!server_host){
+	       alert("请输入服务器域名");
+	    }else if(!open_time){
+	    	alert("请输入开放时间");
+	    }else if(!server_port){
+	    	alert("请输入服务器端口");
+	    }else{
+		    try{
+		       var server_info = {};
+		       server_info['id'] = id;
+		       server_info['open_time'] = open_time
+		       server_info['server_id'] = server_id;
+		       server_info['server_name'] = server_name;
+		       server_info['db_connect'] = db_connect
+		       server_info['redis_connect'] = redis_connect
+		       server_info['server_status'] = server_status
+		       server_info['server_host'] = server_host
+		       server_info['server_port'] = server_port
+		       server_info['is_test'] = is_test
+		       server_info['server_zone'] = server_zone
+		       service.add_server(server_info);
+	           window.location.reload() ;
+			}catch(e){
+			   alert(e.message);
+			}
+	    }
+	});
+	  
+  });
+  
+</script>
+{% endblock %}
+{% block title %}服务器列表{% endblock %}
+{% block content %}
+{% include "inc/server_zone_select.html" %}
+<input type="button" class="add" value="添加服务器"/>
+<input type="button" class="sync" value="同步服务器状态"/><br/>
+<table cellspacing="1" class="tablesorter">
+  <thead>
+    <th>ID</th>
+    <th>服务器ID</th>
+    <th>服务器分区</th>
+    <th>服务器名称</th>
+    <th>服务器域名</th>
+    <th>服务器端口</th>
+    <th align="center">服务器状态</th>
+    <th>数据库连接</th>
+    <th>redis连接</th>
+    <th>正式服|测试服</th>
+    <th>开服时间</th>
+    <th>操作</th>
+  </thead>
+  <tbody>
+    {% if infos %}
+      {% for info in infos %}
+       <tr id="{{ info.id }}" open_time="{{ info.open_time }}" server_id="{{ info.server_id }}" is_test="{{ info.is_test }}" server_zone="{{ info.server_zone }}" server_port="{{ info.server_port }}" server_name="{{info.server_name}}" server_host="{{ info.server_host }}" server_status="{{info.server_status}}" db_connect="{{ info.db_connect}}" redis_connect="{{info.redis_connect}}">
+         <td>{{ info.id }}</td>
+         <td>{{ info.server_id}}</td>
+         <td>{{ info.server_zone|server_zone_name }}</td>
+         <td>{{ info.server_name }}</td>
+         <td>{{ info.server_host }}</td>
+         <td>{{ info.server_port }}</td>
+         <td align="center">{{ info.server_status|server_status_name|safe }}</td>
+         <td>{{ info.db_connect }}</td>
+         <td>{{ info.redis_connect }}</td>
+         <td>
+            {% ifequal info.is_test 1 %}
+               测试服
+            {% else %}
+               正式服
+            {% endifequal %}
+         </td>
+         <td>{{ info.open_time }}</td>
+         <td>
+            <a href="#" class="edit">编辑</a>
+            |
+            <a href="#" class="delete">删除</a>
+            |
+            <a href="#" class="partner_setting">合作商设置</a>
+         </td>
+       </tr>
+      {% endfor %}
+    {% endif %}
+     <tr style="display:none"><td id="pageLink" colspan="15"></td></tr>
+  </tbody>
+</table>
+<div id="add_dialog" class="flora" style="display: none;">
+    <form id="add_form" class="margin-top-10">
+        <input id="id" type="hidden"/>
+        <p>
+    		<label>服务器ID:</label>
+			<span style="margin-left:11px;"><input id="server_id" type="text"/></span>
+	    </p>
+	    <p> 
+	    <label>服务器分区:</label>
+	    <span>
+	    <select id="add_server_zone">
+			{% include "inc/server_zone_select_sample.html" %}
+	    </select>
+	    </span>
+	    </p>
+	    	    <p>
+	    <label>服务器状态:</label>
+	    <span>
+	    <select id="server_status">
+			   <option value="2">火爆</option>
+			   <option value="3">最新</option>
+			   <option value="100">未开放</option>
+	    </select>
+	    </span>
+	    </p> 
+	    <p> 
+	    <label>服务器类型:</label>
+	    <span>
+	    <select id="is_test">
+			   <option value="0">正式服</option>
+			   <option value="1">测试服</option>
+	    </select>
+	    </span>
+	    </p>
+	    <p>
+    		<label>服务器名称:</label>
+			<span><input id="server_name" type="text" size="50"/></span>
+	    </p>
+	    <p>
+    		<label>开放日期:</label>
+			<span style="margin-left:11px;"><input id="open_time" id="open_time" size="50" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" /></span>
+	    </p>
+	    <p>
+            <label>服务器域名:</label>
+			<span><input id="server_host" type="text" size="50"/></span>
+	    </p> 
+	     <p>
+            <label>服务器端口:</label>
+			<span><input id="server_port" type="text" size="50"/></span>
+	    </p> 
+	    <p>
+            <label>数据库连接:</label>
+			<span><input id="db_connect" type="text" size="50"/></span>
+	    </p> 
+	    <p>
+    		<label>redis连接:</label>
+			<span style="margin-left:8px;"><input id="redis_connect" type="text" size="50"/></span>
+	    </p> 
+	    <br/>
+		<input class="button" type="button" value="提交" />
+    </form>
+</div>
+{% endblock %}

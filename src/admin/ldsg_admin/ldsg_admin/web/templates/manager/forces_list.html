@@ -1,0 +1,203 @@
+{% extends "master.html" %}
+{% block title %}副本次数配置{% endblock %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+       
+  $(document).ready(function(){
+  		$('input.search').click(function(){
+		 var server_id = $('#server_id').val();
+         if(!server_id){
+            alert("请选择服务器");
+         }else{
+            var url = "{% url forces-list %}?server_id=" + server_id;
+		    window.location = url;
+         }
+         
+	  });
+  });
+  
+</script>
+
+<script type="text/javascript">
+  forcesObj = new rpc.ServiceProxy("/services/forces/", {asynchronous:true, methods: ['add_forces', 'delete_forces']});
+       
+  $(document).ready(function(){
+  
+	  //genPageLinks({{total}}, {{pagesize}});
+	
+	  $('input.add').click(function(){
+     
+         $('#id').val(0);
+         $('#server_id').val("");
+		 $('#server_name').val("");
+         $('#db_connect').val("");
+         $('#redis_connect').val("");
+         $('#server_host').val("");
+     
+	     $("#add_dialog").show().dialog({
+		     height: 360, width: 430, modal: true,
+	         title: '添加服务器',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             }
+	     });
+	  });
+	  
+	 $('a.delete').click(function(){
+
+         var id = $(this).parent().parent().attr('id');
+         var server_id = $(this).parent().parent().attr('server_id');
+         var server_name = $(this).parent().parent().attr('server_name');
+
+	      if(confirm("确定删除服务器“" + server_id + "-" + server_name + "”?")){
+		    try{
+		       service.delete_server(id);
+	           window.location.reload() ;
+			}catch(e){
+			   alert(e.message);
+			}
+	      }
+	  });
+	  $('a.edit').click(function(){
+     	 $("#add_dialog input:checkbox").removeAttr("checked");
+     	 $("#add_dialog div").remove();
+         var forcesId = $(this).parent().parent().attr('forces_id');
+         var times = $(this).parent().parent().attr('times_limit');
+         
+         $('#forces_id').val(forcesId);
+         $('#times').val(times);
+
+	     $("#add_dialog").show().dialog({
+		     height:900,width: 430, modal: true,
+	         title: '修改次数',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             },
+             buttons:{ "Close": function() { $(this).dialog("close"); window.location.reload()} },
+             close: function(ev, ui) { $(this).remove(); }
+	     });
+	  });
+    $('#add_form input.button').click(function(){
+    	$('#add_form input.button').attr("disabled", "disabled");
+    	var server_id = $('#server_id').val();
+    	var serverIds = "";
+    	serverIds += server_id+",";
+    	$("#add_form input:checkbox").each(function(){
+			if($(this).attr("checked")){
+				var values = $(this).val();
+				var str = "<div style=\"border:1px solid #666;margin:5px 0;\" id=\""+values.split("-")[0]+"\">";
+				str += "<span>正在同步:"+values;
+				str += "</span></div>"
+				$("#add_form").append(str);
+				if(values.split("-")[0] != server_id){
+					serverIds += values.split("-")[0]+',';
+				}
+			}
+		})
+    	var forcesId = $('#forces_id').val();
+    	var times = $('#times').val();
+        if(!forcesId){
+		   alert("请输入ID");
+	    }else if(!times){
+	       alert("请输入次数");
+	    }else{
+		    try{
+		       var forces_info = {};
+		       forces_info['forcesId'] = forcesId;
+		       forces_info['times'] = times;
+		       var serverIdlist = serverIds.split(",");
+		       for(var i = 0;i<serverIdlist.length;i++){
+		       		if(serverIdlist[i]!=null && serverIdlist[i].length>0){
+		       			server_id = serverIdlist[i];
+		       			forcesObj.add_forces({
+				       		params:[server_id,forces_info],
+					       		onSuccess:function(datas){
+					       			var json = eval("(" + datas +")");//转换为json对象     
+					       			var rc = json['rc'];
+					       			if(rc == "1000"){
+					       				$("#"+server_id).append("<span style=\"color:red;margin-left:20px;\">成功</span>")
+					       			}else{
+					       				$("#"+server_id).append("<span style=\"color:red;margin-left:20px;\">失败</span>")
+					       			}	
+					       		},
+						   		onException:function(e){
+						   			$('input.start_check_button').attr("disabled", "");			
+						   			alert("Web server error: because " + e.message);
+						   		}
+				        });
+	       		}
+		       	
+		       }
+		      $('#add_form input.button').attr("disabled", "");			
+	          //window.location.reload() ;
+			}catch(e){
+			   alert(e.message);
+			}
+	    }
+	   
+	});
+  });
+  
+</script>
+{% endblock %}
+{% block content %}
+	{% include "inc/server_select.html" %}<input type="button" class="search" value="查找"/><br/>
+	<table class="tablesorter">
+		<thead>
+			<th>ID</th>
+			<th>场景ID</th>
+			<th>前置怪ID</th>
+			<th>前置怪ID2</th>
+			<th>名称</th>
+			<th>等级</th>
+			<th>类型</th>
+			<th>需要体力</th>
+			<th>次数</th>
+			<th>图片ID</th>
+			<th>操作</th>
+		</thead>
+		<tbody>
+			{% if datas %}
+				{% for data in datas%}
+					<tr forces_id="{{ data.forces_id }}"  times_limit="{{ data.times_limit }}" >
+						<td>{{ data.forces_id }}</td>
+						<td>{{ data.scene_id }}</td>
+						<td>{{ data.pre_forces_id }}</td>
+						<td>{{ data.pre_forces_idb }}</td>
+						<td>{{ data.forces_name }}</td>
+						<td>{{ data.forces_level }}</td>
+						<td>{{ data.forces_type }}</td>
+						<td>{{ data.need_power }}</td>
+						<td>{{ data.times_limit }}</td>
+						<td>{{ data.img_id }}</td>
+						<td><a href="#" class="edit">修改</a></td>
+					</tr>
+				{% endfor %}
+		    {% endif %}
+		    <tr style="display:none"><td id="pageLink" colspan="11"></td></tr>
+		</tbody>
+	</table>
+<div id="add_dialog" class="flora" style="display: none;">
+    <form id="add_form" class="margin-top-10">
+        <input id="forces_id" type="hidden"/>
+        <p>
+    		<label>次数:</label>
+			<span style="margin-left:24px;"><input id="times" type="text" size="40"/></span>
+	    </p>
+	    <p>
+	    	{% include "inc/server_checkbox.html" %}
+	    </p>
+	    <br/>
+		<input class="button" type="button" value="提交" />
+    </form>
+</div>
+</body>
+</html>
+{% endblock %}

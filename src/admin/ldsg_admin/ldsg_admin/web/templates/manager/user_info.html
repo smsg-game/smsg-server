@@ -1,0 +1,229 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+     
+  service = new rpc.ServiceProxy("/services/user/", {asynchronous:false, methods: ['open_all_scene', 'update_user_level', 'update_user_vip_level', 'block_user']});
+       
+  $(document).ready(function(){
+  
+	  $('input.search').click(function(){
+     
+		 var name = $('#name').val();
+		 var server_id = $('#server_id').val();
+         if(!name){
+            alert("请输入用户ID或者角色名");
+         }else if(!server_id){
+            alert("请选择服务器");
+         }else{
+            var url = "{% url user-info %}?name=" + name + "&server_id=" + server_id;
+		    window.location = url;
+         }
+         
+	  });
+	  
+	  	  
+	   $('a.update_userinfo').click(function(){
+	       var category = $(this).attr("category");
+	       var user_id = $(this).parent().parent().attr('user_id');
+           var title ;
+	       if(category==1){
+	          $('#p_user_level').show();
+	          $('#p_vip_level').hide();
+	          $('#p_block').hide();
+	          title = "用户等级修改";
+	       }else if(category==2){
+	          $('#p_user_level').hide();
+	          $('#p_vip_level').show();
+	          $('#p_block').hide();
+	          title = "用户VIP修改";
+	       }else if(category==3){
+	          $('#p_user_level').hide();
+	          $('#p_vip_level').hide();
+	          $('#p_block').show();
+	          title = "用户封停";
+	       }
+	       
+	       $('#category').val(category);
+	       $('#user_id').val(user_id);
+	       
+	   
+	       $("#add_dialog").show().dialog({
+		      height: 150, width: 430, modal: true,
+	          title: title,
+		      overlay: {
+                opacity: 0.5, 
+                background: "black" 
+              }
+	      });
+	   });
+	  
+	  $('a.open_scene').click(function(){
+        
+         var server_id = $('#server_id').val();
+         var lodo_id = $(this).parent().parent().attr('lodo_id');
+         var user_id = $(this).parent().parent().attr('user_id');
+
+	     if(confirm("确定地图全开,“" + lodo_id + "”?")){
+		    try{
+		       service.open_all_scene(server_id, user_id);
+	           window.location.reload() ;
+			}catch(e){
+			   alert(e.message);
+			}
+	     }
+	  });
+	  
+	  $('#add_form input.button').click(function(){
+	    var category = $('#category').val();
+		var user_level = $('#user_level').val();
+		var vip_level = $('#vip_level').val();
+		var server_id = $('#server_id').val();
+        var user_id = $('#user_id').val();
+        var due_time = $('#due_time').val();
+        
+        if(category == 1){
+           if(!user_level){
+              alert("请输入用户等级!");
+              return;
+           }
+           var ret_val = service.update_user_level(server_id, user_id, user_level);
+           if(ret_val == -1){
+              alert("没有正试服权限!");
+              return;
+           }
+        }else if(category == 2){
+           if(!vip_level){
+              alert("请输入VIP等级!");
+              return;
+           }
+           var ret_val = service.update_user_vip_level(server_id, user_id, vip_level);
+           if(ret_val == -1){
+              alert("没有正试服权限!");
+              return;
+           }
+        }else if(category == 3){
+           if(!due_time){
+              alert("请输入封停日期!");
+              return;
+           }
+           var ret_val = service.block_user(server_id, user_id, due_time);
+           if(ret_val == -1){
+              alert("没有正试服权限!");
+              return;
+           }
+        }
+        
+        window.location.reload() ;
+		    
+	});
+	  
+	  
+  });
+  
+  function get_hero_info() {
+		var name = $('#name').val();
+		var server_id = $('#server_id').val();
+		var url = "{% url user-hero-info %}?name=" + name + "&server_id=" + server_id;
+		window.location = url;
+	}
+  
+  function get_package_info() {
+	  	var name = $('#name').val();
+		var server_id = $('#server_id').val();
+		var url = "{% url user-package-info %}?name=" + name + "&server_id=" + server_id;
+		window.location = url;
+  }
+</script>
+{% endblock %}
+{% block title %}用户信息查询{% endblock %}
+{% block content %}
+请输入用户ID或者用户昵称:<input type="text" name="name" id="name" value="{{name}}"/><input type="button" class="search" value="查找"/> {% include "inc/server_select.html" %}<br/>
+
+<table cellspacing="1" class="tablesorter">
+  <thead>
+    <th>用户系统ID</th>
+    <th>用户ID</th>
+    <th>用户名称</th>
+    <th>注册时间</th> 
+    <th>用户等级</th>
+    <th>用用经验</th>
+    <th>用户元宝</th>
+    <th>用户银币</th>
+    <th>VIP等级</th>
+    <th>用户武将</th>
+    <th>用户背包</th>
+    <th>封停状态</th>
+    <th>操作</th>
+  </thead>
+  <tbody>
+    {% if user_info %}
+       <tr user_id="{{ user_info.user_id }}" lodo_id="{{ user_info.lodo_id}}">
+         <td>{{ user_info.user_id }}</td>
+         <td>{{ user_info.lodo_id}}</td>
+         <td>{{ user_info.username }}</td>
+         <td>{{ user_info.reg_time }}</td>
+         <td>{{ user_info.level }}</td>
+         <td>{{ user_info.exp }}</td>
+         <td>{{ user_info.gold_num }}</td>
+         <td>{{ user_info.copper }}</td>
+         <td>{{ user_info.vip_level }}</td>
+         <td><input value="查询用户武将" type="button" onclick="get_hero_info()"></td>
+         <td><input value="查询用户背包" type="button" onclick="get_package_info()"></td>
+         <td>
+            {% if user_info.is_banned %}
+               封停至: {{ user_info.due_time }}
+            {% else %}
+               未封停
+            {% endif %}
+         </td>
+         <td>
+            <a href="#" class="update_userinfo" category=3>封停</a>
+            |
+            <a href="#" class="update_userinfo" category=2>VIP修改</a>
+            |
+            <a href="#" class="open_scene">地图全开(测试服功能)</a>
+            |
+            <a href="#" class="update_userinfo" category=1>修改用户等级(测试服功能)</a>
+         </td>
+       </tr>
+    {% else %}
+        {% if name %}
+          <tr>
+            <td colspan="17">
+               查找失败，无相关用户信息
+            </t>
+          </tr>
+        {% endif %}
+    {% endif %}
+     <tr style="display:none"><td id="pageLink" colspan="12"></td></tr>
+  </tbody>
+</table>
+<div id="add_dialog" class="flora" style="display: none;">
+    <form id="add_form" class="margin-top-10">
+        <input id="category" type="hidden"/>
+        <input id="user_id" type="hidden"/>
+	    <p id="p_user_level">
+    		<label>用户等级:</label>
+			<span><input id="user_level" type="text" size="50"/></span>
+	    </p>
+	    <p id="p_vip_level">
+    		<label>VIP等级:</label>
+			<span style="margin-left:7px;"><input id="vip_level" type="text" size="20"/></span>
+	    </p>
+	    <p id="p_block">
+    		<label>封停时间:</label>
+			<span>
+			  <input type="text" id="due_time" name="due_time" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="Wdate" style="width: 140px"/>
+			</span>
+	    </p>
+	    <br/>
+		<input type="button" class="button" value="确定" />
+    </form>
+</div>
+{% endblock %}

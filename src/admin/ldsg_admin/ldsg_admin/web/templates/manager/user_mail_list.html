@@ -1,0 +1,73 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+     
+  service = new rpc.ServiceProxy("/services/admin/", {asynchronous:false, methods: ['add_server', 'delete_server']});
+       
+  $(document).ready(function(){
+  
+	  genPageLinks({{total}}, {{pagesize}});
+	
+      $('input.search').click(function(){
+     
+		 var name = $('#name').val();
+		 var server_id = $('#server_id').val();
+		 var source_id = $('#source_id').val();
+         if(!name){
+            alert("请输入用户ID或者角色名");
+         }else if(!server_id){
+            alert("请选择服务器");
+         }else{
+            var url = "{% url user-mail-list %}?name=" + name + "&server_id=" + server_id + "&source_id=" + source_id ;
+		    window.location = url;
+         }
+         
+	  });
+  
+  });
+  
+</script>
+{% endblock %}
+{% block title %}用户邮件查询{% endblock %}
+{% block content %}
+请输入用户ID或者用户昵称:<input type="text" name="name" id="name" value="{{name}}"/> 后台邮件ID:<input type="text" name="source_id" id="source_id" value="{{source_id}}"/><input type="button" class="search" value="查找"/> {% include "inc/server_select.html" %}<br/>
+<table cellspacing="1" class="tablesorter">
+  <thead>
+    <th>ID</th>
+    <th>邮件标题</th>
+    <th>邮件道具</th>
+    <th>邮件后台ID</th>
+    <th>发放时间</th>
+    <th>领取状态</th>
+    <th>邮件状态</th>
+  </thead>
+  <tbody>
+    {% if infos %}
+      {% for info in infos %}
+       <tr>
+         <td>{{ info.user_mail_id }}</td>
+         <td>{{ info.mail_info.title}}</td>
+         <td>{{ info.mail_info.tool_ids }}</td>
+         <td>{{ info.mail_info.source_id }}</td>
+         <td>{{ info.created_time }}</td>
+         <td>
+            {% ifequal info.receive_status 1 %}
+              已经领取
+            {% else %}
+              未领取
+            {% endifequal %}
+         </td>
+         <td>{{ info.status|mail_status }}</td>
+       </tr>
+      {% endfor %}
+    {% endif %}
+     <tr style="display:none"><td id="pageLink" colspan="12"></td></tr>
+  </tbody>
+</table>
+{% endblock %}

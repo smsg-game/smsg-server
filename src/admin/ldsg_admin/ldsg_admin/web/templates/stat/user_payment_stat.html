@@ -1,0 +1,67 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+     
+  service = new rpc.ServiceProxy("/services/admin/", {asynchronous:false, methods: ['add_server', 'delete_server']});
+       
+  $(document).ready(function(){
+  
+	  $('input.search').click(function(){
+     
+		 var start_date = $('#start_date').val();
+		 var end_date = $('#end_date').val();
+		 var server_id = $('#server_id').val();
+         if(!start_date){
+            alert("请选择开始日期");
+         } else if (!end_date) {
+        	 alert("请选择结束日期")
+         }else if(!server_id){
+            alert("请选择服务器");
+         }else{
+            var url = "{% url user-payment-stat %}?start_date=" + start_date + "&end_date=" + end_date + "&server_id=" + server_id;
+		    window.location = url;
+         }
+	  });
+  });
+  
+</script>
+{% endblock %}
+{% block title %}用户充值统计{% endblock %}
+{% block content %}
+<table>
+<tr>
+	{% include "inc/server_select.html" %}
+	<td></td>
+	<td><input type="button" class="search" value="查找"/></td>
+</tr>
+<tr>
+	<td>开始日期:</td><td><input type="text" id="start_date" name="start_date" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="Wdate" style="width: 110px" value="{{start_date}}"/></td>
+	<td>结束日期:</td><td><input type="text" id="end_date" name="end_date" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="Wdate" style="width: 110px" value="{{end_date}}"/></td>
+	<td><b style="color:red">例如：要查询选择 2013-09-10 这一天的记录，则选择开始时间为 2013-09-10，结束时间为 2013-09-11</b></td>
+</tr>
+
+</table>
+<table cellspacing="1" class="tablesorter">
+  <thead>
+  	<th>合作商</th>
+  	<th>充值总金额(CNY)</th>
+  </thead>
+  	
+  <tbody>
+  {% if user_payment_stat %}
+  	{% for stat in user_payment_stat %}
+  	<tr>
+  		<td>{{ stat.name|partner_name }}</td>
+  		<td>{{ stat.total }}</td>
+  	</tr>
+  	{% endfor %}
+  	{% endif %}
+  </tbody>
+</table>
+{% endblock %}

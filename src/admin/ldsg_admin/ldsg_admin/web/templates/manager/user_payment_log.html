@@ -1,0 +1,62 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+        
+  $(document).ready(function(){
+  
+      genPageLinks({{total}}, {{pagesize}});
+	
+	  $('input.search').click(function(){
+     
+		 var name = $('#name').val();
+		 var server_id = $('#server_id').val();
+		 var start_time = $('#start_time').val();
+		 var end_time = $('#end_time').val();
+         if(!name){
+            alert("请输入用户ID或者角色名");
+         }else if(!server_id){
+            alert("请选择服务器");
+         }else{
+            var url = "{% url user-payment-log %}?name=" + name + "&server_id=" + server_id + "&start_time=" + start_time + "&end_time=" + end_time;
+		    window.location = url;
+         }
+         
+	  });
+	  
+  });
+  
+</script>
+{% endblock %}
+{% block title %}用户充值记录查询{% endblock %}
+{% block content %}
+请输入用户ID或者用户昵称:<input type="text" name="name" id="name" value="{{name}}"/>{% include "inc/server_select.html" %}
+开始时间:<input type="text" id="start_time" name="start_time" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="Wdate" style="width: 140px" value="{{start_time}}"/>
+结束时间:<input type="text" id="end_time" name="end_time" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="Wdate" style="width: 140px" value="{{end_time}}"/>
+<input type="button" class="search" value="查找"/> <br/>
+<table cellspacing="1" class="tablesorter">
+  <thead>
+  	<th>渠道</th>
+  	<th>充值金额</th>
+  	<th>充值时间</th>
+  </thead>
+
+ <tbody>
+ 	{% if infos %}
+ 	{% for info in infos %}
+ 	<tr>
+ 		<td>{{ info.partner_id|partner_name }} </td>
+ 		<td>{{ info.amount }} </td>
+ 		<td>{{ info.created_time }} </td>
+ 	</tr>
+ 	{% endfor %}
+ 	{% endif %}
+  <tr style="display:none"><td id="pageLink" colspan="12"></td></tr>
+  </tbody>
+</table>
+{% endblock %}

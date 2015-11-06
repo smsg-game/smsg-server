@@ -1,0 +1,6 @@
+<select id="partner_id" name="partner_id">
+<option value="">请选择渠道</option>
+{% for partner in partner_list %}
+	<option value="{{ partner.partner_id }}" {% ifequal partner.partner_id partner_id %}selected=selected{%endifequal%}>{{ partner.name }}</option>
+{% endfor %}	
+</select>

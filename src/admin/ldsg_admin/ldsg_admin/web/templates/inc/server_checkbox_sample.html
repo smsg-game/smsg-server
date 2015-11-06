@@ -1,0 +1,9 @@
+{% load common_extras %}
+{% for zone, server_list in server_list_map.items%}   
+    <div style="margin-top:5px;">
+    <span style="font-size:12px;font-weight:bold;">[{{ zone|server_zone_name }}]:<input type = "checkbox" class="check_all" value="{{zone}}" checked=""/></span><br/>
+    {% for server in server_list %}
+       <input class="check_{{zone}}" type = "checkbox" value="{{server.server_id }}"/>{{ server.server_name }}[{{server.server_id}}]{{server.server_id|server_id_width|safe}}
+    {% endfor %}
+   </div>
+{% endfor %}

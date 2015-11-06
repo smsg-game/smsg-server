@@ -1,0 +1,142 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+     
+  service = new rpc.ServiceProxy("/services/admin/", {asynchronous:false, methods: ['add_white_ip', 'delete_white_ip']});
+       
+  $(document).ready(function(){
+  
+	  genPageLinks({{total}}, {{pagesize}});
+	
+	  $('input.add').click(function(){
+     
+         $('#aip').val("");
+		 $('#aucenter').val("");
+         
+         $("#add_dialog").show().dialog({
+		     height: 160, width: 380, modal: true,
+	         title: '添加白名单IP',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             }
+	     });
+	  });
+	  
+	  $('input.search').click(function(){
+     
+		 var ip = $('#ip').val();
+		 var ucenter = $('#ucenter').val();
+         if(!ip){
+            alert("请输入白名单IP");
+         }else{
+            var url = "{% url white-ip-list %}?ip=" + ip + "&ucenter=" + ucenter
+		    window.location = url;
+         }
+         
+	  });
+	  
+	  $('#ucenter').change(function(){
+     
+		 var ip = $('#ip').val();
+		 var ucenter = $('#ucenter').val();
+         var url = "{% url white-ip-list %}?ip=" + ip + "&ucenter=" + ucenter
+		 window.location = url;
+
+	  });
+	  
+	  
+	  
+	 $('a.delete').click(function(){
+     
+          var ip = $(this).parent().parent().attr('ip');
+          var ucenter = $(this).parent().parent().attr('ucenter');
+
+	      if(confirm("确定删除白名单IP“" + ip + "”?")){
+		    try{
+		       service.delete_white_ip(ucenter, ip);
+	           window.location.reload() ;
+			}catch(e){
+			   alert(e.message);
+			}
+	      }
+	  });
+	  
+    $('#add_form input.button').click(function(){
+		var ip = $('#aip').val();
+		var ucenter = $('#aucenter').val();
+
+        if(!ip){
+		   alert("请输入ip");
+	    }else{
+		    try{
+		       service.add_white_ip(ucenter, ip);
+	           window.location.reload() ;
+			}catch(e){
+			   alert(e.message);
+			}
+	    }
+	});
+	  
+  });
+  
+</script>
+{% endblock %}
+{% block title %}白名单IP列表{% endblock %}
+{% block content %}
+<input type="button" class="add" value="添加白名单IP"/>
+请输入ip:<input type="text" id="ip" value="{{ip}}"/><input type="button" class="search" value="查找"/> 
+<select id="ucenter" name="ucenter">
+	<option value="android" {%ifequal ucenter 'android' %}selected=selected{%endifequal%}>安卓登录服</option>
+	<option value="ios" {%ifequal ucenter 'ios' %}selected=selected{%endifequal%}>ios登录服</option>
+</select><br/>
+<table cellspacing="1" class="tablesorter">
+  <thead>
+    <th>ID</th>
+    <th>IP</th>
+    <th>创建时间</th>
+    <th>操作</th>
+  </thead>
+  <tbody>
+    {% if infos %}
+      {% for info in infos %}
+       <tr ip="{{ info.ip }}" ucenter="{{ info.ucenter }}">
+         <td>{{ info.id }}</td>
+         <td>{{ info.ip}}</td>
+         <td>{{ info.created_time }}</td>
+         <td>
+            <a href="#" class="delete">删除</a>
+         </td>
+       </tr>
+      {% endfor %}
+    {% endif %}
+     <tr style="display:none"><td id="pageLink" colspan="12"></td></tr>
+  </tbody>
+</table>
+<div id="add_dialog" class="flora" style="display: none;">
+    <form id="add_form" class="margin-top-10">
+        <input id="id" type="hidden"/>
+	    <p>
+    		<label>ip:</label>
+			<span><input id="aip" type="text" size="50"/></span>
+	    </p> 
+	    <p>
+	    <label>登录服务器:</label>
+	    <span>
+	    <select id="aucenter">
+			   <option value="android">安卓登录服</option>
+			   <option value="ios">ios登录服</option>
+	    </select>
+	    </span>
+	    </p>
+	    <br/>
+		<input class="button" type="button" value="提交" />
+    </form>
+</div>
+{% endblock %}

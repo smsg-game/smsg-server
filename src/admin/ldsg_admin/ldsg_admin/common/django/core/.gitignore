@@ -1,0 +1,6 @@
+/__init__.pyc
+/context_processors.pyc
+/exceptions.pyc
+/mail.pyc
+/signals.pyc
+/urlresolvers.pyc

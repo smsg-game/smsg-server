@@ -1,0 +1,24 @@
+@charset "utf-8";
+.i_dollar{background-image:url(../images/icon_12.gif);background-repeat: no-repeat;width:12px;height:14px;display:inline;float:left}
+.i_smile{background-image:url(../images/icon_11.gif);background-repeat: no-repeat;width:15px;height:15px;display:inline;float:left}
+.i_sad{background-image:url(../images/icon_10.gif);background-repeat: no-repeat;width:15px;height:15px;display:inline;float:left}
+.i_arrow-u{background-image:url(../images/icon_15.gif);background-repeat: no-repeat;width:12px;height:12px;display:inline;float:left}
+.i_zoomin{background-image:url(../images/icon_01.gif);background-repeat: no-repeat;width:13px;height:13px;display:inline;float:left}
+.i_left{background-image:url(../images/icon_02.gif);background-repeat: no-repeat;width:10px;height:9px;display:inline;float:left}
+.i_link{background-image:url(../images/icon_03.gif);background-repeat: no-repeat;width:16px;height:6px;display:inline;float:left}
+.i_heart{background-image:url(../images/icon_04.gif);background-repeat:no-repeat;width:11px;height:9px;display:inline;float:left}
+.i_star{background-image:url(../images/icon_05.gif);background-repeat:no-repeat;width:14px;height:14px;display:inline;float:left}
+.i_arrow-r{background-image:url(../images/icon_06.gif);background-repeat: no-repeat;width:12px;height:12px;display:inline;float:left}
+.i_arrow-l{background-image:url(../images/icon_07.gif);background-repeat: no-repeat;width:12px;height:12px;display:inline;float:left}
+.i_arrow-ru{background-image:url(../images/icon_08.gif);background-repeat:no-repeat;width:9px;height:9px;display:inline;float:left}
+.i_arrow-d{background-image:url(../images/icon_09.gif);background-repeat: no-repeat;width:9px;height:9px;display:inline;float:left}
+.i_page{background-image:url(../images/icon_13.gif);background-repeat: no-repeat;width:14px;height:14px;display:inline;float:left}
+.i_qq{background-image:url(../images/icon_14.gif);background-repeat: no-repeat;width:14px;height:15px;display:inline;float:left}
+.i_cross{background-image:url(../images/icon_17.gif);background-repeat: no-repeat;width:12px;height:12px;display:inline;float:left}
+.i_cup{background-image:url(../images/icon_18.gif);background-repeat: no-repeat;width:16px;height:29px;display:inline;float:left}
+.i_cup1{background-image:url(../images/icon_19.gif);background-repeat: no-repeat;width:22px;height:47px;display:inline;float:left}
+.i_red_cross{background-image:url(../images/img_01.gif);background-repeat: no-repeat;width:11px;height:11px;display:inline;float:left}
+.i_gray_cross{background-image:url(../images/img_02.gif);background-repeat: no-repeat;width:11px;height:11px;display:inline;float:left}
+.i_msg{background-image:url(../images/img_03.gif);background-repeat: no-repeat;width:17px;height:11px;display:inline;float:left}
+.i_new_msg{background-image:url(../images/img_04.gif);background-repeat: no-repeat;width:17px;height:16px;display:inline;float:left}
+.status1{background-image:url(../images/status/e1.gif);background-repeat: no-repeat;width:17px;height:16px;display:inline;float:left}

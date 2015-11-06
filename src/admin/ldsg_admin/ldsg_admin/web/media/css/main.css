@@ -1,0 +1,90 @@
+
+
+
+td {
+	height: 24px;
+	line-height: 20px;
+	
+	border: 1px solid #fff;
+	color: #135294;
+	padding: 2px;
+	text-align:left;
+}
+
+.td_title,th {
+	height: 26px;
+	line-height: 26px;
+	background: #fff;
+	color: #135294;
+	font-weight: bold;
+	border: 1px solid #fff;
+	padding-left: 20px;
+}
+
+td.over {
+	background: #DDD000;
+}
+
+td.out {
+	background: #EEF7FD;
+}
+
+td.select {
+	background: #BBB000;
+}
+
+.radio {
+	border: 1px solid #DAE4EF;
+}
+
+.checkbox {
+	HEIGHT: 13px;
+	WIDTH: 13px;
+	border: 1px solid #DAE4EF;
+}
+
+.title {
+	font: 14px;
+}
+
+.textbox {
+	border: 1px solid #DAE4EF;
+}
+
+.file {
+	border: 1px solid #DAE4EF;
+}
+
+.select {
+	border: 1px solid #DAE4EF;
+}
+
+.button {
+	border: 1px solid #DAE4EF;
+	height: 20;
+	padding-top: 2px
+}
+
+.textarea {
+	border: 1px solid #DAE4EF;
+}
+
+.error{
+	color: #FF0000;
+}
+
+table .otr{
+	background-color:#e0f1fe;
+}
+
+table .etr{
+	background-color:#ffffff;  
+}
+
+table tbody tr:hover{
+	background:#a2d6fe;
+}
+
+table tbody tr.trchoose{
+	background:#a2d6fe;
+}

@@ -1,0 +1,95 @@
+/* CSS Document */
+
+/********* 全局默认样式 *********/
+body { 
+	margin:0;
+	font-size:12px;
+	font-family: "微软雅黑", "宋体",Arial, Helvetica, sans-serif;
+	_font-family:"宋体"; 
+	height:100%;
+	color:#333;
+	background:#000 url(../image/bg_main.jpg) top center no-repeat;
+	text-align:center;
+	}
+
+div,li,ul,form { margin:0; padding:0; list-style:none; background-repeat:no-repeat;}
+a {text-decoration:none; color:#005f95;}
+a:visited {color:#005f95;}
+a:hover {color:#f35e0a;}
+img {border:0;}
+
+.cGreen,.cGreen:visited{color:#008000;}
+
+
+.nav { width:820px; height:36px; margin:0 auto;}
+.nav li { width:110px; line-height:36px; float:left; background:url(../image/navg.png) no-repeat right;font-size:16px; color:#fff; font-weight:bold;}
+.nav li a { display:block; width:110px; line-height:36px; font-size:16px; color:#fff; font-weight:bold;}
+.nav li a:hover { position:relative; left:1px; top:1px;}
+.nav li a:visited {color:#fff;}
+
+.flist {width:197px; height:179px; background:url(../image/enter.png) no-repeat; text-align:center; padding:6px 0 0 6px;}
+.flist li { width:187px; height:22px; text-align:center; line-height:22px; background:#f6f6f6; border:1px solid #78766f; overflow:hidden; margin-top:5px;}
+.flist li a:hover { font-weight:bold;}
+
+.c2ul { width:442px; height:24px; background: url(../image/tbbg.png);}
+.c2ul li { width:96px; height:24px; float:left;}
+.c2ul li a { display:block; width:96px; height:24px;background:url(../image/tb1.png); line-height:24px; text-align:center;}
+.c2ul li a:hover { font-weight:bold;}
+.c2ul2 { width:440px; height:160px; border:1px solid #c9c9c9; border-top:none;}
+.c2ul2 li { width:428px; height:26px; line-height:26px; padding-left:12px; _padding-left:6px; background: url(../image/dot.png) bottom repeat-x; text-align:left; clear:both;}
+.c2ul2 li a { display:block; width:368px;line-height:26px; padding-left:12px; _padding-left:6px; background: url(../image/arr.png) left center no-repeat; text-align:left; float:left;}
+.c2ul2 li span { display:block; width:46px;line-height:26px;text-align:left; float:left; color:#949494;}
+
+.iask { width:440px; height:150px; border:1px solid #c9c9c9; border-top:none; text-align:center; padding-top:10px;}
+
+
+.c3ul { width:266px; height:24px; background: url(../image/tbbg.png);}
+.c3ul li { width:96px; height:24px; float:left;}
+.c3ul li a { display:block; width:96px; height:24px;background:url(../image/tb1.png); line-height:24px; text-align:center;}
+.c3ul li a:hover { font-weight:bold;}
+.c3ul3 { width:259px; height:180px; border:1px solid #c9c9c9; border-top:none; padding-left:5px;}
+.c3ul3 li { width:256px; height:60px; line-height:20px;background: url(../image/dot.png) bottom repeat-x; text-align:left; clear:both;}
+.c3ul3 li span { display:block; width:60px; height:60px; text-align:left; float:left;}
+.c3ul3 li a { display:block; width:180px;line-height:20px; text-align:left; float:left;}
+
+.t1 { background:url(../image/t1.png) left center no-repeat}.t2 { background:url(../image/t2.png) left center no-repeat}.t3 { background:url(../image/t3.png) left center no-repeat}
+
+.rankselect {
+	position:absolute;
+	top:8px;
+	left:179px;
+	width:70px;
+	padding-left:4px;
+	height:16px;
+	line-height:16px;
+	color:#FFF;
+	cursor:pointer;
+}
+.rankselectul {position:absolute; top:24px; left:176px; width:76px; height:auto; background:#676658; border:1px solid #4c4b3e;}
+.rankselectul li {width:72px; height:18px; padding-left:4px;  line-height:18px; border-bottom:1px solid #4c4b3e;}
+.rankselectul li a { color:#FFF;}
+.rankingtitle {
+	position:absolute;
+	top:4px;
+	left:12px;
+	width:111px;
+	height:22px;
+	line-height:22px;
+}
+.rankingtitle span { display:block; width:183px; font-weight:bold; padding-left:12px;}
+.rankingtitle a { color:#fff;}.rankingtitle a:visited { color:#fff;}
+.ranking {
+	position:absolute;
+	top:55px;
+	left:36px;
+	width:220px;
+	height:212px;
+	overflow:hidden;
+}
+.ranking td {line-height:26.5px; text-align:left;}
+.pad40 { padding-left:40px;}
+
+.c3ul4 { width:259px; height:180px; border:1px solid #c9c9c9; border-top:none; padding-left:5px;}
+.c3ul4 li { width:256px; height:60px; line-height:20px;background: url(../image/dot.png) bottom repeat-x; text-align:left; clear:both;}
+.c3ul4 li span { display:block; width:60px; height:60px; text-align:left; float:left;}
+.c3ul4 li a { display:block; width:180px;line-height:20px; text-align:left; float:left;}

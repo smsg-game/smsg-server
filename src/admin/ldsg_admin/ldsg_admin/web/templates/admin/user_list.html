@@ -1,0 +1,161 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+     
+  service = new rpc.ServiceProxy("/services/admin/", {asynchronous:false, methods: ['add_user',]});
+       
+  $(document).ready(function(){
+  
+	  genPageLinks({{total}}, {{pagesize}});
+	
+	  $('input.add').click(function(){
+     
+         $('#id').val(0);
+         $('#username').val("");
+		 $('#nickname').val("");
+         $('#password').val("");
+         
+         $("#add_dialog").show().dialog({
+		     height: 220, width: 380, modal: true,
+	         title: '添加用户',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             }
+	     });
+	  });
+	  
+	 $('a.delete').click(function(){
+     
+         var id = $(this).parent().parent().attr('id');
+         var partner_id = $(this).parent().parent().attr('partner_id');
+         var name = $(this).parent().parent().attr('name');
+
+	      if(confirm("确定删除合作商“" + name + "-" + partner_id + "”?")){
+		    try{
+		       service.delete_partner(partner_id);
+	           window.location.reload() ;
+			}catch(e){
+			   alert(e.message);
+			}
+	      }
+	  });
+	  
+	  $('a.edit').click(function(){
+     
+         var id = $(this).parent().parent().attr('id');
+         var username = $(this).parent().parent().attr('username');
+         var nickname = $(this).parent().parent().attr('nickname');
+         
+         $('#id').val(id);
+         $('#username').val(username);
+		 $('#nickname').val(nickname);
+		 $('#password').val("");
+
+	     $("#add_dialog").show().dialog({
+		     height: 220, width: 380, modal: true,
+	         title: '修改用户',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             }
+	     });
+	  });
+	  
+	  
+	  
+    $('#add_form input.button').click(function(){
+		var id = $('#id').val();
+		var username = $('#username').val();
+		var password = $('#password').val();
+		var nickname = $('#nickname').val();
+
+        if(!username){
+		    alert("请输入用户名");
+	    }else if(id == "0" && !password){
+	        alert("请输入密码");
+	    }else if(!nickname){
+	        alert("请输入昵称");
+	    }else{
+		    try{
+		       service.add_user(id, username, password, nickname);
+	           window.location.reload() ;
+			}catch(e){
+			   alert(e.message);
+			}
+	    }
+	});
+	  
+  });
+  
+</script>
+{% endblock %}
+{% block title %}用户列表{% endblock %}
+{% block content %}
+<input type="button" class="add" value="添加用户"/>
+<br/>
+<table cellspacing="1" class="tablesorter">
+  <thead>
+    <th>ID</th>
+    <th>用户名</th>
+    <th>用户昵称</th>
+    <th>状态</th>
+    <th>创建时间</th>
+    <th>操作</th>
+  </thead>
+  <tbody>
+    {% if infos %}
+      {% for info in infos %}
+       <tr id="{{ info.id }}" username="{{ info.username }}" nickname="{{ info.nickname }}">
+         <td>{{ info.id }}</td>
+         <td>{{ info.username }}</td>
+         <td>{{ info.nickname}}</td>
+         <td>
+            {% ifequal info.status 0 %}
+               正常
+            {% else %}
+               已删除
+            {% endifequal %}
+         </td>
+         <td>{{ info.created_time}}</td>
+         <td>
+            <a href="#" class="edit">编辑</a>
+            |
+            <a href="#" class="delete">删除</a>
+            |
+            <a href="/admin/privilege_page/{{ info.id }}" class="privilege">权限</a>
+         </td>
+       </tr>
+      {% endfor %}
+    {% endif %}
+     <tr style="display:none"><td id="pageLink" colspan="12"></td></tr>
+  </tbody>
+</table>
+<div id="add_dialog" class="flora" style="display: none;">
+    <form id="add_form" class="margin-top-10">
+        <input id="id" type="hidden"/>
+	    <p>
+    		<label>用户名:</label>
+			<span style="margin-left:12px;"><input id="username" type="text" size="30"/></span>
+	    </p> 
+	    <p>
+    		<label>密码:</label>
+			<span style="margin-left:24px;"><input id="password" type="password" size="30"/></span>
+	    </p> 
+	    <p>
+	    <p>
+    		<label>用户昵称:</label>
+			<span><input id="nickname" type="text" size="40"/></span>
+	    </p> 
+	    <p>
+	    <br/>
+		<input class="button" type="button" value="提交" />
+    </form>
+</div>
+{% endblock %}

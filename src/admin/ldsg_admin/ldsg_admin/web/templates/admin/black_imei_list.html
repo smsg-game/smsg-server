@@ -1,0 +1,138 @@
+{% extends "master.html" %}
+{% load common_extras %}
+{% block head_ext %}
+<script type="text/javascript" src="/site_media/js/rpc.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.core.js"></script>
+<script type="text/javascript" src="/site_media/js/jquery/ui/ui.dialog.js"></script>
+<link rel="stylesheet" href="/site_media/js/jquery/ui/themes/flora/flora.all.css" type="text/css" media="screen" title="no title" />
+<meta http-equiv="content-type" content="text/html; charset=utf8" />
+<script type="text/javascript">
+     
+  service = new rpc.ServiceProxy("/services/admin/", {asynchronous:false, methods: ['add_black_imei', 'delete_black_imei']});
+       
+  $(document).ready(function(){
+  
+	  genPageLinks({{total}}, {{pagesize}});
+	
+	  $('input.add').click(function(){
+     
+         $('#id').val(0);
+         $('#imei').val("");
+		 $('#aucenter').val("");
+         
+         $("#add_dialog").show().dialog({
+		     height: 180, width: 380, modal: true,
+	         title: '添加白名单',
+		     overlay: {
+                opacity: 0.5, 
+                background: "black" 
+             }
+	     });
+	  });
+	  
+	  $('input.search').click(function(){
+		 var imei = $('#imei').val();
+		 var ucenter = $('#ucenter').val();
+		 var url = "{% url black-imei-list %}?imei=" + imei + "&ucenter=" + ucenter
+		 window.location = url;
+	  });
+	  
+	  
+	 $('a.delete').click(function(){
+     
+         var id = $(this).parent().parent().attr('id');
+         var partner_id = $(this).parent().parent().attr('partner_id');
+         var imei = $(this).parent().parent().attr('imei');
+         var ucenter = $('#ucenter').val();
+	      if(confirm("确定删除服务器"+ucenter+"登录服" + imei + "-" + partner_id + "”?")){
+		    try{
+		       service.delete_black_imei(ucenter,id);
+	           window.location.reload() ;
+			}catch(e){
+			   alert(e.message);
+			}
+	      }
+	  });
+	 
+	 $("#ucenter").change(function(){
+		 var imei = $('#imei').val();
+		 var ucenter = $('#ucenter').val();
+		 var url = "{% url black-imei-list %}?imei=" + imei + "&ucenter=" + ucenter
+		 window.location = url;
+	 }); 
+	  
+    $('#add_form input.button').click(function(){
+		var imei = $('#addimei').val();
+		var partner_id = $('#addPartnerId').val();
+		var ucenter = $('#aucenter').val();
+		try{
+	       service.add_black_imei(ucenter,imei,partner_id);
+	       $("#add_dialog").hide();
+           window.location.reload();
+		}catch(e){
+			 alert(e.message);
+		}
+	});
+	  
+  });
+  
+</script>
+{% endblock %}
+{% block title %}imei白名单列表{% endblock %}
+{% block content %}
+<input type="button" class="add" value="添加白名单"/>
+请输入imei:<input type="text" name="imei" id="imei" value="{{imei}}"/><input type="button" class="search" value="查找"/> 
+<select id="ucenter" name="ucenter">
+	<option value="android" {%ifequal ucenter 'android' %}selected=selected{%endifequal%}>安卓登录服</option>
+	<option value="ios" {%ifequal ucenter 'ios' %}selected=selected{%endifequal%}>ios登录服</option>
+</select><br/>
+<table cellspacing="1" class="tablesorter">
+  <thead>
+    <th>ID</th>
+    <th>合作商ID</th>
+    <th>合作商名称</th>
+    <th>imei</th>
+    <th>操作</th>
+  </thead>
+  <tbody>
+    {% if infos %}
+      {% for info in infos %}
+       <tr id="{{ info.id }}" partner_id="{{ info.partner_id}}" imei="{{ info.imei }}"">
+         <td>{{ info.id }}</td>
+         <td>{{ info.partner_id}}</td>
+         <td>{{ info.partner_id }}</td>
+         <td>{{ info.imei }}</td>
+         <td>
+            <a href="#" class="delete">删除</a>
+         </td>
+       </tr>
+      {% endfor %}
+    {% endif %}
+     <tr style="display:none"><td id="pageLink" colspan="12"></td></tr>
+  </tbody>
+</table>
+<div id="add_dialog" class="flora" style="display: none;">
+    <form id="add_form" class="margin-top-10">
+        <input id="id" type="hidden"/>
+	    <p>
+    		<label>imei:</label>
+			<span><input id="addimei" name="addimei" type="text" size="50"/></span>
+	    </p> 
+	    <p>
+	    <p>
+    		<label>合作商ID:</label>
+			<span><input id="addPartnerId" name="addPartnerId" type="text" size="45"/></span>
+	    </p> 
+	    <label>登录服务器:</label>
+	    <span>
+	    <select id="aucenter">
+			   <option value="android">安卓登录服</option>
+			   <option value="ios">ios登录服</option>
+	    </select>
+	    </span>
+	    </p>
+	    <br/>
+		<input class="button" type="button" value="提交" />
+    </form>
+</div>
+{% endblock %}
