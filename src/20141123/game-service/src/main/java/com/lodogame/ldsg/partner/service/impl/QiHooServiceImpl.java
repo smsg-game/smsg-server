@@ -37,20 +37,25 @@ public class QiHooServiceImpl extends BasePartnerService {
 		checkSign(token, partnerId, serverId, timestamp, sign);
 
 		try {
+//			logger.info("qihoo token:" + token);
+//			Map<String, String> tokenInfo = QiHooSdk.instance().assessToken(token);
+//			logger.info("tokenInfo:" + Json.toJson(tokenInfo));
+			logger.info("QiHooService login 新版登录");
 			logger.info("qihoo token:" + token);
-			Map<String, String> tokenInfo = QiHooSdk.instance().assessToken(token);
-			logger.info("tokenInfo:" + Json.toJson(tokenInfo));
-			if (tokenInfo != null && tokenInfo.containsKey("access_token") && !StringUtils.isBlank(tokenInfo.get("access_token"))) {
-				String accessToken = tokenInfo.get("access_token");
-				String refreshToken = tokenInfo.get("refresh_token");
-				logger.info("accessToken:" + accessToken);
-				logger.info("refreshToken:" + refreshToken);
-				Map<String, String> userInfoMap = QiHooSdk.instance().getUserInfo(tokenInfo.get("access_token"));
+			Map<String, String> userInfoMap = QiHooSdk.instance().getUserInfo(token);
+			logger.info("userInfoMap:" + userInfoMap);
+			if (userInfoMap != null && userInfoMap.containsKey("id")) {
+//			if (tokenInfo != null && tokenInfo.containsKey("access_token") && !StringUtils.isBlank(tokenInfo.get("access_token"))) {
+//				String accessToken = tokenInfo.get("access_token");
+//				String refreshToken = tokenInfo.get("refresh_token");
+//				logger.info("accessToken:" + accessToken);
+//				logger.info("refreshToken:" + refreshToken);
+//				Map<String, String> userInfoMap = QiHooSdk.instance().getUserInfo(tokenInfo.get("access_token"));
 				logger.info("userInfoMap:" + userInfoMap);
 				if (userInfoMap != null && userInfoMap.containsKey("id")) {
 					UserToken userToken = GameApiSdk.getInstance().loadUserToken(userInfoMap.get("id"), partnerId, serverId, "0", params);
-					userToken.setPartnerToken(accessToken);
-					userToken.setExtInfo(refreshToken);
+//					userToken.setPartnerToken(token);
+//					userToken.setExtInfo(refreshToken);
 					return userToken;
 				}
 			}
