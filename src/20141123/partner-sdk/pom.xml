@@ -28,7 +28,11 @@
 			<artifactId>game-utils</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-
-	</dependencies>
+	<dependency>
+		<groupId>UCGameServerSDK</groupId>
+		<artifactId>UCGameServerSDK</artifactId>
+		<version>1.0.1</version>
+	</dependency> 
 	
+	</dependencies>
 </project>

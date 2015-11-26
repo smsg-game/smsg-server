@@ -20,6 +20,7 @@ import com.lodogame.ldsg.bo.UserToken;
 import com.lodogame.ldsg.manager.TokenManager;
 import com.lodogame.ldsg.service.GameApiService;
 import com.lodogame.ldsg.service.UserService;
+import com.lodogame.model.User;
 import com.lodogame.model.UserMapper;
 
 /**
@@ -121,6 +122,16 @@ public class UserController {
 		ut.setPartnerId(userMapper.getPartnerId());
 		ut.setServerId(userMapper.getServerId());
 		ut.setUserId(userMapper.getUserId());
+		User user = null;
+		try {
+			user = userService.get(userMapper.getUserId());
+		} catch (Exception e) {
+		}
+		if(user!=null){
+			ut.setExtInfo(user.getLevel()+":"+user.getUsername());
+		}else{
+			ut.setExtInfo(1+":");
+		}
 		TokenManager.getInstance().setToken(ut.getToken(), ut);
 		return ut;
 	}

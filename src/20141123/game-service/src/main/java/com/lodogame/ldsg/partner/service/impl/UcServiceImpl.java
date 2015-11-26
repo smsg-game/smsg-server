@@ -42,6 +42,22 @@ public class UcServiceImpl extends BasePartnerService {
 			if (sidInfo != null && sidInfo.getState().getCode() == 1) {
 				UserToken userToken = GameApiSdk.getInstance().loadUserToken(sidInfo.getData().getAccountId(), partnerId, serverId, "0", params);
 				// TODO .. 扩展数据提交接口
+				try {
+					if(userToken.getExtInfo()!=null&&!userToken.getExtInfo().equals("")){
+						String[] strArray = userToken.getExtInfo().split(":");
+						String roleName = "";
+						if(strArray.length==2){
+							roleName = strArray[1];
+						}
+						
+						UcSdk.instance().sendGameData(token, strArray[0], roleName, GameApiSdk.getInstance().getGameServerName(partnerId, serverId), userToken.getUserId(), serverId);
+					}else{
+						UcSdk.instance().sendGameData(token, "1", "", GameApiSdk.getInstance().getGameServerName(partnerId, serverId), userToken.getUserId(), serverId);
+					}
+				} catch (Exception e) {
+					 
+				}
+				
 				return userToken;
 			} else {
 				if (sidInfo != null) {

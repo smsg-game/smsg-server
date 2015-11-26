@@ -27,6 +27,10 @@ import com.lodogame.ldsg.partner.model.uc.SidInfoResponse;
 import com.lodogame.ldsg.partner.model.uc.UcGame;
 import com.lodogame.ldsg.partner.model.uc.Util;
 
+import cn.uc.g.sdk.cp.model.SDKException;
+import cn.uc.g.sdk.cp.model.UserGameData;
+import cn.uc.g.sdk.cp.service.SDKServerService;
+
 public class UcSdk extends BaseSdk {
 	private static final Logger logger = Logger.getLogger(UcSdk.class);
 
@@ -217,6 +221,36 @@ public class UcSdk extends BaseSdk {
 		return false;
 	}
 
+	/**
+	 * 发送游戏数据到UC服务器
+	 * @param sid   sessionId
+	 * @param level  等级
+	 * @param roleName 角色名称
+	 * @param zoneName 服务器名
+	 * @param roleId   角色id
+	 * @param zoneId   服务器id
+	 */
+	public void sendGameData(String sid,String level,String roleName,String zoneName,String roleId,String zoneId){
+	        
+	        //玩家的游戏数据
+	        Map<String, String> content = new HashMap<String, String>();
+	        content.put("roleLevel", level);
+	        content.put("roleName", roleName);
+	        content.put("zoneName", zoneName);
+	        content.put("roleId", roleId);
+	        content.put("zoneId", zoneId);
+	        
+	        //构造玩家的游戏数据对象
+	        UserGameData gameData = new UserGameData();
+	        gameData.setCategory("loginGameRole");
+	        gameData.setContent(content);
+	        try {
+	            boolean result = SDKServerService.gameData(sid, gameData);
+	            System.out.println("同步数据的结果:"+result);
+	        } catch (SDKException e) {
+	            System.err.println(e.getErrorCode() + "--" + e.getMessage());
+	        }
+	}
 	public String getHost() {
 		return host;
 	}

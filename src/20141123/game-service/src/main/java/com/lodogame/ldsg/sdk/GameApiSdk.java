@@ -39,6 +39,16 @@ public class GameApiSdk {
 		}
 		return HOST;
 	}
+	
+	public String getGameServerName(String partnerId,String serverId){
+		List<GameServer> gameServers =  GameServerCache.getInstance().getGameServers(partnerId);
+		for(GameServer gameServer:gameServers){
+			if(gameServer.getServerId().equals(serverId)){
+				return gameServer.getServerName();
+			}
+		}
+		return "";
+	}
 
 	public static GameApiSdk getInstance() {
 		synchronized (GameApiSdk.class) {
@@ -77,6 +87,7 @@ public class GameApiSdk {
 			tk.setServerId(map.get("serverId"));
 			tk.setToken(map.get("token"));
 			tk.setUserId(map.get("userId"));
+			tk.setExtInfo(map.get("extInfo"));
 			return tk;
 		} catch (Exception e) {
 			LOG.error(e.getMessage(), e);
