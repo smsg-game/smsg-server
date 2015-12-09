@@ -417,8 +417,8 @@ public class ToolServiceImpl implements ToolService {
 					}
 					// 判断是否需要发送跑马灯
 					if (systemToolDrop.getIsPush() == 1 && dropToolBO.getToolType() != ToolType.HERO) {
-						SystemTool systemToolInfo = this.systemToolDao.get(dropToolBO.getToolId());
-						messageService.sendOpenGiftBoxMsg(userId, user.getUsername(), "", systemTool.getName(), systemToolInfo.getName());
+//						SystemTool systemToolInfo = this.systemToolDao.get(dropToolBO.getToolId());
+						messageService.sendOpenGiftBoxMsg(userId, user.getUsername(), "", systemTool.getName(), systemToolDrop.getDropToolName());
 					}
 
 				}
