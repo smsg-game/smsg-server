@@ -246,7 +246,8 @@ public class UcSdk extends BaseSdk {
 	        gameData.setContent(content);
 	        try {
 	            boolean result = SDKServerService.gameData(sid, gameData);
-	            System.out.println("同步数据的结果:"+result);
+	            logger.info("同步数据的结果:sid="+sid+",result="+result);
+	            System.out.println("同步数据的结果:sid="+sid+",result="+result);
 	        } catch (SDKException e) {
 	            System.err.println(e.getErrorCode() + "--" + e.getMessage());
 	        }
@@ -260,9 +261,10 @@ public class UcSdk extends BaseSdk {
 	}
 
 	public static void main(String[] args) throws Exception {
-		String json = "{\"id\":1376815057712,\"state\":{\"code\":10,\"msg\":\"无效的请求数据,校验签名失败\"},\"data\":\"\"}";
-		SidInfoResponse s = Json.toObject(json, SidInfoResponse.class);
-		System.out.println(s);
+//		String json = "{\"id\":1376815057712,\"state\":{\"code\":10,\"msg\":\"无效的请求数据,校验签名失败\"},\"data\":\"\"}";
+//		SidInfoResponse s = Json.toObject(json, SidInfoResponse.class);
+//		System.out.println(s);
+		UcSdk.instance().sendGameData("123", "1", "2", "test", "1234", "1231");
 	}
 
 	public String getPartnerId() {
