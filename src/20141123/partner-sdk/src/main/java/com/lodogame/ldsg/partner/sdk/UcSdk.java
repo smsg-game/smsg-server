@@ -231,7 +231,7 @@ public class UcSdk extends BaseSdk {
 	 * @param zoneId   服务器id
 	 */
 	public void sendGameData(String sid,String level,String roleName,String zoneName,String roleId,String zoneId){
-	        
+	        logger.info("进入ucsdk发送数据,sid="+sid+",level="+level+",roleName="+roleName+",zoneName="+zoneName+",roleId="+roleId+",zoneId="+zoneId);
 	        //玩家的游戏数据
 	        Map<String, String> content = new HashMap<String, String>();
 	        content.put("roleLevel", level);
@@ -245,11 +245,13 @@ public class UcSdk extends BaseSdk {
 	        gameData.setCategory("loginGameRole");
 	        gameData.setContent(content);
 	        try {
+	        	logger.info("进入ucsdk发送数据,startSendMsg");
 	            boolean result = SDKServerService.gameData(sid, gameData);
 	            logger.info("同步数据的结果:sid="+sid+",result="+result);
 	            System.out.println("同步数据的结果:sid="+sid+",result="+result);
 	        } catch (SDKException e) {
 	            System.err.println(e.getErrorCode() + "--" + e.getMessage());
+	            logger.error(e.getMessage(),e);
 	        }
 	}
 	public String getHost() {

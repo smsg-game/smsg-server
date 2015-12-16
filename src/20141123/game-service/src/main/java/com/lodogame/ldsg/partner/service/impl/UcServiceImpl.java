@@ -33,7 +33,7 @@ public class UcServiceImpl extends BasePartnerService {
 			throw new ServiceException(PartnerService.PARAM_ERROR, "参数不正确");
 		}
 
-		checkSign(token, partnerId, serverId, timestamp, sign);
+//		checkSign(token, partnerId, serverId, timestamp, sign);
 
 		SidInfoResponse sidInfo = null;
 		try {
@@ -44,18 +44,22 @@ public class UcServiceImpl extends BasePartnerService {
 				// TODO .. 扩展数据提交接口
 				try {
 					if(userToken.getExtInfo()!=null&&!userToken.getExtInfo().equals("")){
+						logger.info("extInfo="+userToken.getExtInfo());
 						String[] strArray = userToken.getExtInfo().split(":");
 						String roleName = "";
 						if(strArray.length==2){
 							roleName = strArray[1];
 						}
-						
-						UcSdk.instance().sendGameData(token, strArray[0], roleName, GameApiSdk.getInstance().getGameServerName(partnerId, serverId), userToken.getUserId(), serverId);
+						logger.info("start get zoneName");
+						String zoneName = GameApiSdk.getInstance().getGameServerName(partnerId, serverId);
+						logger.info("startSendGameData,extInfo="+userToken.getExtInfo()+",level="+strArray[0]+",roleName="+roleName+",zoneName="+zoneName+",userId="+userToken.getUserId()+",serverId="+serverId);
+						UcSdk.instance().sendGameData(token, strArray[0], roleName, zoneName, userToken.getUserId(), serverId);
 					}else{
 						UcSdk.instance().sendGameData(token, "1", "", GameApiSdk.getInstance().getGameServerName(partnerId, serverId), userToken.getUserId(), serverId);
 					}
+					logger.info("endSendGameData,extInfo="+userToken.getExtInfo());
 				} catch (Exception e) {
-					 
+					logger.error(e.getMessage(), e);
 				}
 				
 				return userToken;
