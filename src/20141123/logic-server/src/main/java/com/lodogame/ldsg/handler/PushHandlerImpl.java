@@ -741,14 +741,15 @@ public class PushHandlerImpl extends BasePushHandler implements PushHandler {
 		
 		if (keys == null || keys.contains("mc")) {
 			UserMonthlyCardBO bo = new UserMonthlyCardBO();
-			UserMonthlyCardTask task = userMonthlyCardTaskDao.getByUserId(uid);
-			
-			if (task != null && task.isTaskExpired() == false) {
-				bo.setIsBought(1);
-				Date startDate = com.lodogame.game.utils.DateUtils.getDateAtMidnight(task.getStartDate());
-				int dayDiff = com.lodogame.game.utils.DateUtils.getDayDiff(startDate, new Date());
-				bo.setLeftDays(30 - dayDiff);
-			}
+//			UserMonthlyCardTask task = userMonthlyCardTaskDao.getByUserId(uid);
+//			
+//			if (task != null && task.isTaskExpired() == false) {
+//				bo.setIsBought(1);
+//				Date startDate = com.lodogame.game.utils.DateUtils.getDateAtMidnight(task.getStartDate());
+//				int dayDiff = com.lodogame.game.utils.DateUtils.getDayDiff(startDate, new Date());
+//				bo.setLeftDays(30 - dayDiff);
+//			}
+			bo.setIsBought(1);
 			
 			params.put("mc", bo);
 		}
