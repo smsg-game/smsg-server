@@ -68,7 +68,7 @@ public class IpayServiceImpl extends BasePartnerService {
 
 		pkgId = "sgsg_"+pkgId;
 		TradeInfo info = createOrderInfo(partnerId, serverId, partnerUserId, amount, tradeName,pkgId,qn);
-		info.setNotifyUrl(EasouSdk.instance().getPayBackUrl());
+		info.setNotifyUrl(EasouSdk.instance().getPayBackUrl1025());
 		info.setAppId(EasouSdk.instance().getAppId());
 		info.setPartnerId(EasouSdk.instance().getEasouPartnerId());
 		
