@@ -69,4 +69,7 @@
 	<bean id="dianJinNewPartner" class="com.lodogame.ldsg.partner.service.impl.DianJinNewServiceImpl" scope="singleton"></bean>
 	<bean id="dianJinNewIOSPartner" class="com.lodogame.ldsg.partner.service.impl.DianJinNewIOSServiceImpl" scope="singleton"></bean>
 	<bean id="molPartner" class="com.lodogame.ldsg.partner.service.impl.MolServiceImpl" scope="singleton"></bean>
+	
+	<bean id="ipayPartner" class="com.lodogame.ldsg.partner.service.impl.IpayServiceImpl" scope="singleton">
+	</bean>
 </beans>
