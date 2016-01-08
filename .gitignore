@@ -2,3 +2,12 @@
 target/
 *.classpath
 src/build/
+src/*/.project
+src/20141123/game-api/.project
+src/20141123/game-server/.project
+src/20141123/game-service/.project
+src/20141123/game-utils/.project
+src/20141123/game-web/.project
+src/20141123/logic-server/.project
+src/20141123/main-server/.project
+src/20141123/partner-sdk/.project
