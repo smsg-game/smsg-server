@@ -82,6 +82,6 @@ public class TableUtils {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(getUserMailTable("e3324a777fb34d0a9dd66f9771c100d1"));
+		System.out.println(getToolUseLogTable("34525f88b5534609b6d51356711e4395"));
 	}
 }

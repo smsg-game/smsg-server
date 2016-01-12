@@ -201,7 +201,7 @@ public class MallServiceImpl implements MallService {
 
 		int mallId = systemMall.getMallId();
 
-		if (num < 1) {
+		if (num < 1 || num>100) {
 			String message = "购买商品出错，商品数量异常.userId[" + userId + "], num[" + num + "]";
 			LOG.error(message);
 			throw new ServiceException(ServiceReturnCode.FAILD, message);
