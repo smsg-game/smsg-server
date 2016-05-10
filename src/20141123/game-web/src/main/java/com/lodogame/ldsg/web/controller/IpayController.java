@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+
+
+
+
 import com.lodogame.ldsg.partner.model.ipay.SignHelper;
 import com.lodogame.ldsg.partner.service.PartnerService;
 import com.lodogame.ldsg.web.factory.PartnerServiceFactory;
@@ -36,12 +40,7 @@ private static Logger LOG = Logger.getLogger(IpayController.class);
 		
 		LOG.info("ipay收到支付回调,trandata="+transdata+",sign="+sign+",signtype="+signtype);
 		
-		/*
-		 * 调用验签接口
-		 * 
-		 * 主要 目的 确定 收到的数据是我们 发的数据，是没有被非法改动的
-		 */
-		if (SignHelper.verify(transdata, sign, PLATP_KEY)) {
+if (SignHelper.verify(transdata, sign, PLATP_KEY)) {
 			LOG.info("校验成功");
 			JSONObject json = JSONObject.parseObject(transdata);
 			String orderId = json.getString("cporderid");
